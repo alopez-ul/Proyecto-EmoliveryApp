@@ -27,6 +27,7 @@ export default function MapaGoogle({ apiKey, puntos, seleccionado, onSelect, mod
           gestureHandling="greedy"
           disableDefaultUI
           zoomControl
+          zoomControlOptions={{ position: 9 }}
           clickableIcons={false}
           draggableCursor={modoRegistro ? 'crosshair' : undefined}
           onClick={(e) => {

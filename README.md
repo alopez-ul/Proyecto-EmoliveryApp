@@ -1,4 +1,4 @@
-# Emolientes Lima
+# Emolivery
 
 Versión base de una web para la venta de emolientes y el registro de puntos de venta en Lima, Perú, sobre un mapa de Google Maps.
 
@@ -15,7 +15,7 @@ ProyectoBase/
 └── frontend/           Vite + React
     └── src/
         ├── pages/MainPage.jsx
-        ├── components/ MapaLima (elige MapaGoogle o MapaOSM), MenuEmoliente, EmolienteIcon, StatsHud, PuntoList, PuntoPanel, NuevoPuntoForm
+        ├── components/ MapaLima (elige MapaGoogle o MapaOSM), MenuPrincipal, EmolienteIcon
         └── services/api.js
 ```
 
@@ -28,7 +28,7 @@ npm run install:all   # instala raíz, backend y frontend
 npm run dev           # levanta la API (:3001) y la web (:5173)
 ```
 
-El mapa usa Google Maps si `frontend/.env` tiene `VITE_GOOGLE_MAPS_API_KEY` (ver `frontend/.env.example`); si no, usa OpenStreetMap como respaldo, sin necesidad de clave.
+El mapa usa Google Maps si `frontend/.env` tiene `VITE_GOOGLE_MAPS_API_KEY` (ver `frontend/.env.example`); si no, usa un mapa de respaldo con Leaflet y mosaicos de Esri, sin necesidad de clave.
 
 Abre http://localhost:5173. Vite redirige `/api` al backend.
 
@@ -43,6 +43,6 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | GET    | /api/productos           | Catálogo de emolientes               |
 | GET    | /api/ventas?puntoId=     | Lista ventas (opcionalmente por punto) |
 | POST   | /api/ventas              | Registra una venta `{puntoId, productoId, cantidad}` |
-| GET    | /api/ventas/resumen      | Métricas para el HUD                 |
+| GET    | /api/ventas/resumen      | Métricas de ventas                   |
 
 La persistencia es un archivo JSON (`backend/data/db.json`), pensado para reemplazarse por una base de datos real.
