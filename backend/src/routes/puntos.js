@@ -1,18 +1,20 @@
-import { Router } from 'express'
-import { readDb, writeDb, nextId } from '../db.js'
+import { crearRouter } from '../router.js'
+import { query } from '../db.js'
 
-const router = Router()
+const router = crearRouter()
+
+const COLUMNAS = 'id, nombre, encargado, direccion, lat, lng, horario, activo'
+const EDITABLES = ['nombre', 'encargado', 'direccion', 'lat', 'lng', 'horario', 'activo']
 
 router.get('/', async (_req, res) => {
-  const db = await readDb()
-  res.json(db.puntos)
+  const { rows } = await query(`SELECT ${COLUMNAS} FROM puntos ORDER BY id`)
+  res.json(rows)
 })
 
 router.get('/:id', async (req, res) => {
-  const db = await readDb()
-  const punto = db.puntos.find((p) => p.id === Number(req.params.id))
-  if (!punto) return res.status(404).json({ error: 'Punto no encontrado' })
-  res.json(punto)
+  const { rows } = await query(`SELECT ${COLUMNAS} FROM puntos WHERE id = $1`, [Number(req.params.id)])
+  if (!rows.length) return res.status(404).json({ error: 'Punto no encontrado' })
+  res.json(rows[0])
 })
 
 router.post('/', async (req, res) => {
@@ -20,29 +22,30 @@ router.post('/', async (req, res) => {
   if (!nombre || !encargado || typeof lat !== 'number' || typeof lng !== 'number') {
     return res.status(400).json({ error: 'nombre, encargado, lat y lng son obligatorios' })
   }
-  const db = await readDb()
-  const punto = { id: nextId(db.puntos), nombre, encargado, direccion, lat, lng, horario, activo: true }
-  db.puntos.push(punto)
-  await writeDb(db)
-  res.status(201).json(punto)
+  const { rows } = await query(
+    `INSERT INTO puntos (nombre, encargado, direccion, lat, lng, horario)
+     VALUES ($1, $2, $3, $4, $5, $6) RETURNING ${COLUMNAS}`,
+    [nombre, encargado, direccion, lat, lng, horario],
+  )
+  res.status(201).json(rows[0])
 })
 
 router.patch('/:id', async (req, res) => {
-  const db = await readDb()
-  const punto = db.puntos.find((p) => p.id === Number(req.params.id))
-  if (!punto) return res.status(404).json({ error: 'Punto no encontrado' })
-  const { id: _ignored, ...cambios } = req.body
-  Object.assign(punto, cambios)
-  await writeDb(db)
-  res.json(punto)
+  const cambios = EDITABLES.filter((campo) => req.body[campo] !== undefined)
+  if (!cambios.length) return res.status(400).json({ error: `Nada que actualizar. Campos permitidos: ${EDITABLES.join(', ')}` })
+
+  const asignaciones = cambios.map((campo, i) => `${campo} = $${i + 2}`).join(', ')
+  const { rows } = await query(
+    `UPDATE puntos SET ${asignaciones} WHERE id = $1 RETURNING ${COLUMNAS}`,
+    [Number(req.params.id), ...cambios.map((campo) => req.body[campo])],
+  )
+  if (!rows.length) return res.status(404).json({ error: 'Punto no encontrado' })
+  res.json(rows[0])
 })
 
 router.delete('/:id', async (req, res) => {
-  const db = await readDb()
-  const id = Number(req.params.id)
-  if (!db.puntos.some((p) => p.id === id)) return res.status(404).json({ error: 'Punto no encontrado' })
-  db.puntos = db.puntos.filter((p) => p.id !== id)
-  await writeDb(db)
+  const { rowCount } = await query('DELETE FROM puntos WHERE id = $1', [Number(req.params.id)])
+  if (!rowCount) return res.status(404).json({ error: 'Punto no encontrado' })
   res.status(204).end()
 })
 

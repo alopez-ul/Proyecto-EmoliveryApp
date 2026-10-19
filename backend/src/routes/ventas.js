@@ -1,48 +1,53 @@
-import { Router } from 'express'
-import { readDb, writeDb, nextId } from '../db.js'
+import { crearRouter } from '../router.js'
+import { query } from '../db.js'
 
-const router = Router()
+const router = crearRouter()
+
+const COLUMNAS = 'id, punto_id AS "puntoId", producto_id AS "productoId", cantidad, total, fecha'
 
 router.get('/', async (req, res) => {
-  const db = await readDb()
   const { puntoId } = req.query
-  const ventas = puntoId ? db.ventas.filter((v) => v.puntoId === Number(puntoId)) : db.ventas
-  res.json(ventas)
+  const { rows } = puntoId
+    ? await query(`SELECT ${COLUMNAS} FROM ventas WHERE punto_id = $1 ORDER BY fecha`, [Number(puntoId)])
+    : await query(`SELECT ${COLUMNAS} FROM ventas ORDER BY fecha`)
+  res.json(rows)
 })
 
+// "Hoy" se calcula con la hora de Lima, no con UTC.
 router.get('/resumen', async (_req, res) => {
-  const db = await readDb()
-  const hoy = new Date().toISOString().slice(0, 10)
-  const ventasHoy = db.ventas.filter((v) => v.fecha.startsWith(hoy))
-  res.json({
-    puntosActivos: db.puntos.filter((p) => p.activo).length,
-    puntosTotales: db.puntos.length,
-    ventasHoy: ventasHoy.reduce((n, v) => n + v.cantidad, 0),
-    ingresosHoy: ventasHoy.reduce((s, v) => s + v.total, 0),
-    ingresosTotales: db.ventas.reduce((s, v) => s + v.total, 0),
-  })
+  const { rows } = await query(`
+    WITH hoy AS (
+      SELECT date_trunc('day', now() AT TIME ZONE 'America/Lima') AT TIME ZONE 'America/Lima' AS inicio
+    )
+    SELECT
+      (SELECT count(*) FROM puntos WHERE activo)::int                                            AS "puntosActivos",
+      (SELECT count(*) FROM puntos)::int                                                         AS "puntosTotales",
+      (SELECT coalesce(sum(cantidad), 0) FROM ventas, hoy WHERE fecha >= hoy.inicio)::int        AS "ventasHoy",
+      (SELECT coalesce(sum(total), 0) FROM ventas, hoy WHERE fecha >= hoy.inicio)::float8        AS "ingresosHoy",
+      (SELECT coalesce(sum(total), 0) FROM ventas)::float8                                       AS "ingresosTotales"
+  `)
+  res.json(rows[0])
 })
 
 router.post('/', async (req, res) => {
   const { puntoId, productoId, cantidad } = req.body
-  const db = await readDb()
-  const punto = db.puntos.find((p) => p.id === Number(puntoId))
-  const producto = db.productos.find((p) => p.id === Number(productoId))
   const qty = Number(cantidad)
-  if (!punto || !producto || !Number.isInteger(qty) || qty < 1) {
+  if (!Number.isInteger(qty) || qty < 1) {
     return res.status(400).json({ error: 'puntoId, productoId y cantidad (entero > 0) son obligatorios' })
   }
-  const venta = {
-    id: nextId(db.ventas),
-    puntoId: punto.id,
-    productoId: producto.id,
-    cantidad: qty,
-    total: Number((producto.precio * qty).toFixed(2)),
-    fecha: new Date().toISOString(),
+  // El total se calcula en la BD con el precio vigente; solo inserta si el punto y el producto existen.
+  const { rows } = await query(
+    `INSERT INTO ventas (punto_id, producto_id, cantidad, total)
+     SELECT pt.id, pr.id, $3::int, round(pr.precio * $3::int, 2)
+     FROM puntos pt, productos pr
+     WHERE pt.id = $1 AND pr.id = $2
+     RETURNING ${COLUMNAS}`,
+    [Number(puntoId), Number(productoId), qty],
+  )
+  if (!rows.length) {
+    return res.status(400).json({ error: 'puntoId, productoId y cantidad (entero > 0) son obligatorios' })
   }
-  db.ventas.push(venta)
-  await writeDb(db)
-  res.status(201).json(venta)
+  res.status(201).json(rows[0])
 })
 
 export default router

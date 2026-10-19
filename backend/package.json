@@ -5,12 +5,14 @@
   "type": "module",
   "main": "src/server.js",
   "scripts": {
-    "dev": "node --watch-path=src src/server.js",
-    "start": "node src/server.js"
+    "dev": "node --env-file-if-exists=../.env.local --watch-path=src src/server.js",
+    "start": "node --env-file-if-exists=../.env.local src/server.js",
+    "db:migrate": "node --env-file-if-exists=../.env.local src/migrate.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "emoliente-tracker": "file:..",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "pg": "^8.23.1"
   }
 }
