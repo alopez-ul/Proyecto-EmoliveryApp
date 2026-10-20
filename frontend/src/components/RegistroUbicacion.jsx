@@ -36,7 +36,7 @@ export default function RegistroUbicacion() {
       {ultima && !error && (
         <div style={estilos.exito}>
           Ubicación registrada el {formatoFecha.format(new Date(ultima.registradaEn))} (precisión ≈ {Math.round(ultima.precisionM)} m).
-          Los clientes ya te ven en el mapa.
+          Con tu jornada abierta, los clientes te ven en el mapa.
         </div>
       )}
       {!ultima && !error && (

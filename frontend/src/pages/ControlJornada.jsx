@@ -3,13 +3,14 @@ import { abrirJornada, cerrarJornada, estadoJornada } from '../services/jornadas
 
 // US06 - Apertura y Cierre de Jornada del Emolientero (Jorge Burga - Sprint 1)
 // Conectado al backend: las jornadas se guardan en Neon (tabla jornadas). Para abrir se exige
-// una ubicación registrada hoy (US05). El módulo de órdenes aún no existe.
+// una ubicación registrada hoy (US05) y para cerrar, no tener órdenes sin entregar.
 
 export default function ControlJornada() {
-  const [estado, setEstado] = useState(null) // { jornada, ubicacionHoy, jornadasHoy }
+  const [estado, setEstado] = useState(null) // { jornada, ubicacionHoy, jornadasHoy, ordenesPendientes }
   const [procesando, setProcesando] = useState(false)
   const [error, setError] = useState('')
   const [avisoUbicacion, setAvisoUbicacion] = useState(false)
+  const [avisoOrdenes, setAvisoOrdenes] = useState(false)
 
   const cargar = useCallback(() => {
     estadoJornada()
@@ -21,6 +22,7 @@ export default function ControlJornada() {
 
   const jornadaAbierta = Boolean(estado?.jornada)
   const ubicacionGPS = Boolean(estado?.ubicacionHoy)
+  const ordenesPendientes = estado?.ordenesPendientes ?? 0
   const ultima = estado?.jornadasHoy.at(-1)
   const horaInicio = ultima ? new Date(ultima.abiertaEn) : null
   const horaCierre = ultima?.cerradaEn ? new Date(ultima.cerradaEn) : null
@@ -30,24 +32,25 @@ export default function ControlJornada() {
       ? fecha.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
       : '--:--:--'
 
-  async function ejecutar(accion) {
+  // mostrarAviso: el aviso de la regla incumplida (422) de cada acción
+  async function ejecutar(accion, mostrarAviso) {
     setError('')
     setAvisoUbicacion(false)
+    setAvisoOrdenes(false)
     setProcesando(true)
     try {
       await accion()
-      cargar()
     } catch (err) {
-      if (err.status === 422) setAvisoUbicacion(true)
+      if (err.status === 422) mostrarAviso(true)
       else setError(err.message)
-      cargar()
     } finally {
+      cargar()
       setProcesando(false)
     }
   }
 
-  const iniciarJornada = () => ejecutar(abrirJornada)
-  const cerrarJornadaActual = () => ejecutar(cerrarJornada)
+  const iniciarJornada = () => ejecutar(abrirJornada, setAvisoUbicacion)
+  const cerrarJornadaActual = () => ejecutar(cerrarJornada, setAvisoOrdenes)
 
   return (
     <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col">
@@ -154,7 +157,7 @@ export default function ControlJornada() {
             <div className="flex items-center justify-between p-4 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9]">
               <div className="flex items-center gap-3">
                 <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                  'bg-stone-100 text-stone-400'
+                  ordenesPendientes ? 'bg-amber-100 text-amber-600' : 'bg-stone-100 text-stone-400'
                 }`}>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
@@ -163,11 +166,15 @@ export default function ControlJornada() {
                 <div>
                   <p className="text-sm font-bold text-[#2b1a0f]">Órdenes pendientes de entrega</p>
                   <p className="text-xs text-[#9a8676]">
-                    Sin órdenes pendientes (el módulo de órdenes aún no está disponible)
+                    {ordenesPendientes === 0
+                      ? 'Sin órdenes pendientes'
+                      : `${ordenesPendientes} ${ordenesPendientes === 1 ? 'orden' : 'órdenes'} sin entregar`}
                   </p>
                 </div>
               </div>
-
+              {ordenesPendientes > 0 && (
+                <span className="text-xs font-bold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full">{ordenesPendientes}</span>
+              )}
             </div>
           </div>
 
@@ -181,6 +188,15 @@ export default function ControlJornada() {
                 No puedes iniciar jornada sin registrar tu ubicación en La Molina.{' '}
                 <a href="#emolientero" className="underline font-bold">Regístrala desde tu panel</a>.
               </span>
+            </div>
+          )}
+
+          {avisoOrdenes && (
+            <div className="mb-4 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-sm font-medium flex items-start gap-2.5">
+              <svg className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <span>No puedes cerrar la jornada con órdenes pendientes de entrega. Completa o cancela las órdenes primero.</span>
             </div>
           )}
 

@@ -65,7 +65,7 @@ describe('US06: apertura', () => {
   test('al inicio no hay jornada abierta ni ubicación de hoy', async () => {
     const { status, datos } = await api('GET', '/api/jornadas/estado', 'emo')
     assert.equal(status, 200)
-    assert.deepEqual(datos, { jornada: null, ubicacionHoy: null, jornadasHoy: [] })
+    assert.deepEqual(datos, { jornada: null, ubicacionHoy: null, jornadasHoy: [], ordenesPendientes: 0 })
   })
 
   test('no se puede abrir sin ubicación registrada hoy (422)', async () => {
@@ -100,6 +100,38 @@ describe('US06: apertura', () => {
     assert.ok(datos.jornada)
     assert.ok(datos.ubicacionHoy)
     assert.equal(datos.jornadasHoy.length, 1)
+  })
+})
+
+describe('US06: no se cierra con órdenes sin entregar', () => {
+  let ordenId
+
+  test('una orden pendiente aparece en el estado y bloquea el cierre (422)', async () => {
+    const { rows } = await pool.query(
+      "INSERT INTO ordenes (cliente_id, emolientero_id, estado) VALUES ($1, $2, 'pendiente') RETURNING id",
+      [ids.cliente, ids.emo],
+    )
+    ordenId = rows[0].id
+    assert.equal((await api('GET', '/api/jornadas/estado', 'emo')).datos.ordenesPendientes, 1)
+    const { status, datos } = await api('POST', '/api/jornadas/cerrar', 'emo')
+    assert.equal(status, 422)
+    assert.match(datos.error, /órdenes pendientes/)
+    assert.ok((await api('GET', '/api/jornadas/estado', 'emo')).datos.jornada, 'la jornada sigue abierta')
+  })
+
+  test('una orden en camino también bloquea el cierre', async () => {
+    await pool.query("UPDATE ordenes SET estado = 'en_camino' WHERE id = $1", [ordenId])
+    assert.equal((await api('POST', '/api/jornadas/cerrar', 'emo')).status, 422)
+  })
+
+  test('las órdenes de otro emolientero no lo bloquean', async () => {
+    const { rows } = await pool.query("SELECT count(*)::int n FROM ordenes WHERE emolientero_id = $1 AND estado IN ('pendiente','en_camino')", [ids.emo2])
+    assert.equal(rows[0].n, 0)
+  })
+
+  test('al entregarla ya no hay órdenes pendientes', async () => {
+    await pool.query("UPDATE ordenes SET estado = 'entregada' WHERE id = $1", [ordenId])
+    assert.equal((await api('GET', '/api/jornadas/estado', 'emo')).datos.ordenesPendientes, 0)
   })
 })
 

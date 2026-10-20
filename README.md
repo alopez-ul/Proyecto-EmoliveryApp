@@ -81,9 +81,12 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | POST   | /api/auth/nueva-password | US04: define la nueva contraseña `{token, password}` |
 | POST   | /api/emolienteros/registro | US02: registra un emolientero `{nombreNegocio, dni, codigoMunicipal, telefono, correo, password}` en `pendiente_verificacion` y notifica a los admins. 400 con `campos` si hay datos inválidos; 409 si el DNI, el código o el correo ya existen |
 | POST   | /api/clientes/registro   | US01: registra un cliente `{nombre, telefono, correo, password}` como `activo`. 400 con `campos` si hay datos inválidos; 409 si el correo ya existe |
+| GET    | /api/ubicaciones         | US05: ubicación actual de los emolienteros **con la jornada abierta** (público, para el mapa) |
+| GET    | /api/ubicaciones/mia     | US05: última ubicación del emolientero con sesión |
+| POST   | /api/ubicaciones         | US05: registra la ubicación `{lat, lng, precision}` (solo La Molina, precisión de 50 m o mejor) |
 | GET    | /api/jornadas/estado     | US06: jornada abierta, ubicación de hoy y jornadas de hoy (solo emolientero) |
 | POST   | /api/jornadas/abrir      | US06: abre la jornada; exige ubicación registrada hoy (422 si no) y una sola abierta (409) |
-| POST   | /api/jornadas/cerrar     | US06: cierra la jornada abierta (409 si no hay) |
+| POST   | /api/jornadas/cerrar     | US06: cierra la jornada abierta (409 si no hay; 422 si quedan órdenes sin entregar) |
 | GET    | /api/admin/emolienteros/pendientes | US23: bandeja de emolienteros por verificar (solo admin) |
 | GET    | /api/admin/emolienteros/historial  | US23: decisiones tomadas (solo admin) |
 | POST   | /api/admin/emolienteros/:id/aprobar  | US23: aprueba → cuenta `activo` y notifica (solo admin) |
@@ -107,6 +110,8 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 - `npm test` incluye las pruebas de T09: DNI duplicado y código inválido, contra la BD de `.env.local`.
 
 ## Base de datos
+
+- **Órdenes:** la tabla `ordenes` (migración 007) por ahora solo sirve para la regla de US06 (no cerrar la jornada con órdenes `pendiente` o `en_camino`). Crear y entregar órdenes corresponde a la historia de pedidos.
 
 - **Driver:** `pg` (node-postgres) con un pool, porque el backend es un servidor de larga duración.
 - **Conexiones:** la app usa `DATABASE_URL` (con pooling); las migraciones usan `DATABASE_URL_UNPOOLED` (directa), como recomienda Neon.

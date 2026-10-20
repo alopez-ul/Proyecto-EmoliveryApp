@@ -22,15 +22,19 @@ async function ubicacionDeHoy(emolienteroId) {
   return rows[0] ?? null
 }
 
-// Estado para la pantalla: jornada abierta (si hay), ubicación de hoy y jornadas de hoy.
+// Órdenes que el emolientero aún debe entregar (o cancelar).
+const ORDENES_SIN_ENTREGAR = "SELECT 1 FROM ordenes WHERE emolientero_id = $1 AND estado IN ('pendiente', 'en_camino')"
+
+// Estado para la pantalla: jornada abierta (si hay), ubicación de hoy, jornadas de hoy y órdenes sin entregar.
 router.get('/estado', async (req, res) => {
   const id = req.usuario.id
-  const [{ rows: abierta }, ubicacion, { rows: hoy }] = await Promise.all([
+  const [{ rows: abierta }, ubicacion, { rows: hoy }, { rowCount: ordenesPendientes }] = await Promise.all([
     query(`SELECT ${COLUMNAS} FROM jornadas WHERE emolientero_id = $1 AND cerrada_en IS NULL`, [id]),
     ubicacionDeHoy(id),
     query(`SELECT ${COLUMNAS} FROM jornadas WHERE emolientero_id = $1 AND abierta_en >= ${INICIO_HOY} ORDER BY abierta_en`, [id]),
+    query(ORDENES_SIN_ENTREGAR, [id]),
   ])
-  res.json({ jornada: abierta[0] ?? null, ubicacionHoy: ubicacion, jornadasHoy: hoy })
+  res.json({ jornada: abierta[0] ?? null, ubicacionHoy: ubicacion, jornadasHoy: hoy, ordenesPendientes })
 })
 
 // Abrir: exige haber registrado la ubicación hoy (US05; esa ruta ya valida que sea en La Molina).
@@ -48,15 +52,22 @@ router.post('/abrir', async (req, res) => {
   }
 })
 
-// Cerrar la jornada abierta.
-// Pendiente: cuando exista el módulo de órdenes, aquí se debe impedir el cierre si hay órdenes sin entregar.
+// Cerrar la jornada abierta, solo si no quedan órdenes sin entregar. La condición va en el mismo
+// UPDATE para que una orden que llegue en ese instante no se cuele entre la revisión y el cierre.
 router.post('/cerrar', async (req, res) => {
+  const id = req.usuario.id
   const { rows } = await query(
-    `UPDATE jornadas SET cerrada_en = now() WHERE emolientero_id = $1 AND cerrada_en IS NULL RETURNING ${COLUMNAS}`,
-    [req.usuario.id],
+    `UPDATE jornadas SET cerrada_en = now()
+     WHERE emolientero_id = $1 AND cerrada_en IS NULL AND NOT EXISTS (${ORDENES_SIN_ENTREGAR})
+     RETURNING ${COLUMNAS}`,
+    [id],
   )
-  if (!rows.length) throw new ErrorHttp(409, 'No tienes una jornada abierta.')
-  res.json(rows[0])
+  if (rows.length) return res.json(rows[0])
+
+  // No se cerró: ¿no había jornada abierta o había órdenes sin entregar?
+  const { rowCount: abierta } = await query('SELECT 1 FROM jornadas WHERE emolientero_id = $1 AND cerrada_en IS NULL', [id])
+  if (!abierta) throw new ErrorHttp(409, 'No tienes una jornada abierta.')
+  throw new ErrorHttp(422, 'No puedes cerrar la jornada con órdenes pendientes de entrega. Completa o cancela las órdenes primero.')
 })
 
 export default router

@@ -9,7 +9,8 @@ const router = crearRouter()
 
 const COLUMNAS = `id, lat, lng, precision_m AS "precisionM", fuente, registrada_en AS "registradaEn"`
 
-// Ubicación actual de cada emolientero activo (la más reciente). Es pública: la usa el mapa de los clientes.
+// Ubicación actual (la más reciente) de cada emolientero activo que está atendiendo, es decir,
+// con la jornada abierta (US06). Es pública: la usa el mapa de los clientes.
 router.get('/', async (_req, res) => {
   const { rows } = await query(
     `SELECT DISTINCT ON (u.id)
@@ -18,6 +19,7 @@ router.get('/', async (_req, res) => {
      FROM ubicaciones ub
      JOIN usuarios u ON u.id = ub.emolientero_id
      WHERE u.rol = 'emolientero' AND u.estado = 'activo'
+       AND EXISTS (SELECT 1 FROM jornadas j WHERE j.emolientero_id = u.id AND j.cerrada_en IS NULL)
      ORDER BY u.id, ub.registrada_en DESC`,
   )
   res.json(rows)

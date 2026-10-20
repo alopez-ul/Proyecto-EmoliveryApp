@@ -98,7 +98,14 @@ describe('US05: consultar ubicación', () => {
     assert.equal(datos.lat, -12.09)
   })
 
+  test('sin jornada abierta (US06) el emolientero no aparece en el listado público', async () => {
+    const { datos } = await api('GET', '/api/ubicaciones')
+    assert.ok(!datos.some((u) => u.nombre === 'Test emolientero'))
+  })
+
   test('el listado público trae una sola ubicación (la más reciente) por emolientero', async () => {
+    // Con la jornada abierta ya aparece en el mapa.
+    assert.equal((await api('POST', '/api/jornadas/abrir', { token: tokens.emolientero })).status, 201)
     const { status, datos } = await api('GET', '/api/ubicaciones')
     assert.equal(status, 200)
     const mias = datos.filter((u) => u.nombre === 'Test emolientero')
