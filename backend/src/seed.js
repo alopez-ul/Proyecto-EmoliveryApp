@@ -6,7 +6,7 @@ import { hashContrasena } from './seguridad.js'
 const USUARIOS_PRUEBA = [
   { nombre: 'Carla Cliente', correo: 'cliente@emolivery.pe', password: 'Cliente123', rol: 'cliente', estado: 'activo' },
   { nombre: 'Elmer Emolientero', correo: 'emolientero@emolivery.pe', password: 'Emoliente123', rol: 'emolientero', estado: 'activo', dni: '40000001' },
-  { nombre: 'Ana Admin', correo: 'admin@emolivery.pe', password: 'Admin123', rol: 'admin', estado: 'activo' },
+  { nombre: 'Admin', correo: 'admin@emolivery.pe', password: 'Admin123', rol: 'admin', estado: 'activo' },
   { nombre: 'Sergio Suspendido', correo: 'suspendido@emolivery.pe', password: 'Suspendido123', rol: 'cliente', estado: 'suspendido' },
   // US23: registros pendientes de verificación para la bandeja del administrador
   { nombre: 'Rosa Huamán', correo: 'rosa@emolivery.pe', password: 'Pendiente123', rol: 'emolientero', estado: 'pendiente_verificacion', dni: '40000002' },
