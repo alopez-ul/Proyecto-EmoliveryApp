@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import AuthCard, { estilos } from '../components/AuthCard.jsx'
 import Notificaciones from '../components/Notificaciones.jsx'
+import RegistroUbicacion from '../components/RegistroUbicacion.jsx'
 import PanelAdmin from './admin/PanelAdmin.jsx'
 import { cerrarSesion, verificarSesion } from '../services/authService.js'
 
@@ -47,6 +48,7 @@ export default function PanelRolPage({ rol }) {
         Iniciaste sesión como <strong>{rol}</strong> ({usuario.correo}).
       </p>
       <Notificaciones />
+      {rol === 'emolientero' && <RegistroUbicacion />}
       <button
         type="button"
         style={estilos.boton}
