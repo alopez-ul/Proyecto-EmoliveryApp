@@ -9,13 +9,17 @@ ProyectoBase/
 ├── neon.ts             Configuración de Neon (servicios del proyecto)
 ├── backend/            API REST (Node + Express) sobre Neon Postgres
 │   ├── db/migrations/  Migraciones SQL versionadas
+│   ├── test/           Pruebas automáticas (npm test)
 │   └── src/
-│       ├── server.js
+│       ├── app.js      Crea la app Express (rutas y errores)
+│       ├── server.js   Arranca la app en el puerto 3001
+│       ├── autenticacion.js  Middleware de sesión y de rol
+│       ├── notificaciones.js Notificaciones al usuario
 │       ├── db.js       Pool de conexiones (node-postgres)
 │       ├── migrate.js  Aplica las migraciones pendientes
 │       ├── seed.js     Crea los usuarios de prueba
 │       ├── seguridad.js  Contraseñas (scrypt), sesiones (JWT) y enlaces de recuperación
-│       └── routes/     auth, puntos, productos, ventas
+│       └── routes/     auth, admin, notificaciones, puntos, productos, ventas
 └── frontend/           Vite + React
     └── src/
         ├── pages/MainPage.jsx
@@ -42,6 +46,7 @@ npm run install:all   # instala raíz, backend y frontend
 npm run db:migrate    # crea/actualiza las tablas en Neon
 npm run db:seed       # (opcional) crea los usuarios de prueba
 npm run dev           # levanta la API (:3001) y la web (:5173)
+npm test              # pruebas automáticas de la API (usan la BD de .env.local)
 ```
 
 Además, copia `backend/.env.example` como `backend/.env` y completa `JWT_SECRET` (clave para firmar las sesiones). En desarrollo puedes poner `BUZON_SIMULADO=true` para ver en pantalla el enlace de recuperación de contraseña, ya que aún no se envían correos.
@@ -56,6 +61,7 @@ Además, copia `backend/.env.example` como `backend/.env` y completa `JWT_SECRET
 | emolientero@emolivery.pe | Emoliente123 | emolientero |
 | admin@emolivery.pe | Admin123 | admin |
 | suspendido@emolivery.pe | Suspendido123 | cliente (cuenta suspendida) |
+| rosa@, luis@, juana@emolivery.pe | Pendiente123 | emolienteros pendientes de verificación (US23) |
 
 Sus contraseñas son públicas: no ejecutes `db:seed` en una base con usuarios reales.
 
@@ -73,6 +79,12 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | POST   | /api/auth/recuperar      | US04: genera un enlace de recuperación `{correo}` (respuesta igual exista o no el correo) |
 | GET    | /api/auth/recuperar/:token | US04: indica si el enlace sigue vigente |
 | POST   | /api/auth/nueva-password | US04: define la nueva contraseña `{token, password}` |
+| GET    | /api/admin/emolienteros/pendientes | US23: bandeja de emolienteros por verificar (solo admin) |
+| GET    | /api/admin/emolienteros/historial  | US23: decisiones tomadas (solo admin) |
+| POST   | /api/admin/emolienteros/:id/aprobar  | US23: aprueba → cuenta `activo` y notifica (solo admin) |
+| POST   | /api/admin/emolienteros/:id/rechazar | US23: rechaza `{motivo}` (10–500 caracteres) → `rechazado` y notifica (solo admin) |
+| GET    | /api/notificaciones      | Notificaciones del usuario con sesión |
+| POST   | /api/notificaciones/:id/leida | Marca una notificación como leída |
 | GET    | /api/puntos              | Lista los puntos de venta            |
 | POST   | /api/puntos              | Registra un punto `{nombre, encargado, lat, lng, direccion?, horario?}` |
 | PATCH  | /api/puntos/:id          | Actualiza un punto (p. ej. `activo`) |

@@ -7,7 +7,8 @@
     "dev": "concurrently -n api,web -c red,cyan \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
     "build": "npm run build --prefix frontend",
     "db:migrate": "npm run db:migrate --prefix backend",
-    "db:seed": "npm run db:seed --prefix backend"
+    "db:seed": "npm run db:seed --prefix backend",
+    "test": "npm test --prefix backend"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

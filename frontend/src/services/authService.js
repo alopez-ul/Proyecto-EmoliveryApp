@@ -50,6 +50,23 @@ export function cerrarSesion() {
   sessionStorage.removeItem(CLAVE_SESION)
 }
 
+// Llamada a la API con el token de sesión. Si el servidor responde 401 (sesión vencida o
+// cuenta desactivada), cierra la sesión y vuelve al login.
+export async function pedirConSesion(ruta, { method = 'GET', body } = {}) {
+  const res = await fetch(`/api${ruta}`, {
+    method,
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${sessionStorage.getItem(CLAVE_SESION)}` },
+    body: body && JSON.stringify(body),
+  })
+  const datos = await res.json().catch(() => ({}))
+  if (res.status === 401) {
+    cerrarSesion()
+    window.location.hash = 'login'
+  }
+  if (!res.ok) throw Object.assign(new Error(datos.error || 'No se pudo conectar con el servidor.'), { status: res.status })
+  return datos
+}
+
 // T15: pide un enlace de recuperación. En desarrollo el backend devuelve el enlace para
 // mostrarlo en el buzón simulado; si el correo no existe (o en producción) devuelve null.
 export async function solicitarRecuperacion(correo) {

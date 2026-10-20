@@ -1,5 +1,7 @@
 import { crearRouter } from '../router.js'
 import { pool, query } from '../db.js'
+import { ErrorHttp } from '../errores.js'
+import { requiereSesion } from '../autenticacion.js'
 import {
   HASH_FICTICIO,
   VIGENCIA_ENLACE_MIN,
@@ -9,7 +11,6 @@ import {
   nuevoTokenRecuperacion,
   validarPassword,
   verificarContrasena,
-  verificarSesion,
 } from '../seguridad.js'
 
 const router = crearRouter()
@@ -19,13 +20,6 @@ const CORREO_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 // Solo en desarrollo: devuelve el enlace de recuperación en la respuesta (el "buzón simulado"),
 // porque todavía no hay envío real de correos. Apagado salvo que BUZON_SIMULADO=true.
 const BUZON_SIMULADO = process.env.BUZON_SIMULADO === 'true'
-
-class ErrorHttp extends Error {
-  constructor(status, mensaje) {
-    super(mensaje)
-    this.status = status
-  }
-}
 
 const publico = (u) => ({ id: u.id, nombre: u.nombre, correo: u.correo, rol: u.rol })
 
@@ -44,24 +38,24 @@ router.post('/login', async (req, res) => {
   const coincide = await verificarContrasena(password, usuario?.password_hash ?? HASH_FICTICIO)
   if (!usuario || !coincide) throw new ErrorHttp(401, 'Correo o contraseña incorrectos.')
   if (usuario.estado === 'suspendido') throw new ErrorHttp(403, 'Tu cuenta está suspendida. Comunícate con el administrador.')
-  if (usuario.estado === 'pendiente_verificacion') throw new ErrorHttp(403, 'Tu cuenta está pendiente de verificación.')
+  if (usuario.estado === 'pendiente_verificacion') {
+    throw new ErrorHttp(403, 'Tu cuenta está pendiente de verificación. Te avisaremos cuando un administrador la revise.')
+  }
+  // US23 - T31: el emolientero rechazado conoce el motivo al intentar ingresar (solo tras dar su contraseña).
+  if (usuario.estado === 'rechazado') {
+    const { rows: v } = await query(
+      "SELECT motivo FROM verificaciones WHERE usuario_id = $1 AND decision = 'rechazado' ORDER BY creado_en DESC LIMIT 1",
+      [usuario.id],
+    )
+    throw new ErrorHttp(403, `Tu solicitud de registro fue rechazada. Motivo: ${v[0]?.motivo ?? 'no indicado'}`)
+  }
 
   res.json({ token: firmarSesion(usuario), usuario: publico(usuario) })
 })
 
 // Devuelve el usuario de la sesión, comprobando la firma del token y que la cuenta siga activa.
-router.get('/yo', async (req, res) => {
-  const [tipo, token] = (req.get('Authorization') ?? '').split(' ')
-  let sesion
-  try {
-    if (tipo !== 'Bearer' || !token) throw new Error()
-    sesion = verificarSesion(token)
-  } catch {
-    throw new ErrorHttp(401, 'Sesión no válida o vencida.')
-  }
-  const { rows } = await query('SELECT id, nombre, correo, rol, estado FROM usuarios WHERE id = $1', [sesion.sub])
-  if (!rows[0] || rows[0].estado !== 'activo') throw new ErrorHttp(401, 'Sesión no válida o vencida.')
-  res.json(publico(rows[0]))
+router.get('/yo', requiereSesion, async (req, res) => {
+  res.json(publico(req.usuario))
 })
 
 // US04 - T14/T15: genera un enlace de recuperación con vigencia limitada.
