@@ -1,0 +1,272 @@
+import { useState } from 'react'
+
+// US06 - Apertura y Cierre de Jornada del Emolientero (Jorge Burga - Sprint 1)
+// Simulación frontend completa sin conexión a backend.
+
+export default function ControlJornada() {
+  const [jornadaAbierta, setJornadaAbierta] = useState(false)
+  const [ubicacionGPS, setUbicacionGPS] = useState(false)
+  const [ordenesPendientes, setOrdenesPendientes] = useState(false)
+  const [horaInicio, setHoraInicio] = useState(null)
+  const [horaCierre, setHoraCierre] = useState(null)
+  const [avisoUbicacion, setAvisoUbicacion] = useState(false)
+  const [avisoOrdenes, setAvisoOrdenes] = useState(false)
+
+  const formatearHora = (fecha) =>
+    fecha
+      ? fecha.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+      : '--:--:--'
+
+  const iniciarJornada = () => {
+    if (!ubicacionGPS) {
+      setAvisoUbicacion(true)
+      setTimeout(() => setAvisoUbicacion(false), 4000)
+      return
+    }
+    setAvisoUbicacion(false)
+    setJornadaAbierta(true)
+    setHoraInicio(new Date())
+    setHoraCierre(null)
+  }
+
+  const cerrarJornada = () => {
+    if (ordenesPendientes) {
+      setAvisoOrdenes(true)
+      setTimeout(() => setAvisoOrdenes(false), 4000)
+      return
+    }
+    setAvisoOrdenes(false)
+    setJornadaAbierta(false)
+    setHoraCierre(new Date())
+  }
+
+  return (
+    <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col">
+      {/* Header */}
+      <header className="bg-white border-b border-[#ebe3d9] py-4 px-6 flex items-center justify-between shadow-xs sticky top-0 z-20">
+        <a href="#inicio" className="flex items-center gap-2">
+          <span className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#b8581a] to-[#e67e22] flex items-center justify-center text-white font-bold text-lg shadow-sm">
+            E
+          </span>
+          <span className="font-extrabold text-2xl tracking-tight text-[#2b1a0f]">
+            Emolivery<span className="text-[#b8581a]">.</span>
+          </span>
+        </a>
+        <a
+          href="#emolientero"
+          className="text-sm font-semibold text-[#6b5443] hover:text-[#2b1a0f] transition-colors py-1.5 px-3 rounded-lg hover:bg-[#fbf6ef]"
+        >
+          ← Panel Emolientero
+        </a>
+      </header>
+
+      {/* Main */}
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+        <div className="w-full max-w-lg bg-white rounded-3xl border border-[#ebe3d9] shadow-xl p-6 sm:p-8">
+          {/* Title */}
+          <div className="text-center mb-6">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 text-[#b8581a] mb-2">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              US06 - Control de Jornada
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#2b1a0f]">
+              Apertura y Cierre de Jornada
+            </h1>
+            <p className="text-sm text-[#6b5443] mt-1.5">
+              Gestiona tu disponibilidad diaria como emolientero autorizado.
+            </p>
+          </div>
+
+          {/* Estado Actual de la Jornada */}
+          <div className={`mb-6 p-5 rounded-2xl border-2 text-center transition-all duration-300 ${
+            jornadaAbierta
+              ? 'bg-emerald-50 border-emerald-300'
+              : 'bg-stone-50 border-stone-200'
+          }`}>
+            <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold mb-2 ${
+              jornadaAbierta
+                ? 'bg-emerald-100 text-emerald-800'
+                : 'bg-stone-200 text-stone-600'
+            }`}>
+              <span className={`w-2.5 h-2.5 rounded-full ${
+                jornadaAbierta ? 'bg-emerald-500 animate-pulse' : 'bg-stone-400'
+              }`} />
+              {jornadaAbierta ? 'Jornada Abierta' : 'Jornada Cerrada'}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mt-3 text-xs text-[#6b5443]">
+              <div>
+                <span className="block font-bold uppercase tracking-wider text-[10px] text-[#9a8676] mb-0.5">Hora de Apertura</span>
+                <span className={`text-base font-mono font-bold ${jornadaAbierta ? 'text-emerald-700' : 'text-stone-400'}`}>
+                  {formatearHora(horaInicio)}
+                </span>
+              </div>
+              <div>
+                <span className="block font-bold uppercase tracking-wider text-[10px] text-[#9a8676] mb-0.5">Hora de Cierre</span>
+                <span className={`text-base font-mono font-bold ${horaCierre ? 'text-red-600' : 'text-stone-400'}`}>
+                  {formatearHora(horaCierre)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Toggles de Simulación */}
+          <div className="space-y-4 mb-6">
+            {/* Toggle GPS */}
+            <div className="flex items-center justify-between p-4 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9]">
+              <div className="flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+                  ubicacionGPS ? 'bg-emerald-100 text-emerald-600' : 'bg-stone-100 text-stone-400'
+                }`}>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#2b1a0f]">Ubicación GPS registrada</p>
+                  <p className="text-xs text-[#9a8676]">
+                    {ubicacionGPS ? 'Zona: La Molina, Lima' : 'Sin ubicación activa'}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={ubicacionGPS}
+                onClick={() => { setUbicacionGPS(!ubicacionGPS); setAvisoUbicacion(false) }}
+                className={`relative w-12 h-7 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-amber-200 ${
+                  ubicacionGPS ? 'bg-emerald-500' : 'bg-stone-300'
+                }`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-sm transition-transform duration-200 ${
+                  ubicacionGPS ? 'translate-x-5' : 'translate-x-0'
+                }`} />
+              </button>
+            </div>
+
+            {/* Toggle Órdenes Pendientes */}
+            <div className="flex items-center justify-between p-4 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9]">
+              <div className="flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+                  ordenesPendientes ? 'bg-amber-100 text-amber-600' : 'bg-stone-100 text-stone-400'
+                }`}>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-[#2b1a0f]">Órdenes pendientes de entrega</p>
+                  <p className="text-xs text-[#9a8676]">
+                    {ordenesPendientes ? '3 órdenes sin completar (simulado)' : 'Sin órdenes pendientes'}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={ordenesPendientes}
+                onClick={() => { setOrdenesPendientes(!ordenesPendientes); setAvisoOrdenes(false) }}
+                className={`relative w-12 h-7 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-amber-200 ${
+                  ordenesPendientes ? 'bg-amber-500' : 'bg-stone-300'
+                }`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-sm transition-transform duration-200 ${
+                  ordenesPendientes ? 'translate-x-5' : 'translate-x-0'
+                }`} />
+              </button>
+            </div>
+          </div>
+
+          {/* Avisos de Bloqueo */}
+          {avisoUbicacion && (
+            <div className="mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm font-medium flex items-start gap-2.5">
+              <svg className="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              <span>No puedes iniciar jornada sin registrar tu ubicación en La Molina. Activa el GPS primero.</span>
+            </div>
+          )}
+
+          {avisoOrdenes && (
+            <div className="mb-4 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-sm font-medium flex items-start gap-2.5">
+              <svg className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <span>No puedes cerrar la jornada con órdenes pendientes de entrega. Completa o cancela las órdenes primero.</span>
+            </div>
+          )}
+
+          {/* Botones de Acción */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* Botón Iniciar Jornada */}
+            <button
+              type="button"
+              onClick={iniciarJornada}
+              disabled={jornadaAbierta}
+              className={`py-3.5 px-4 rounded-xl font-bold text-sm shadow-md transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 ${
+                jornadaAbierta
+                  ? 'bg-stone-200 text-stone-400 cursor-not-allowed shadow-none'
+                  : 'bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white hover:shadow-lg'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Iniciar Jornada
+            </button>
+
+            {/* Botón Cerrar Jornada */}
+            <button
+              type="button"
+              onClick={cerrarJornada}
+              disabled={!jornadaAbierta}
+              className={`py-3.5 px-4 rounded-xl font-bold text-sm shadow-md transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 ${
+                !jornadaAbierta
+                  ? 'bg-stone-200 text-stone-400 cursor-not-allowed shadow-none'
+                  : 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white hover:shadow-lg'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+              </svg>
+              Cerrar Jornada
+            </button>
+          </div>
+
+          {/* Historial simulado */}
+          {(horaInicio || horaCierre) && (
+            <div className="mt-6 pt-5 border-t border-[#ebe3d9]">
+              <h3 className="text-xs font-bold text-[#9a8676] uppercase tracking-wider mb-3">Registro de actividad de hoy</h3>
+              <div className="space-y-2">
+                {horaInicio && (
+                  <div className="flex items-center gap-2.5 text-sm">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <span className="text-[#6b5443]">Jornada iniciada a las</span>
+                    <span className="font-mono font-bold text-emerald-700">{formatearHora(horaInicio)}</span>
+                  </div>
+                )}
+                {horaCierre && (
+                  <div className="flex items-center gap-2.5 text-sm">
+                    <span className="w-2 h-2 rounded-full bg-red-500" />
+                    <span className="text-[#6b5443]">Jornada cerrada a las</span>
+                    <span className="font-mono font-bold text-red-600">{formatearHora(horaCierre)}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="py-4 text-center text-xs text-[#9a8676]">
+        EMOLIVERY &copy; {new Date().getFullYear()} - Plataforma de Emolientes Tradicionales de Lima
+      </footer>
+    </div>
+  )
+}
