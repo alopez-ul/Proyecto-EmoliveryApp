@@ -1,0 +1,113 @@
+/* US23 - Panel del administrador. Usa las variables de color de index.css. */
+
+.panel-admin { height: 100vh; overflow-y: auto; background: var(--fondo); }
+
+.panel-admin-barra { justify-content: space-between; position: sticky; top: 0; }
+.panel-admin-marca { text-decoration: none; }
+.panel-admin-usuario { display: flex; align-items: center; gap: 14px; font-size: 0.9rem; color: var(--cafe-medio); }
+
+.panel-admin-contenido { max-width: 1040px; margin: 0 auto; padding: 32px 24px 48px; }
+.panel-admin-encabezado { margin-bottom: 20px; }
+.panel-admin-encabezado h2 { margin: 2px 0 4px; font-size: 1.6rem; letter-spacing: -0.02em; }
+.pa-etiqueta { margin: 0; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--caramelo); }
+.pa-ayuda { margin: 0; color: var(--cafe-medio); font-size: 0.92rem; line-height: 1.5; }
+
+/* Tarjeta y pestañas */
+.pa-tarjeta {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: calc(var(--radio) + 6px);
+  box-shadow: var(--sombra-md);
+  overflow: hidden;
+}
+.pa-pestanas { display: flex; gap: 4px; padding: 8px 8px 0; border-bottom: 1px solid var(--borde); }
+.pa-pestanas button {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border: none; border-bottom: 2px solid transparent;
+  background: none; font-weight: 600; color: var(--cafe-suave); cursor: pointer;
+}
+.pa-pestanas button:hover { color: var(--cafe); }
+.pa-pestanas button.is-activa { color: var(--caramelo); border-bottom-color: var(--caramelo); }
+.pa-contador {
+  min-width: 22px; padding: 1px 7px; border-radius: 999px;
+  background: var(--ambar-suave); color: var(--caramelo); font-size: 0.78rem; text-align: center;
+}
+
+/* Tabla */
+.pa-tabla { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+.pa-tabla th {
+  padding: 12px 18px; text-align: left; font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 0.03em; text-transform: uppercase; color: var(--cafe-suave); background: var(--crema);
+}
+.pa-tabla td { padding: 14px 18px; border-top: 1px solid var(--borde); vertical-align: middle; }
+.pa-tabla tbody tr:hover { background: #fdfaf6; }
+.pa-secundario { display: block; margin-top: 2px; font-size: 0.82rem; color: var(--cafe-suave); }
+.pa-mono { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+.pa-motivo { max-width: 320px; color: var(--cafe-medio); }
+.pa-acciones { white-space: nowrap; text-align: right; }
+.pa-acciones .pa-boton + .pa-boton { margin-left: 8px; }
+.pa-vacio { margin: 0; padding: 40px 18px; text-align: center; color: var(--cafe-suave); }
+
+.pa-insignia { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
+.pa-insignia.is-aprobado { background: #e5f2e7; color: var(--hierba); }
+.pa-insignia.is-rechazado { background: #fdecea; color: #9b2c1f; }
+
+/* Botones */
+.pa-boton {
+  padding: 8px 14px; border-radius: 9px; border: 1px solid transparent;
+  font: inherit; font-size: 0.88rem; font-weight: 600; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.pa-boton:disabled { opacity: 0.6; cursor: progress; }
+.pa-boton-secundario { background: var(--superficie); border-color: var(--borde-fuerte); color: var(--cafe); }
+.pa-boton-secundario:hover:not(:disabled) { background: var(--crema); }
+.pa-boton-aprobar { background: #e5f2e7; color: var(--hierba); }
+.pa-boton-aprobar:hover { background: #d5ead8; }
+.pa-boton-rechazar { background: var(--superficie); border-color: #f0c9c3; color: #9b2c1f; }
+.pa-boton-rechazar:hover { background: #fdecea; }
+.pa-boton-aprobar-solido { background: var(--hierba); color: #fff; }
+.pa-boton-aprobar-solido:hover:not(:disabled) { background: #265a30; }
+.pa-boton-rechazar-solido { background: #b3261e; color: #fff; }
+.pa-boton-rechazar-solido:hover:not(:disabled) { background: #96201a; }
+
+/* Alertas */
+.pa-alerta {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  margin-bottom: 16px; padding: 12px 14px; border-radius: 11px; font-size: 0.9rem;
+}
+.pa-alerta-exito { background: #e8f3e9; color: var(--hierba); }
+.pa-alerta-error { background: #fdecea; color: #9b2c1f; }
+.pa-cerrar-alerta { border: none; background: none; font-size: 1.2rem; line-height: 1; color: inherit; cursor: pointer; }
+
+/* Diálogo */
+.pa-dialogo {
+  width: min(480px, calc(100vw - 32px)); padding: 26px; border: none;
+  border-radius: calc(var(--radio) + 6px); background: var(--superficie); color: var(--cafe);
+  box-shadow: 0 24px 64px -16px rgba(43, 26, 15, 0.35);
+}
+.pa-dialogo::backdrop { background: rgba(43, 26, 15, 0.45); }
+.pa-dialogo h3 { margin: 0 0 8px; font-size: 1.25rem; letter-spacing: -0.01em; }
+.pa-dialogo .pa-ayuda { margin-bottom: 18px; }
+.pa-campo { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; font-size: 0.88rem; font-weight: 600; color: var(--cafe-medio); }
+.pa-campo textarea {
+  padding: 10px 12px; border: 1px solid var(--borde-fuerte); border-radius: 10px;
+  font: inherit; font-weight: 400; color: var(--cafe); resize: vertical;
+}
+.pa-campo textarea:focus { outline: none; border-color: var(--caramelo); box-shadow: 0 0 0 3px rgba(184, 88, 26, 0.12); }
+.pa-contador-texto { align-self: flex-end; font-weight: 400; }
+.pa-dialogo-acciones { display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px; }
+
+/* Celular: la tabla se apila como tarjetas */
+@media (max-width: 680px) {
+  .panel-admin-contenido { padding: 20px 14px 32px; }
+  .panel-admin-usuario span { display: none; }
+  .pa-tabla thead { display: none; }
+  .pa-tabla, .pa-tabla tbody, .pa-tabla tr, .pa-tabla td { display: block; width: 100%; }
+  .pa-tabla tr { padding: 10px 4px; border-top: 1px solid var(--borde); }
+  .pa-tabla td { padding: 6px 14px; border: none; }
+  .pa-tabla td[data-titulo]::before {
+    content: attr(data-titulo); display: block; font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; color: var(--cafe-suave);
+  }
+  .pa-acciones { text-align: left; }
+}
