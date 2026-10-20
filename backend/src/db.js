@@ -1,17 +1,21 @@
-import { readFile, writeFile } from 'node:fs/promises'
-import { fileURLToPath } from 'node:url'
+import pg from 'pg'
 
-const DB_PATH = fileURLToPath(new URL('../data/db.json', import.meta.url))
-
-// Persistencia simple en un archivo JSON. Reemplazar por una BD real más adelante.
-export async function readDb() {
-  return JSON.parse(await readFile(DB_PATH, 'utf-8'))
+// Conexión a Neon Postgres. DATABASE_URL es la cadena con pooling (PgBouncer), la adecuada
+// para el tráfico normal de la API. Se carga desde ../.env.local (lo genera `neon deploy`).
+if (!process.env.DATABASE_URL) {
+  console.error('Falta DATABASE_URL. Ejecuta `neon env pull` en la raíz del proyecto.')
+  process.exit(1)
 }
 
-export async function writeDb(db) {
-  await writeFile(DB_PATH, JSON.stringify(db, null, 2))
-}
+// NUMERIC llega como texto para no perder precisión; los montos de la app caben en un número JS.
+pg.types.setTypeParser(pg.types.builtins.NUMERIC, Number)
 
-export function nextId(items) {
-  return items.reduce((max, item) => Math.max(max, item.id), 0) + 1
+// Neon entrega sslmode=require; pg ya lo trata como verify-full y avisa que en v9 será más débil.
+// Se fija verify-full explícitamente para conservar la verificación completa del certificado.
+const connectionString = process.env.DATABASE_URL.replace('sslmode=require', 'sslmode=verify-full')
+
+export const pool = new pg.Pool({ connectionString, max: 10 })
+
+export function query(text, params) {
+  return pool.query(text, params)
 }
