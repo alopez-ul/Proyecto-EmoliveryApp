@@ -8,6 +8,8 @@ import adminRouter from './routes/admin.js'
 import notificacionesRouter from './routes/notificaciones.js'
 import ubicacionesRouter from './routes/ubicaciones.js'
 import emolienterosRouter from './routes/emolienteros.js'
+import clientesRouter from './routes/clientes.js'
+import jornadasRouter from './routes/jornadas.js'
 import { pool } from './db.js'
 
 // La app se crea aquí y se arranca en server.js, para que las pruebas puedan levantarla en otro puerto.
@@ -32,6 +34,8 @@ app.use('/api/admin', adminRouter)
 app.use('/api/notificaciones', notificacionesRouter)
 app.use('/api/ubicaciones', ubicacionesRouter)
 app.use('/api/emolienteros', emolienterosRouter)
+app.use('/api/clientes', clientesRouter)
+app.use('/api/jornadas', jornadasRouter)
 
 app.use((err, _req, res, _next) => {
   // JSON mal formado en el cuerpo de la petición

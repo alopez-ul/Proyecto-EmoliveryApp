@@ -49,6 +49,14 @@ export default function PanelRolPage({ rol }) {
       </p>
       <Notificaciones />
       {rol === 'emolientero' && <RegistroUbicacion />}
+      {rol === 'emolientero' && (
+        <a
+          href="#control-jornada"
+          style={{ ...estilos.botonSecundario, display: 'block', marginBottom: 12, textAlign: 'center', textDecoration: 'none' }}
+        >
+          Control de jornada (abrir o cerrar)
+        </a>
+      )}
       <button
         type="button"
         style={estilos.boton}

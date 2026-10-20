@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { registrarCliente } from '../services/registroService.js'
 
 export default function RegistroCliente() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ export default function RegistroCliente() {
   const [errores, setErrores] = useState({})
   const [enviado, setEnviado] = useState(false)
   const [cargando, setCargando] = useState(false)
+  const [errorGeneral, setErrorGeneral] = useState('')
 
   // Validaciones en tiempo real
   function validar(valores) {
@@ -68,8 +70,9 @@ export default function RegistroCliente() {
     setErrores(validar(formData))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setErrorGeneral('')
     setTouched({
       nombre: true,
       telefono: true,
@@ -82,14 +85,25 @@ export default function RegistroCliente() {
 
     if (Object.keys(errs).length === 0) {
       setCargando(true)
-      // Simulación de registro de cliente (Sprint 1 Frontend Mockup)
-      setTimeout(() => {
-        setCargando(false)
+      try {
+        // US01: crea la cuenta en la base de datos (Neon)
+        await registrarCliente({
+          nombre: formData.nombre,
+          telefono: formData.telefono,
+          correo: formData.correo,
+          password: formData.password,
+        })
         setEnviado(true)
         setTimeout(() => {
           window.location.hash = 'login'
         }, 2200)
-      }, 900)
+      } catch (err) {
+        // Errores del servidor por campo (p. ej. correo ya registrado) o un error general
+        if (err.campos) setErrores((prev) => ({ ...prev, ...err.campos }))
+        else setErrorGeneral(err.message)
+      } finally {
+        setCargando(false)
+      }
     }
   }
 
@@ -280,6 +294,12 @@ export default function RegistroCliente() {
                   </p>
                 )}
               </div>
+
+              {errorGeneral && (
+                <p role="alert" className="p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700 font-medium">
+                  {errorGeneral}
+                </p>
+              )}
 
               {/* Botón Submit */}
               <button

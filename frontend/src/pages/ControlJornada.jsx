@@ -1,44 +1,53 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { abrirJornada, cerrarJornada, estadoJornada } from '../services/jornadasService.js'
 
 // US06 - Apertura y Cierre de Jornada del Emolientero (Jorge Burga - Sprint 1)
-// Simulación frontend completa sin conexión a backend.
+// Conectado al backend: las jornadas se guardan en Neon (tabla jornadas). Para abrir se exige
+// una ubicación registrada hoy (US05). El módulo de órdenes aún no existe.
 
 export default function ControlJornada() {
-  const [jornadaAbierta, setJornadaAbierta] = useState(false)
-  const [ubicacionGPS, setUbicacionGPS] = useState(false)
-  const [ordenesPendientes, setOrdenesPendientes] = useState(false)
-  const [horaInicio, setHoraInicio] = useState(null)
-  const [horaCierre, setHoraCierre] = useState(null)
+  const [estado, setEstado] = useState(null) // { jornada, ubicacionHoy, jornadasHoy }
+  const [procesando, setProcesando] = useState(false)
+  const [error, setError] = useState('')
   const [avisoUbicacion, setAvisoUbicacion] = useState(false)
-  const [avisoOrdenes, setAvisoOrdenes] = useState(false)
+
+  const cargar = useCallback(() => {
+    estadoJornada()
+      .then(setEstado)
+      .catch((err) => setError(err.status === 403 ? 'Esta sección es solo para emolienteros.' : err.message))
+  }, [])
+
+  useEffect(cargar, [cargar])
+
+  const jornadaAbierta = Boolean(estado?.jornada)
+  const ubicacionGPS = Boolean(estado?.ubicacionHoy)
+  const ultima = estado?.jornadasHoy.at(-1)
+  const horaInicio = ultima ? new Date(ultima.abiertaEn) : null
+  const horaCierre = ultima?.cerradaEn ? new Date(ultima.cerradaEn) : null
 
   const formatearHora = (fecha) =>
     fecha
       ? fecha.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
       : '--:--:--'
 
-  const iniciarJornada = () => {
-    if (!ubicacionGPS) {
-      setAvisoUbicacion(true)
-      setTimeout(() => setAvisoUbicacion(false), 4000)
-      return
-    }
+  async function ejecutar(accion) {
+    setError('')
     setAvisoUbicacion(false)
-    setJornadaAbierta(true)
-    setHoraInicio(new Date())
-    setHoraCierre(null)
+    setProcesando(true)
+    try {
+      await accion()
+      cargar()
+    } catch (err) {
+      if (err.status === 422) setAvisoUbicacion(true)
+      else setError(err.message)
+      cargar()
+    } finally {
+      setProcesando(false)
+    }
   }
 
-  const cerrarJornada = () => {
-    if (ordenesPendientes) {
-      setAvisoOrdenes(true)
-      setTimeout(() => setAvisoOrdenes(false), 4000)
-      return
-    }
-    setAvisoOrdenes(false)
-    setJornadaAbierta(false)
-    setHoraCierre(new Date())
-  }
+  const iniciarJornada = () => ejecutar(abrirJornada)
+  const cerrarJornadaActual = () => ejecutar(cerrarJornada)
 
   return (
     <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col">
@@ -128,30 +137,24 @@ export default function ControlJornada() {
                 <div>
                   <p className="text-sm font-bold text-[#2b1a0f]">Ubicación GPS registrada</p>
                   <p className="text-xs text-[#9a8676]">
-                    {ubicacionGPS ? 'Zona: La Molina, Lima' : 'Sin ubicación activa'}
+                    {ubicacionGPS
+                      ? `Hoy a las ${formatearHora(new Date(estado.ubicacionHoy.registradaEn))} · La Molina`
+                      : 'Aún no registras tu ubicación hoy'}
                   </p>
                 </div>
               </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={ubicacionGPS}
-                onClick={() => { setUbicacionGPS(!ubicacionGPS); setAvisoUbicacion(false) }}
-                className={`relative w-12 h-7 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-amber-200 ${
-                  ubicacionGPS ? 'bg-emerald-500' : 'bg-stone-300'
-                }`}
-              >
-                <span className={`absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-sm transition-transform duration-200 ${
-                  ubicacionGPS ? 'translate-x-5' : 'translate-x-0'
-                }`} />
-              </button>
+              {ubicacionGPS ? (
+                <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">Registrada</span>
+              ) : (
+                <a href="#emolientero" className="text-xs font-bold text-[#b8581a] hover:underline">Registrar ubicación</a>
+              )}
             </div>
 
             {/* Toggle Órdenes Pendientes */}
             <div className="flex items-center justify-between p-4 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9]">
               <div className="flex items-center gap-3">
                 <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                  ordenesPendientes ? 'bg-amber-100 text-amber-600' : 'bg-stone-100 text-stone-400'
+                  'bg-stone-100 text-stone-400'
                 }`}>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
@@ -160,23 +163,11 @@ export default function ControlJornada() {
                 <div>
                   <p className="text-sm font-bold text-[#2b1a0f]">Órdenes pendientes de entrega</p>
                   <p className="text-xs text-[#9a8676]">
-                    {ordenesPendientes ? '3 órdenes sin completar (simulado)' : 'Sin órdenes pendientes'}
+                    Sin órdenes pendientes (el módulo de órdenes aún no está disponible)
                   </p>
                 </div>
               </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={ordenesPendientes}
-                onClick={() => { setOrdenesPendientes(!ordenesPendientes); setAvisoOrdenes(false) }}
-                className={`relative w-12 h-7 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-amber-200 ${
-                  ordenesPendientes ? 'bg-amber-500' : 'bg-stone-300'
-                }`}
-              >
-                <span className={`absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-sm transition-transform duration-200 ${
-                  ordenesPendientes ? 'translate-x-5' : 'translate-x-0'
-                }`} />
-              </button>
+
             </div>
           </div>
 
@@ -186,16 +177,16 @@ export default function ControlJornada() {
               <svg className="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
-              <span>No puedes iniciar jornada sin registrar tu ubicación en La Molina. Activa el GPS primero.</span>
+              <span>
+                No puedes iniciar jornada sin registrar tu ubicación en La Molina.{' '}
+                <a href="#emolientero" className="underline font-bold">Regístrala desde tu panel</a>.
+              </span>
             </div>
           )}
 
-          {avisoOrdenes && (
-            <div className="mb-4 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-sm font-medium flex items-start gap-2.5">
-              <svg className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-              <span>No puedes cerrar la jornada con órdenes pendientes de entrega. Completa o cancela las órdenes primero.</span>
+          {error && (
+            <div role="alert" className="mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm font-medium">
+              {error}
             </div>
           )}
 
@@ -205,9 +196,9 @@ export default function ControlJornada() {
             <button
               type="button"
               onClick={iniciarJornada}
-              disabled={jornadaAbierta}
+              disabled={!estado || jornadaAbierta || procesando}
               className={`py-3.5 px-4 rounded-xl font-bold text-sm shadow-md transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 ${
-                jornadaAbierta
+                !estado || jornadaAbierta
                   ? 'bg-stone-200 text-stone-400 cursor-not-allowed shadow-none'
                   : 'bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white hover:shadow-lg'
               }`}
@@ -222,8 +213,8 @@ export default function ControlJornada() {
             {/* Botón Cerrar Jornada */}
             <button
               type="button"
-              onClick={cerrarJornada}
-              disabled={!jornadaAbierta}
+              onClick={cerrarJornadaActual}
+              disabled={!jornadaAbierta || procesando}
               className={`py-3.5 px-4 rounded-xl font-bold text-sm shadow-md transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 ${
                 !jornadaAbierta
                   ? 'bg-stone-200 text-stone-400 cursor-not-allowed shadow-none'
@@ -238,25 +229,25 @@ export default function ControlJornada() {
             </button>
           </div>
 
-          {/* Historial simulado */}
-          {(horaInicio || horaCierre) && (
+          {/* Registro de actividad de hoy (desde la base de datos) */}
+          {estado?.jornadasHoy.length > 0 && (
             <div className="mt-6 pt-5 border-t border-[#ebe3d9]">
               <h3 className="text-xs font-bold text-[#9a8676] uppercase tracking-wider mb-3">Registro de actividad de hoy</h3>
               <div className="space-y-2">
-                {horaInicio && (
-                  <div className="flex items-center gap-2.5 text-sm">
+                {estado.jornadasHoy.flatMap((j) => [
+                  <div key={`a${j.id}`} className="flex items-center gap-2.5 text-sm">
                     <span className="w-2 h-2 rounded-full bg-emerald-500" />
                     <span className="text-[#6b5443]">Jornada iniciada a las</span>
-                    <span className="font-mono font-bold text-emerald-700">{formatearHora(horaInicio)}</span>
-                  </div>
-                )}
-                {horaCierre && (
-                  <div className="flex items-center gap-2.5 text-sm">
-                    <span className="w-2 h-2 rounded-full bg-red-500" />
-                    <span className="text-[#6b5443]">Jornada cerrada a las</span>
-                    <span className="font-mono font-bold text-red-600">{formatearHora(horaCierre)}</span>
-                  </div>
-                )}
+                    <span className="font-mono font-bold text-emerald-700">{formatearHora(new Date(j.abiertaEn))}</span>
+                  </div>,
+                  j.cerradaEn && (
+                    <div key={`c${j.id}`} className="flex items-center gap-2.5 text-sm">
+                      <span className="w-2 h-2 rounded-full bg-red-500" />
+                      <span className="text-[#6b5443]">Jornada cerrada a las</span>
+                      <span className="font-mono font-bold text-red-600">{formatearHora(new Date(j.cerradaEn))}</span>
+                    </div>
+                  ),
+                ])}
               </div>
             </div>
           )}

@@ -80,6 +80,10 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | GET    | /api/auth/recuperar/:token | US04: indica si el enlace sigue vigente |
 | POST   | /api/auth/nueva-password | US04: define la nueva contraseña `{token, password}` |
 | POST   | /api/emolienteros/registro | US02: registra un emolientero `{nombreNegocio, dni, codigoMunicipal, telefono, correo, password}` en `pendiente_verificacion` y notifica a los admins. 400 con `campos` si hay datos inválidos; 409 si el DNI, el código o el correo ya existen |
+| POST   | /api/clientes/registro   | US01: registra un cliente `{nombre, telefono, correo, password}` como `activo`. 400 con `campos` si hay datos inválidos; 409 si el correo ya existe |
+| GET    | /api/jornadas/estado     | US06: jornada abierta, ubicación de hoy y jornadas de hoy (solo emolientero) |
+| POST   | /api/jornadas/abrir      | US06: abre la jornada; exige ubicación registrada hoy (422 si no) y una sola abierta (409) |
+| POST   | /api/jornadas/cerrar     | US06: cierra la jornada abierta (409 si no hay) |
 | GET    | /api/admin/emolienteros/pendientes | US23: bandeja de emolienteros por verificar (solo admin) |
 | GET    | /api/admin/emolienteros/historial  | US23: decisiones tomadas (solo admin) |
 | POST   | /api/admin/emolienteros/:id/aprobar  | US23: aprueba → cuenta `activo` y notifica (solo admin) |
