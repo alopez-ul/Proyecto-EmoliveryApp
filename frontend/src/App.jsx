@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import MainPage from './pages/MainPage.jsx'
 import Login from './pages/Login.jsx'
 import RegistroCliente from './pages/RegistroCliente.jsx'
-import RegistroEmolientero from './pages/RegistroEmolientero.jsx'
+import ControlJornada from './pages/ControlJornada.jsx'
 import RecuperarPage from './pages/RecuperarPage.jsx'
 import NuevaPasswordPage from './pages/NuevaPasswordPage.jsx'
 import PanelRolPage from './pages/PanelRolPage.jsx'
@@ -29,17 +29,20 @@ export default function App() {
     }
   }, [])
 
-  // Rutas del Sprint 1 (Módulo de Identidad y Autenticación)
-  if (ruta === 'login') {
-    return <Login key={window.location.hash || window.location.pathname} />
-  }
-
+  // Rutas del Sprint 1 - Responsabilidades de Jorge Burga
+  // US01: Registro de cliente
   if (ruta === 'registro-cliente' || ruta === 'registro') {
     return <RegistroCliente key={window.location.hash || window.location.pathname} />
   }
 
-  if (ruta === 'registro-emolientero') {
-    return <RegistroEmolientero key={window.location.hash || window.location.pathname} />
+  // US06: Apertura y Cierre de Jornada
+  if (ruta === 'control-jornada') {
+    return <ControlJornada key={window.location.hash || window.location.pathname} />
+  }
+
+  // Rutas compartidas del equipo
+  if (ruta === 'login') {
+    return <Login key={window.location.hash || window.location.pathname} />
   }
 
   // Rutas existentes de recuperación y paneles
