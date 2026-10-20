@@ -6,6 +6,7 @@ import ventasRouter from './routes/ventas.js'
 import authRouter from './routes/auth.js'
 import adminRouter from './routes/admin.js'
 import notificacionesRouter from './routes/notificaciones.js'
+import emolienterosRouter from './routes/emolienteros.js'
 import { pool } from './db.js'
 
 // La app se crea aquí y se arranca en server.js, para que las pruebas puedan levantarla en otro puerto.
@@ -28,12 +29,13 @@ app.use('/api/ventas', ventasRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/notificaciones', notificacionesRouter)
+app.use('/api/emolienteros', emolienterosRouter)
 
 app.use((err, _req, res, _next) => {
   // JSON mal formado en el cuerpo de la petición
   if (err.type === 'entity.parse.failed') return res.status(400).json({ error: 'JSON inválido' })
   // Errores esperados que ya traen su código HTTP (401, 403, 410...)
-  if (err.status) return res.status(err.status).json({ error: err.message })
+  if (err.status) return res.status(err.status).json({ error: err.message, ...(err.campos && { campos: err.campos }) })
   // Clases 22 (dato inválido) y 23 (restricción violada) de Postgres: es un error del cliente
   if (/^2[23]/.test(err.code ?? '')) {
     console.warn(`Datos inválidos (${err.code}): ${err.message}`)

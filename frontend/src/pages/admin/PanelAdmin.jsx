@@ -154,6 +154,7 @@ function BandejaPendientes({ pendientes, onDecidir }) {
         <tr>
           <th>Emolientero</th>
           <th>DNI</th>
+          <th>Autorización municipal</th>
           <th>Registrado</th>
           <th aria-label="Acciones" />
         </tr>
@@ -166,6 +167,7 @@ function BandejaPendientes({ pendientes, onDecidir }) {
               <span className="pa-secundario">{e.correo}</span>
             </td>
             <td data-titulo="DNI" className="pa-mono">{e.dni ?? '—'}</td>
+            <td data-titulo="Autorización municipal" className="pa-mono">{e.codigoMunicipal ?? '—'}</td>
             <td data-titulo="Registrado">{fecha(e.creadoEn)}</td>
             <td className="pa-acciones">
               <button type="button" className="pa-boton pa-boton-aprobar" onClick={() => onDecidir('aprobar', e)}>

@@ -1,4 +1,18 @@
 import { useState } from 'react'
+import { registrarEmolientero } from '../services/registroService.js'
+
+// Mismo formato que backend/src/validaciones/emolientero.js (el backend es el que decide).
+const CODIGO_MUNICIPAL = /^MLM-(\d{4})-(\d{5})$/
+
+const TODOS_TOCADOS = {
+  nombreNegocio: true,
+  dni: true,
+  codigoMunicipal: true,
+  telefono: true,
+  correo: true,
+  password: true,
+  confirmarPassword: true,
+}
 
 export default function RegistroEmolientero() {
   const [formData, setFormData] = useState({
@@ -13,8 +27,9 @@ export default function RegistroEmolientero() {
 
   const [touched, setTouched] = useState({})
   const [errores, setErrores] = useState({})
-  const [enviado, setEnviado] = useState(false)
+  const [enviado, setEnviado] = useState(null)
   const [cargando, setCargando] = useState(false)
+  const [errorServidor, setErrorServidor] = useState('')
 
   function validar(valores) {
     const errs = {}
@@ -23,6 +38,8 @@ export default function RegistroEmolientero() {
       errs.nombreNegocio = 'El nombre del titular o negocio es obligatorio.'
     } else if (valores.nombreNegocio.trim().length < 3) {
       errs.nombreNegocio = 'Ingresa al menos 3 caracteres.'
+    } else if (valores.nombreNegocio.trim().length > 100) {
+      errs.nombreNegocio = 'Ingresa como máximo 100 caracteres.'
     }
 
     if (!valores.dni.trim()) {
@@ -31,10 +48,16 @@ export default function RegistroEmolientero() {
       errs.dni = 'El DNI debe contener exactamente 8 dígitos numéricos.'
     }
 
+    const partesCodigo = CODIGO_MUNICIPAL.exec(valores.codigoMunicipal.trim())
+    const añoActual = new Date().getFullYear()
     if (!valores.codigoMunicipal.trim()) {
       errs.codigoMunicipal = 'El código de autorización municipal es obligatorio.'
-    } else if (valores.codigoMunicipal.trim().length < 6) {
-      errs.codigoMunicipal = 'Formato sugerido: MUN-2024-XXXX (mínimo 6 caracteres).'
+    } else if (!partesCodigo) {
+      errs.codigoMunicipal = 'El código debe tener el formato MLM-AAAA-NNNNN (por ejemplo, MLM-2025-00123).'
+    } else if (Number(partesCodigo[1]) < 2000 || Number(partesCodigo[1]) > añoActual) {
+      errs.codigoMunicipal = `El año del código debe estar entre 2000 y ${añoActual}.`
+    } else if (partesCodigo[2] === '00000') {
+      errs.codigoMunicipal = 'El correlativo del código no puede ser 00000.'
     }
 
     if (!valores.telefono.trim()) {
@@ -67,7 +90,8 @@ export default function RegistroEmolientero() {
   }
 
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name } = e.target
+    const value = name === 'codigoMunicipal' ? e.target.value.toUpperCase() : e.target.value
     const nuevos = { ...formData, [name]: value }
     setFormData(nuevos)
     if (touched[name]) {
@@ -81,27 +105,32 @@ export default function RegistroEmolientero() {
     setErrores(validar(formData))
   }
 
-  const handleSubmit = (e) => {
+  const enfocar = (errs) => {
+    const primero = Object.keys(TODOS_TOCADOS).find((campo) => errs[campo])
+    if (primero) document.getElementById(primero)?.focus()
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setTouched({
-      nombreNegocio: true,
-      dni: true,
-      codigoMunicipal: true,
-      telefono: true,
-      correo: true,
-      password: true,
-      confirmarPassword: true,
-    })
+    setTouched(TODOS_TOCADOS)
+    setErrorServidor('')
     const errs = validar(formData)
     setErrores(errs)
+    if (Object.keys(errs).length) return enfocar(errs)
 
-    if (Object.keys(errs).length === 0) {
-      setCargando(true)
-      // Simulación de envío de solicitud para verificación municipal
-      setTimeout(() => {
-        setCargando(false)
-        setEnviado(true)
-      }, 1000)
+    setCargando(true)
+    try {
+      const { confirmarPassword, ...datos } = formData
+      setEnviado(await registrarEmolientero(datos))
+    } catch (err) {
+      // Errores por campo del servidor (p. ej. DNI ya registrado) se muestran bajo cada campo
+      if (err.campos) {
+        setErrores(err.campos)
+        enfocar(err.campos)
+      }
+      setErrorServidor(err.message)
+    } finally {
+      setCargando(false)
     }
   }
 
@@ -171,13 +200,13 @@ export default function RegistroEmolientero() {
               </div>
               <h3 className="font-bold text-xl text-[#2b1a0f] mb-2">¡Solicitud recibida satisfactoriamente!</h3>
               <p className="text-sm text-[#6b5443] mb-4">
-                El puesto <strong>{formData.nombreNegocio}</strong> (DNI: {formData.dni}) ha sido registrado con estado{' '}
+                El puesto <strong>{enviado.nombre}</strong> (DNI: {formData.dni}) ha sido registrado con estado{' '}
                 <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-900 border border-amber-300">
                   Pendiente de verificación municipal
                 </span>.
               </p>
               <p className="text-xs text-[#9a8676] mb-6">
-                Te notificaremos a <strong>{formData.correo}</strong> en cuanto la municipalidad y el administrador aprueben tu autorización <strong>{formData.codigoMunicipal}</strong>.
+                El administrador ya fue notificado. Te avisaremos a <strong>{enviado.correo}</strong> en cuanto apruebe tu autorización <strong>{enviado.codigoMunicipal}</strong>.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <a
@@ -196,6 +225,11 @@ export default function RegistroEmolientero() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate className="space-y-4">
+              {errorServidor && (
+                <div role="alert" className="p-3 rounded-xl border border-red-300 bg-red-50 text-sm font-semibold text-red-700">
+                  ⚠ {errorServidor}
+                </div>
+              )}
               {/* Nombre del Titular / Negocio */}
               <div>
                 <label htmlFor="nombreNegocio" className="block text-xs font-bold text-[#6b5443] uppercase tracking-wider mb-1.5">
@@ -258,7 +292,10 @@ export default function RegistroEmolientero() {
                     id="codigoMunicipal"
                     name="codigoMunicipal"
                     type="text"
-                    placeholder="MUN-2024-890"
+                    placeholder="MLM-2025-00123"
+                    maxLength={14}
+                    autoComplete="off"
+                    spellCheck={false}
                     value={formData.codigoMunicipal}
                     onChange={handleChange}
                     onBlur={handleBlur}
