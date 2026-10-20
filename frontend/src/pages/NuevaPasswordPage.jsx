@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AuthCard, { estilos, parametroHash } from '../components/AuthCard.jsx'
 import { definirNuevaPassword, validarEnlace, validarPassword } from '../services/authService.js'
 
-function errorDelEnlace(token) {
+async function errorDelEnlace(token) {
   try {
-    validarEnlace(token)
+    await validarEnlace(token)
     return ''
   } catch (err) {
     return err.message
@@ -14,7 +14,12 @@ function errorDelEnlace(token) {
 // US04 - Recuperación de contraseña (T16 pantalla de definición de nueva contraseña)
 export default function NuevaPasswordPage() {
   const token = parametroHash('token') || ''
-  const [errorEnlace, setErrorEnlace] = useState(() => errorDelEnlace(token))
+  // null mientras se consulta al servidor si el enlace sigue vigente
+  const [errorEnlace, setErrorEnlace] = useState(null)
+
+  useEffect(() => {
+    errorDelEnlace(token).then(setErrorEnlace)
+  }, [token])
   const [password, setPassword] = useState('')
   const [confirmacion, setConfirmacion] = useState('')
   const [error, setError] = useState('')
@@ -32,10 +37,14 @@ export default function NuevaPasswordPage() {
       window.location.hash = 'login?cambio=ok'
     } catch (err) {
       // El enlace pudo vencer o usarse mientras la pantalla estaba abierta.
-      setErrorEnlace(errorDelEnlace(token) || '')
+      setErrorEnlace(await errorDelEnlace(token))
       setError(err.message)
       setCargando(false)
     }
+  }
+
+  if (errorEnlace === null) {
+    return <AuthCard titulo="Nueva contraseña" subtitulo="Verificando el enlace…" />
   }
 
   if (errorEnlace) {

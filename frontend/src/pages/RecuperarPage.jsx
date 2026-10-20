@@ -19,11 +19,16 @@ export default function RecuperarPage() {
     if (!CORREO_VALIDO.test(correo.trim())) return setErrorCampo('Ingresa un correo válido.')
     setErrorCampo('')
     setCargando(true)
-    const resultado = await solicitarRecuperacion(correo)
-    setBuzon(resultado)
-    setVencido(false)
-    setEnviado(true)
-    setCargando(false)
+    try {
+      const resultado = await solicitarRecuperacion(correo)
+      setBuzon(resultado)
+      setVencido(false)
+      setEnviado(true)
+    } catch (err) {
+      setErrorCampo(err.message)
+    } finally {
+      setCargando(false)
+    }
   }
 
   return (
@@ -79,8 +84,8 @@ export default function RecuperarPage() {
             type="button"
             style={estilos.botonSecundario}
             disabled={vencido}
-            onClick={() => {
-              forzarVencimiento(buzon.token)
+            onClick={async () => {
+              await forzarVencimiento(buzon.token)
               setVencido(true)
             }}
           >

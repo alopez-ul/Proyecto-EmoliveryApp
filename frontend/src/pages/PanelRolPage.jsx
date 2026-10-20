@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import AuthCard, { estilos } from '../components/AuthCard.jsx'
-import { cerrarSesion, usuarioActual } from '../services/authService.js'
+import { cerrarSesion, verificarSesion } from '../services/authService.js'
 
 const PANELES = {
   cliente: 'Panel del cliente',
@@ -11,14 +11,25 @@ const PANELES = {
 // US03 - T12: destino de la redirección por rol.
 // Es un panel de prueba; el contenido real de cada panel corresponde a otras historias.
 export default function PanelRolPage({ rol }) {
-  const usuario = usuarioActual()
-  const destino = !usuario ? 'login' : usuario.rol !== rol ? usuario.rol : null
+  const [usuario, setUsuario] = useState(null)
 
+  // El servidor confirma la sesión (firma del token, vigencia, cuenta activa) y su rol real.
+  // Se repite al cambiar de rol: al pasar de #cliente a #admin React reutiliza este componente.
   useEffect(() => {
-    if (destino) window.location.hash = destino
-  }, [destino])
+    let vigente = true
+    setUsuario(null)
+    verificarSesion().then((u) => {
+      if (!vigente) return
+      if (!u) window.location.hash = 'login'
+      else if (u.rol !== rol) window.location.hash = u.rol
+      else setUsuario(u)
+    })
+    return () => {
+      vigente = false
+    }
+  }, [rol])
 
-  if (destino) return null
+  if (!usuario) return <AuthCard titulo={PANELES[rol]} subtitulo="Verificando tu sesión…" />
 
   return (
     <AuthCard titulo={PANELES[rol]} subtitulo={`Hola, ${usuario.nombre}.`}>
