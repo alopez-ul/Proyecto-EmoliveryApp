@@ -6,6 +6,7 @@ import ventasRouter from './routes/ventas.js'
 import authRouter from './routes/auth.js'
 import adminRouter from './routes/admin.js'
 import notificacionesRouter from './routes/notificaciones.js'
+import ubicacionesRouter from './routes/ubicaciones.js'
 import { pool } from './db.js'
 
 // La app se crea aquí y se arranca en server.js, para que las pruebas puedan levantarla en otro puerto.
@@ -28,6 +29,7 @@ app.use('/api/ventas', ventasRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/notificaciones', notificacionesRouter)
+app.use('/api/ubicaciones', ubicacionesRouter)
 
 app.use((err, _req, res, _next) => {
   // JSON mal formado en el cuerpo de la petición
