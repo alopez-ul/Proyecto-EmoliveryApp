@@ -22,21 +22,27 @@
   --font: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
-* { box-sizing: border-box; }
+/* Estilos globales de elementos en la capa "base" de Tailwind: así las clases de Tailwind
+   (p. ej. text-white o font-bold en las pantallas de registro) pueden sobrescribirlos. */
+@layer base {
+  * { box-sizing: border-box; }
 
-html, body, #root { height: 100%; margin: 0; }
+  html, body, #root { height: 100%; margin: 0; }
 
-body {
-  background: var(--fondo);
-  color: var(--cafe);
-  font-family: var(--font);
-  -webkit-font-smoothing: antialiased;
-  overflow: hidden;
+  body {
+    background: var(--fondo);
+    color: var(--cafe);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* El reinicio de Tailwind deja los títulos sin negrita; se restaura como estaba antes. */
+  h1, h2, h3, h4 { font-weight: 700; }
+
+  button { font: inherit; color: inherit; }
+
+  :focus-visible { outline: 2px solid var(--caramelo); outline-offset: 2px; }
 }
-
-button { font: inherit; color: inherit; }
-
-:focus-visible { outline: 2px solid var(--caramelo); outline-offset: 2px; }
 
 /* ---------- Layout ---------- */
 .main-page {
