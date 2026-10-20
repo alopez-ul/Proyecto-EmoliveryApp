@@ -79,6 +79,7 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | POST   | /api/auth/recuperar      | US04: genera un enlace de recuperación `{correo}` (respuesta igual exista o no el correo) |
 | GET    | /api/auth/recuperar/:token | US04: indica si el enlace sigue vigente |
 | POST   | /api/auth/nueva-password | US04: define la nueva contraseña `{token, password}` |
+| POST   | /api/emolienteros/registro | US02: registra un emolientero `{nombreNegocio, dni, codigoMunicipal, telefono, correo, password}` en `pendiente_verificacion` y notifica a los admins. 400 con `campos` si hay datos inválidos; 409 si el DNI, el código o el correo ya existen |
 | GET    | /api/admin/emolienteros/pendientes | US23: bandeja de emolienteros por verificar (solo admin) |
 | GET    | /api/admin/emolienteros/historial  | US23: decisiones tomadas (solo admin) |
 | POST   | /api/admin/emolienteros/:id/aprobar  | US23: aprueba → cuenta `activo` y notifica (solo admin) |
@@ -93,6 +94,13 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | GET    | /api/ventas?puntoId=     | Lista ventas (opcionalmente por punto) |
 | POST   | /api/ventas              | Registra una venta `{puntoId, productoId, cantidad}` |
 | GET    | /api/ventas/resumen      | Métricas de ventas                   |
+
+## Registro de emolientero (US02)
+
+- El código de autorización municipal de La Molina tiene el formato `MLM-AAAA-NNNNN` (año entre 2000 y el actual, correlativo distinto de 00000). La regla vive en `backend/src/validaciones/emolientero.js`.
+- DNI, código municipal y correo son únicos. Se revisan antes de insertar, y los índices únicos de la BD resuelven los registros simultáneos.
+- La cuenta y el aviso a cada administrador activo se crean en una sola transacción. El aviso se ve en las notificaciones del panel del admin.
+- `npm test` incluye las pruebas de T09: DNI duplicado y código inválido, contra la BD de `.env.local`.
 
 ## Base de datos
 

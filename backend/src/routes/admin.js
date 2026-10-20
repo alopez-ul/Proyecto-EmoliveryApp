@@ -32,7 +32,7 @@ const MENSAJES = {
 // T28: bandeja de registros pendientes, del más antiguo al más reciente.
 router.get('/emolienteros/pendientes', async (_req, res) => {
   const { rows } = await query(
-    `SELECT id, nombre, correo, dni, creado_en AS "creadoEn"
+    `SELECT id, nombre, correo, dni, codigo_municipal AS "codigoMunicipal", telefono, creado_en AS "creadoEn"
      FROM usuarios
      WHERE rol = 'emolientero' AND estado = $1
      ORDER BY creado_en`,

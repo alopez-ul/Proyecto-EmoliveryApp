@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import MainPage from './pages/MainPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import RegistroCliente from './pages/RegistroCliente.jsx'
+import RegistroEmolientero from './pages/RegistroEmolientero.jsx'
 import ControlJornada from './pages/ControlJornada.jsx'
 import RecuperarPage from './pages/RecuperarPage.jsx'
 import NuevaPasswordPage from './pages/NuevaPasswordPage.jsx'
@@ -33,6 +34,11 @@ export default function App() {
   // US01: Registro de cliente
   if (ruta === 'registro-cliente' || ruta === 'registro') {
     return <RegistroCliente key={window.location.hash || window.location.pathname} />
+  }
+
+  // US02: Registro de emolientero (Renzo)
+  if (ruta === 'registro-emolientero') {
+    return <RegistroEmolientero key={window.location.hash || window.location.pathname} />
   }
 
   // US06: Apertura y Cierre de Jornada
