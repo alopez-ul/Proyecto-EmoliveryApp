@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import MainPage from './pages/MainPage.jsx'
-import Login from './pages/Login.jsx'
+import LoginPage from './pages/LoginPage.jsx'
 import RegistroCliente from './pages/RegistroCliente.jsx'
 import ControlJornada from './pages/ControlJornada.jsx'
 import RecuperarPage from './pages/RecuperarPage.jsx'
@@ -29,7 +29,7 @@ export default function App() {
     }
   }, [])
 
-  // Rutas del Sprint 1 - Responsabilidades de Jorge Burga
+  // Rutas del Sprint 1 - Responsabilidades exclusivas de Jorge Burga
   // US01: Registro de cliente
   if (ruta === 'registro-cliente' || ruta === 'registro') {
     return <RegistroCliente key={window.location.hash || window.location.pathname} />
@@ -40,9 +40,9 @@ export default function App() {
     return <ControlJornada key={window.location.hash || window.location.pathname} />
   }
 
-  // Rutas compartidas del equipo
+  // Rutas del equipo (US03 / US04 - Matías)
   if (ruta === 'login') {
-    return <Login key={window.location.hash || window.location.pathname} />
+    return <LoginPage key={window.location.hash} />
   }
 
   // Rutas existentes de recuperación y paneles
