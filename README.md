@@ -90,6 +90,9 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | GET    | /api/puntos-habituales   | US10: puntos habituales del emolientero con sesión, por día y hora |
 | POST   | /api/puntos-habituales   | US10: registra `{referencia, lat, lng, diaSemana (1=lunes…7=domingo), horaInicio, horaFin ("HH:MM")}`. 400 con `campos` si hay datos inválidos (p. ej. fin no posterior al inicio); 409 si se cruza con otro punto suyo del mismo día |
 | DELETE | /api/puntos-habituales/:id | US10: elimina un punto propio (404 si no existe o es de otro) |
+| GET    | /api/catalogo            | US11: catálogo del emolientero con sesión, por categoría y nombre |
+| POST   | /api/catalogo            | US11: agrega un producto `{nombre, categoria ("emoliente", "bebida" o "acompanamiento"), precio, disponible}`. 400 con `campos` si hay datos inválidos; 409 si ya tiene un producto con ese nombre |
+| PATCH  | /api/catalogo/:id        | US11: edita un producto propio (mismos campos y reglas; 404 si no existe o es de otro) |
 | GET    | /api/ubicaciones/estimadas | US10: ubicación aproximada (`fuente: horario_habitual`, 300 m) de los emolienteros **sin** jornada abierta que suelen estar en un punto a esta hora (público, para el mapa) |
 | GET    | /api/admin/emolienteros/pendientes | US23: bandeja de emolienteros por verificar (solo admin) |
 | GET    | /api/admin/emolienteros/historial  | US23: decisiones tomadas (solo admin) |

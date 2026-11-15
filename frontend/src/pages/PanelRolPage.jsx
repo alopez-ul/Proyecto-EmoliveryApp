@@ -65,6 +65,14 @@ export default function PanelRolPage({ rol }) {
           Mis puntos habituales (zona, día y horario)
         </a>
       )}
+      {rol === 'emolientero' && (
+        <a
+          href="#mi-catalogo"
+          style={{ ...estilos.botonSecundario, display: 'block', marginBottom: 12, textAlign: 'center', textDecoration: 'none' }}
+        >
+          Mi catálogo (productos y precios)
+        </a>
+      )}
       <button
         type="button"
         style={estilos.boton}
