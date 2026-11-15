@@ -21,6 +21,7 @@ export default function MainPage() {
         setUbicaciones(
           lista.map((u) => ({
             id: `ubicacion-${u.id}`,
+            emolienteroId: u.emolienteroId,
             nombre: u.nombre,
             lat: u.lat,
             lng: u.lng,
@@ -41,6 +42,7 @@ export default function MainPage() {
         setEstimadas(
           lista.map((u) => ({
             id: `estimada-${u.id}`,
+            emolienteroId: u.emolienteroId,
             nombre: u.nombre,
             lat: u.lat,
             lng: u.lng,
@@ -65,7 +67,10 @@ export default function MainPage() {
         <MapaLima
           puntos={[...puntos, ...ubicaciones, ...estimadas]}
           seleccionado={null}
-          onSelect={() => {}}
+          // US12: al tocar un emolientero se abre su catálogo
+          onSelect={(p) => {
+            if (p.emolienteroId) window.location.hash = `catalogo?id=${p.emolienteroId}`
+          }}
           modoRegistro={false}
           borrador={null}
           onPick={() => {}}

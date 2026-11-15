@@ -1,14 +1,18 @@
 // US11 - T51: validación de un producto del catálogo (precio, categoría obligatoria y nombre único).
 // Es la que decide; el frontend repite estas reglas solo para avisar antes de enviar.
 
-// Clave guardada en la BD → nombre que se muestra. Debe coincidir con el CHECK de 009_catalogo.sql.
+// Clave guardada en la BD → nombre que se muestra, en el orden en que la vista pública (US12) las agrupa.
+// Debe coincidir con el CHECK de 011_catalogo_unificado.sql.
 export const CATEGORIAS = {
   emoliente: 'Emolientes',
+  quinua_avena: 'Quinua y avena',
+  maca: 'Maca',
   bebida: 'Otras bebidas',
   acompanamiento: 'Acompañamientos',
 }
 
 export const PRECIO_MAXIMO = 100
+export const DESCRIPCION_MAXIMA = 200
 
 // true si el número tiene como máximo dos decimales (céntimos): 2.5 y 2.50 sí, 2.555 no.
 const tieneCentimos = (n) => Math.abs(n * 100 - Math.round(n * 100)) < 1e-9
@@ -17,6 +21,8 @@ const tieneCentimos = (n) => Math.abs(n * 100 - Math.round(n * 100)) < 1e-9
 export function validarProducto(body) {
   const datos = {
     nombre: typeof body?.nombre === 'string' ? body.nombre.trim().replace(/\s+/g, ' ') : '',
+    // Opcional (US12 la muestra en la vista pública).
+    descripcion: typeof body?.descripcion === 'string' ? body.descripcion.trim().replace(/\s+/g, ' ') : body?.descripcion ?? '',
     categoria: body?.categoria,
     precio: body?.precio,
     disponible: body?.disponible ?? true,
@@ -25,6 +31,9 @@ export function validarProducto(body) {
 
   if (datos.nombre.length < 3 || datos.nombre.length > 60) {
     errores.nombre = 'El nombre debe tener entre 3 y 60 caracteres.'
+  }
+  if (typeof datos.descripcion !== 'string' || datos.descripcion.length > DESCRIPCION_MAXIMA) {
+    errores.descripcion = `La descripción puede tener hasta ${DESCRIPCION_MAXIMA} caracteres.`
   }
   if (!Object.hasOwn(CATEGORIAS, datos.categoria)) {
     errores.categoria = 'Elige una categoría.'

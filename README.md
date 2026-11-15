@@ -84,6 +84,7 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | GET    | /api/ubicaciones         | US05/US08: ubicación más confiable de los emolienteros **con la jornada abierta** (público, para el mapa), con `antiguedadMin` y `confiabilidad` (`alto` < 15 min, `medio` ≤ 1 h, `bajo` > 1 h o solo horario habitual). Excluye las de más de 4 h sin confirmación |
 | GET    | /api/ubicaciones/mia     | US05: última ubicación del emolientero con sesión |
 | POST   | /api/ubicaciones         | US05: registra la ubicación `{lat, lng, precision}` (solo La Molina, precisión de 50 m o mejor) |
+| GET    | /api/catalogo/:emolienteroId | US12: catálogo público agrupado por categoría, con `precio`, `disponible` y `comprable` por producto; `puedeComprar` es false fuera de jornada. 404 si el emolientero no existe o no está activo |
 | GET    | /api/jornadas/estado     | US06: jornada abierta, ubicación de hoy y jornadas de hoy (solo emolientero) |
 | POST   | /api/jornadas/abrir      | US06: abre la jornada; exige ubicación registrada hoy (422 si no) y una sola abierta (409) |
 | POST   | /api/jornadas/cerrar     | US06: cierra la jornada abierta (409 si no hay; 422 si quedan órdenes sin entregar) |
@@ -91,7 +92,7 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | POST   | /api/puntos-habituales   | US10: registra `{referencia, lat, lng, diaSemana (1=lunes…7=domingo), horaInicio, horaFin ("HH:MM")}`. 400 con `campos` si hay datos inválidos (p. ej. fin no posterior al inicio); 409 si se cruza con otro punto suyo del mismo día |
 | DELETE | /api/puntos-habituales/:id | US10: elimina un punto propio (404 si no existe o es de otro) |
 | GET    | /api/catalogo            | US11: catálogo del emolientero con sesión, por categoría y nombre |
-| POST   | /api/catalogo            | US11: agrega un producto `{nombre, categoria ("emoliente", "bebida" o "acompanamiento"), precio, disponible}`. 400 con `campos` si hay datos inválidos; 409 si ya tiene un producto con ese nombre |
+| POST   | /api/catalogo            | US11: agrega un producto `{nombre, descripcion?, categoria ("emoliente", "quinua_avena", "maca", "bebida" o "acompanamiento"), precio, disponible}`. 400 con `campos` si hay datos inválidos; 409 si ya tiene un producto con ese nombre |
 | PATCH  | /api/catalogo/:id        | US11: edita un producto propio (mismos campos y reglas; 404 si no existe o es de otro) |
 | GET    | /api/ubicaciones/estimadas | US10: ubicación aproximada (`fuente: horario_habitual`, 300 m) de los emolienteros **sin** jornada abierta que suelen estar en un punto a esta hora (público, para el mapa) |
 | GET    | /api/admin/emolienteros/pendientes | US23: bandeja de emolienteros por verificar (solo admin) |
@@ -121,6 +122,15 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 - El emolientero los registra en `#puntos-habituales` (enlace en su panel): zona marcada en el mapa dentro de La Molina con una referencia, día de la semana y rango horario.
 - Reglas (`backend/src/validaciones/puntoHabitual.js`, repetidas en el frontend solo para avisar antes): la hora de fin debe ser posterior a la de inicio (no se admiten rangos que crucen la medianoche) y los rangos de un mismo día no pueden cruzarse. Los rangos son `[inicio, fin)`: 08:00–10:00 y 10:00–12:00 son válidos. La restricción `EXCLUDE` de la migración 008 frena los registros simultáneos.
 - `PatronHistorico` (`backend/src/fuentes/patronHistorico.js`) es la fuente de localización de baja precisión (`horario_habitual`, 300 m): a quien no tiene la jornada abierta lo ubica en su punto habitual del momento (hora de Lima). Si tiene la jornada abierta manda su GPS. El mapa muestra estas ubicaciones con un marcador punteado.
+
+## Catálogo: gestión (US11) y consulta (US12)
+
+- Cada emolientero tiene su catálogo en `catalogo_productos` (migraciones `009` y `011`), con nombre, descripción opcional, categoría, precio y disponibilidad. Las categorías son `emoliente`, `quinua_avena`, `maca`, `bebida` (Otras bebidas) y `acompanamiento`; viven en `backend/src/validaciones/producto.js`.
+- US11: el emolientero lo administra en `#mi-catalogo` (enlace en su panel). El nombre no se repite dentro de su catálogo y el precio va de S/ 0.01 a S/ 100. `npm run db:seed` carga un catálogo de prueba para `emolientero@emolivery.pe`.
+- Al tocar un emolientero en el mapa se abre `#catalogo?id=<emolientero>`. La vista agrupa los productos por categoría, siempre en el mismo orden: Emolientes, Quinua y avena, Maca, Otras bebidas y Acompañamientos.
+- Un producto agotado sigue visible, pero no se puede comprar. Fuera de jornada todo el catálogo se ve, pero ningún producto se puede comprar.
+- Solo publican su catálogo los emolienteros con cuenta activa. Uno pendiente, rechazado o suspendido responde 404.
+- Al crear la compra anticipada, US13 debe volver a comprobar en el servidor la jornada y la disponibilidad, porque deshabilitar el botón en pantalla no basta.
 
 ## Base de datos
 

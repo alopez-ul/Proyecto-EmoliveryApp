@@ -1,10 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
-import { CATEGORIAS, crearProducto, editarProducto, listarMiCatalogo, validarProducto } from '../services/catalogoService.js'
+import {
+  CATEGORIAS,
+  DESCRIPCION_MAXIMA,
+  crearProducto,
+  editarProducto,
+  listarMiCatalogo,
+  validarProducto,
+} from '../services/catalogoService.js'
 
 // US11 - T50: el emolientero da de alta y edita los productos de su catálogo (nombre, categoría,
 // precio y disponibilidad). El mismo formulario sirve para crear y para editar.
 
-const VACIO = { nombre: '', categoria: '', precio: '', disponible: true }
+const VACIO = { nombre: '', descripcion: '', categoria: '', precio: '', disponible: true }
 
 const claseCampo = (error) =>
   `w-full rounded-xl border px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 ${
@@ -56,7 +63,7 @@ export default function GestionCatalogo() {
     setError('')
     setExito('')
     setEditandoId(p.id)
-    setForm({ nombre: p.nombre, categoria: p.categoria, precio: String(p.precio), disponible: p.disponible })
+    setForm({ nombre: p.nombre, descripcion: p.descripcion ?? '', categoria: p.categoria, precio: String(p.precio), disponible: p.disponible })
     setIntentoEnviar(false)
     setErrores({})
   }
@@ -70,7 +77,7 @@ export default function GestionCatalogo() {
     setErrores(errs)
     if (Object.keys(errs).length) return
 
-    const producto = { nombre: form.nombre, categoria: form.categoria, precio: Number(form.precio), disponible: form.disponible }
+    const producto = { nombre: form.nombre, descripcion: form.descripcion, categoria: form.categoria, precio: Number(form.precio), disponible: form.disponible }
     setGuardando(true)
     try {
       const guardado = editandoId ? await editarProducto(editandoId, producto) : await crearProducto(producto)
@@ -133,6 +140,22 @@ export default function GestionCatalogo() {
                 className={claseCampo(errores.nombre)}
               />
               <ErrorCampo mensaje={errores.nombre} />
+            </div>
+
+            <div>
+              <label htmlFor="descripcion" className="block text-sm font-semibold mb-1.5">
+                Descripción <span className="font-normal text-[#9a8676]">(opcional)</span>
+              </label>
+              <textarea
+                id="descripcion"
+                rows={2}
+                maxLength={DESCRIPCION_MAXIMA}
+                placeholder="Ej. Linaza, cola de caballo y alfalfa"
+                value={form.descripcion}
+                onChange={cambiar('descripcion')}
+                className={claseCampo(errores.descripcion)}
+              />
+              <ErrorCampo mensaje={errores.descripcion} />
             </div>
 
             <div>

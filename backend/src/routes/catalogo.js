@@ -1,14 +1,68 @@
+// Catálogo de productos de cada emolientero.
+// US12 - Consulta de catálogo y precios: vista pública para clientes (GET /:emolienteroId).
 // US11 - Gestión de catálogo: el emolientero da de alta y edita los productos de su punto de venta.
 import { crearRouter } from '../router.js'
 import { query } from '../db.js'
 import { ErrorHttp } from '../errores.js'
 import { requiereRol, requiereSesion } from '../autenticacion.js'
-import { buscarNombreRepetido, validarProducto } from '../validaciones/producto.js'
+import { CATEGORIAS, buscarNombreRepetido, validarProducto } from '../validaciones/producto.js'
 
 const router = crearRouter()
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+export const MOTIVO_FUERA_DE_JORNADA = 'Este emolientero está fuera de jornada. Puedes ver su catálogo, pero no comprar hasta que abra.'
+
+// ---------- US12: vista pública ----------
+
+// Catálogo de un emolientero agrupado por categoría (T54, en el orden de CATEGORIAS). Solo se publica
+// el de cuentas activas (verificadas en US23): un emolientero pendiente, rechazado o suspendido responde 404.
+// Va antes de requiereSesion: es la única ruta pública de este router.
+router.get('/:emolienteroId', async (req, res) => {
+  const { emolienteroId } = req.params
+  if (!UUID.test(emolienteroId)) throw new ErrorHttp(404, 'Emolientero no encontrado.')
+
+  const { rows: [emolientero] } = await query(
+    `SELECT u.id, u.nombre,
+            EXISTS (SELECT 1 FROM jornadas j WHERE j.emolientero_id = u.id AND j.cerrada_en IS NULL) AS "enJornada"
+     FROM usuarios u
+     WHERE u.id = $1 AND u.rol = 'emolientero' AND u.estado = 'activo'`,
+    [emolienteroId],
+  )
+  if (!emolientero) throw new ErrorHttp(404, 'Emolientero no encontrado.')
+
+  const { rows: productos } = await query(
+    `SELECT id, nombre, descripcion, categoria, precio, disponible
+     FROM catalogo_productos WHERE emolientero_id = $1
+     ORDER BY lower(nombre)`,
+    [emolienteroId],
+  )
+
+  // T56: fuera de jornada nada se puede comprar. T55: un producto agotado tampoco.
+  const puedeComprar = emolientero.enJornada
+  const categorias = Object.entries(CATEGORIAS)
+    .map(([id, nombre]) => ({
+      id,
+      nombre,
+      productos: productos
+        .filter((p) => p.categoria === id)
+        .map(({ categoria, ...p }) => ({ ...p, comprable: puedeComprar && p.disponible })),
+    }))
+    .filter((c) => c.productos.length)
+
+  res.json({
+    emolientero,
+    puedeComprar,
+    motivoNoCompra: puedeComprar ? null : MOTIVO_FUERA_DE_JORNADA,
+    categorias,
+  })
+})
+
+// ---------- US11: gestión por el emolientero (con sesión) ----------
+
 router.use(requiereSesion, requiereRol('emolientero'))
 
-const COLUMNAS = 'id, nombre, categoria, precio, disponible'
+const COLUMNAS = 'id, nombre, descripcion, categoria, precio, disponible'
 const MENSAJE_REPETIDO = 'Ya tienes un producto con ese nombre en tu catálogo.'
 
 // Catálogo del emolientero con sesión, agrupado por categoría y en orden alfabético.
@@ -42,9 +96,9 @@ router.post('/', async (req, res) => {
   const datos = await validarYRevisarNombre(req)
   try {
     const { rows } = await query(
-      `INSERT INTO catalogo_productos (emolientero_id, nombre, categoria, precio, disponible)
-       VALUES ($1, $2, $3, $4, $5) RETURNING ${COLUMNAS}`,
-      [req.usuario.id, datos.nombre, datos.categoria, datos.precio, datos.disponible],
+      `INSERT INTO catalogo_productos (emolientero_id, nombre, descripcion, categoria, precio, disponible)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING ${COLUMNAS}`,
+      [req.usuario.id, datos.nombre, datos.descripcion, datos.categoria, datos.precio, datos.disponible],
     )
     res.status(201).json(rows[0])
   } catch (err) {
@@ -61,10 +115,10 @@ router.patch('/:id', async (req, res) => {
   try {
     const { rows } = await query(
       `UPDATE catalogo_productos
-       SET nombre = $3, categoria = $4, precio = $5, disponible = $6, actualizado_en = now()
+       SET nombre = $3, descripcion = $4, categoria = $5, precio = $6, disponible = $7, actualizado_en = now()
        WHERE id = $1 AND emolientero_id = $2
        RETURNING ${COLUMNAS}`,
-      [id, req.usuario.id, datos.nombre, datos.categoria, datos.precio, datos.disponible],
+      [id, req.usuario.id, datos.nombre, datos.descripcion, datos.categoria, datos.precio, datos.disponible],
     )
     if (!rows[0]) throw new ErrorHttp(404, 'Producto no encontrado.')
     res.json(rows[0])
