@@ -8,6 +8,7 @@ import PuntosHabituales from './pages/PuntosHabituales.jsx'
 import GestionCatalogo from './pages/GestionCatalogo.jsx'
 import CatalogoEmolientero from './pages/CatalogoEmolientero.jsx'
 import CompraAnticipada from './pages/CompraAnticipada.jsx'
+import ResenasEmolientero from './pages/ResenasEmolientero.jsx'
 import RecuperarPage from './pages/RecuperarPage.jsx'
 import NuevaPasswordPage from './pages/NuevaPasswordPage.jsx'
 import PanelRolPage from './pages/PanelRolPage.jsx'
@@ -63,6 +64,11 @@ export default function App() {
   // US12: Catálogo público de un emolientero (#catalogo?id=<emolientero>) (Renzo)
   if (ruta === 'catalogo') {
     return <CatalogoEmolientero key={window.location.hash} />
+  }
+
+  // US18: Reseñas y calificación de un emolientero (#resenas?id=<emolientero>) (Matías)
+  if (ruta === 'resenas') {
+    return <ResenasEmolientero key={window.location.hash} />
   }
 
   // US13: Compra anticipada: carrito y orden pendiente de pago (#comprar?id=<emolientero>) (Matías)

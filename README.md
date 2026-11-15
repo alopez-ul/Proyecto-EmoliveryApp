@@ -96,6 +96,7 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | PATCH  | /api/catalogo/:id        | US11: edita un producto propio (mismos campos y reglas; 404 si no existe o es de otro) |
 | POST   | /api/ordenes             | US13: el cliente confirma su carrito `{emolienteroId, lineas: [{productoId, cantidad}]}` → orden `pendiente_pago` con vigencia de 15 min y precios congelados. 400 si el carrito está vacío o es inválido; 422 si el emolientero cerró su jornada o un producto ya no está disponible (solo cliente) |
 | GET    | /api/ordenes/:id         | US13: orden propia con sus líneas, `total`, `expiraEn` y `vencida` (solo cliente) |
+| GET    | /api/resenas/emolientero/:id | US18: reseñas publicadas de un emolientero, de la más reciente a la más antigua, con `promedio` (1 decimal) y `total`. Sin reseñas: `total` 0 y `promedio` null (público) |
 | GET    | /api/ubicaciones/estimadas | US10: ubicación aproximada (`fuente: horario_habitual`, 300 m, `confiabilidad: bajo`) de los emolienteros **sin** jornada abierta que suelen estar en un punto a esta hora (público, para el mapa) |
 | GET    | /api/admin/emolienteros/pendientes | US23: bandeja de emolienteros por verificar (solo admin) |
 | GET    | /api/admin/emolienteros/historial  | US23: decisiones tomadas (solo admin) |
