@@ -10,6 +10,9 @@ import CatalogoEmolientero from './pages/CatalogoEmolientero.jsx'
 import ValidarRecojo from './pages/ValidarRecojo.jsx'
 import MapaCercanos from './pages/MapaCercanos.jsx'
 import PagoYape from './pages/PagoYape.jsx'
+import CompraAnticipada from './pages/CompraAnticipada.jsx'
+import ResenasEmolientero from './pages/ResenasEmolientero.jsx'
+import Moderacion from './pages/Moderacion.jsx'
 import RecuperarPage from './pages/RecuperarPage.jsx'
 import NuevaPasswordPage from './pages/NuevaPasswordPage.jsx'
 import PanelRolPage from './pages/PanelRolPage.jsx'
@@ -80,6 +83,21 @@ export default function App() {
   // US14: Pago con QR de Yape (Jorge Rodrigo Burga)
   if (ruta === 'pago-yape') {
     return <PagoYape key={window.location.hash || window.location.pathname} />
+  }
+
+  // US25: Moderación de contenido (solo administrador) (Matías)
+  if (ruta === 'moderacion') {
+    return <Moderacion />
+  }
+
+  // US18: Reseñas y calificación de un emolientero (#resenas?id=<emolientero>) (Matías)
+  if (ruta === 'resenas') {
+    return <ResenasEmolientero key={window.location.hash} />
+  }
+
+  // US13: Compra anticipada: carrito y orden pendiente de pago (#comprar?id=<emolientero>) (Matías)
+  if (ruta === 'comprar') {
+    return <CompraAnticipada key={window.location.hash} />
   }
 
   // Rutas del equipo (US03 / US04 - Matías)
