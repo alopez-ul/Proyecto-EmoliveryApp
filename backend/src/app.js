@@ -14,6 +14,7 @@ import puntosHabitualesRouter from './routes/puntosHabituales.js'
 import catalogoRouter from './routes/catalogo.js'
 import comprasRouter from './routes/compras.js'
 import consultaResenasRouter from './routes/consultaResenas.js'
+import moderacionRouter from './routes/moderacion.js'
 import { pool } from './db.js'
 
 // La app se crea aquí y se arranca en server.js, para que las pruebas puedan levantarla en otro puerto.
@@ -44,6 +45,7 @@ app.use('/api/puntos-habituales', puntosHabitualesRouter)
 app.use('/api/catalogo', catalogoRouter)
 app.use('/api/ordenes', comprasRouter)
 app.use('/api/resenas', consultaResenasRouter)
+app.use('/api/moderacion', moderacionRouter)
 
 app.use((err, _req, res, _next) => {
   // JSON mal formado en el cuerpo de la petición

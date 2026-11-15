@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { obtenerResenas } from '../services/consultaResenasService.js'
+import { reportarResena } from '../services/moderacionService.js'
 
 // US18 - Consultar reseñas y calificación (#resenas?id=<emolientero>).
 // Muestra el promedio y el total (T87), el listado de la más reciente a la más antigua (T87)
@@ -23,6 +24,19 @@ export default function ResenasEmolientero() {
   const [id] = useState(idDeLaRuta)
   const [datos, setDatos] = useState(null)
   const [error, setError] = useState(null) // { status, mensaje }
+  const [aviso, setAviso] = useState('')
+
+  // US25: cualquier usuario con sesión puede reportar una reseña (sin sesión, lo lleva al login).
+  async function reportar(resena) {
+    const motivo = window.prompt('¿Por qué reportas esta reseña? (entre 10 y 300 caracteres)')
+    if (motivo === null) return
+    try {
+      await reportarResena(resena.id, motivo)
+      setAviso('Gracias. Un administrador revisará la reseña.')
+    } catch (err) {
+      setAviso(err.message)
+    }
+  }
 
   useEffect(() => {
     obtenerResenas(id)
@@ -57,6 +71,12 @@ export default function ResenasEmolientero() {
           )}
         </div>
 
+        {aviso && (
+          <div role="status" className="mb-4 p-3 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9] text-sm text-[#6b5443]">
+            {aviso}
+          </div>
+        )}
+
         {/* T88: emolientero sin reseñas */}
         {datos.total === 0 ? (
           <div className="text-center py-8 px-4 rounded-2xl bg-[#fbf6ef] border border-dashed border-[#ddd2c4]">
@@ -74,7 +94,12 @@ export default function ResenasEmolientero() {
                   </time>
                 </div>
                 {r.comentario && <p className="text-sm mt-1.5">{r.comentario}</p>}
-                <p className="text-xs font-semibold text-[#6b5443] mt-1">{r.autor}</p>
+                <div className="flex items-center justify-between mt-1">
+                  <p className="text-xs font-semibold text-[#6b5443]">{r.autor}</p>
+                  <button type="button" onClick={() => reportar(r)} className="text-xs font-semibold text-[#9a8676] hover:text-red-600 hover:underline">
+                    Reportar
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

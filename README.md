@@ -97,6 +97,9 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | POST   | /api/ordenes             | US13: el cliente confirma su carrito `{emolienteroId, lineas: [{productoId, cantidad}]}` → orden `pendiente_pago` con vigencia de 15 min y precios congelados. 400 si el carrito está vacío o es inválido; 422 si el emolientero cerró su jornada o un producto ya no está disponible (solo cliente) |
 | GET    | /api/ordenes/:id         | US13: orden propia con sus líneas, `total`, `expiraEn` y `vencida` (solo cliente) |
 | GET    | /api/resenas/emolientero/:id | US18: reseñas publicadas de un emolientero, de la más reciente a la más antigua, con `promedio` (1 decimal) y `total`. Sin reseñas: `total` 0 y `promedio` null (público) |
+| POST   | /api/moderacion/resenas/:id/reportes | US25: reporta una reseña `{motivo}` (10–300 caracteres; con sesión). 409 si ya la reportaste y sigue pendiente; 422 si es tuya |
+| GET    | /api/moderacion/reportes?estado=pendientes o atendidos | US25: bandeja de reportes pendientes o registro de decisiones (solo admin) |
+| POST   | /api/moderacion/reportes/:id/decision | US25: `{decision: "ocultar" o "mantener", nota}`. Ocultar oculta la reseña y baja 10 puntos la reputación del autor. 409 si ya fue atendido; 410 si el autor eliminó la reseña (solo admin) |
 | GET    | /api/ubicaciones/estimadas | US10: ubicación aproximada (`fuente: horario_habitual`, 300 m, `confiabilidad: bajo`) de los emolienteros **sin** jornada abierta que suelen estar en un punto a esta hora (público, para el mapa) |
 | GET    | /api/admin/emolienteros/pendientes | US23: bandeja de emolienteros por verificar (solo admin) |
 | GET    | /api/admin/emolienteros/historial  | US23: decisiones tomadas (solo admin) |

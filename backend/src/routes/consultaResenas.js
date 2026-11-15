@@ -20,11 +20,12 @@ router.get('/emolientero/:emolienteroId', async (req, res) => {
   )
   if (!emolientero) throw new ErrorHttp(404, 'Emolientero no encontrado.')
 
-  // Solo las publicadas: una reseña habilitada (US15) que el cliente aún no escribe no tiene calificación.
+  // Solo las publicadas y no ocultas por moderación (US25). Una reseña habilitada (US15) que el cliente aún
+  // no escribe no tiene calificación.
   const { rows } = await query(
     `SELECT r.id, r.calificacion, r.comentario, r.publicada_en AS "publicadaEn", u.nombre AS autor
      FROM resenas r JOIN usuarios u ON u.id = r.cliente_id
-     WHERE r.emolientero_id = $1 AND r.publicada_en IS NOT NULL`,
+     WHERE r.emolientero_id = $1 AND r.publicada_en IS NOT NULL AND r.oculta_en IS NULL`,
     [emolienteroId],
   )
   const resenas = ordenarPorFecha(rows).map((r) => ({ ...r, autor: nombrePublico(r.autor) }))
