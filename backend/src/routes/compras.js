@@ -1,4 +1,6 @@
 // US13 - Compra anticipada: el cliente confirma su carrito y se crea la orden pendiente de pago.
+// Se monta en /api/ordenes junto con las rutas de US15 (routes/ordenes.js): por eso el rol se exige en cada
+// ruta y no en todo el router, y /:id solo acepta números (no captura /mias ni /por-entregar).
 import { crearRouter } from '../router.js'
 import { pool, query } from '../db.js'
 import { ErrorHttp } from '../errores.js'
@@ -7,10 +9,10 @@ import { Orden, verificarCompra } from '../orden.js'
 import { validarCarrito } from '../validaciones/compra.js'
 
 const router = crearRouter()
-router.use(requiereSesion, requiereRol('cliente'))
+const soloCliente = [requiereSesion, requiereRol('cliente')]
 
 // T60 y T61: confirma la compra. Todo ocurre en una transacción: si algo falla, no queda una orden a medias.
-router.post('/', async (req, res) => {
+router.post('/', ...soloCliente, async (req, res) => {
   const { datos, errores } = validarCarrito(req.body)
   if (Object.keys(errores).length) throw new ErrorHttp(400, errores.carrito ?? 'Revisa tu carrito.', errores)
 
@@ -80,7 +82,10 @@ async function buscarOrden(id, clienteId) {
 }
 
 // Detalle de una orden propia (lo usa la pantalla de compra y, luego, el pago de US14).
-router.get('/:id', async (req, res) => {
+// Si :id no es un número, se salta esta ruta (next('route')) y la petición sigue a las rutas de US15.
+const soloIdNumerico = (req, _res, next) => next(/^\d+$/.test(req.params.id) ? undefined : 'route')
+
+router.get('/:id', soloIdNumerico, ...soloCliente, async (req, res) => {
   const id = Number(req.params.id)
   const orden = Number.isInteger(id) ? await buscarOrden(id, req.usuario.id) : null
   if (!orden) throw new ErrorHttp(404, 'Orden no encontrada.')
