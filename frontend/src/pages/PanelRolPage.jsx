@@ -48,6 +48,14 @@ export default function PanelRolPage({ rol }) {
         Iniciaste sesión como <strong>{rol}</strong> ({usuario.correo}).
       </p>
       <Notificaciones />
+      {rol === 'cliente' && (
+        <a
+          href="#mis-compras"
+          style={{ ...estilos.botonSecundario, display: 'block', marginBottom: 12, textAlign: 'center', textDecoration: 'none' }}
+        >
+          Mis compras (historial y total)
+        </a>
+      )}
       {rol === 'emolientero' && <RegistroUbicacion />}
       {rol === 'emolientero' && (
         <a
