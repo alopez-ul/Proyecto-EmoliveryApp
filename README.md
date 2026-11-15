@@ -167,7 +167,8 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 
 ## Base de datos
 
-- **Migraciones `012` a `015`:** `012` código de recojo y `resenas` (US15), `013` compra anticipada (US13, rama MATIAS), `014` avistamientos (US09) y `015` noticias (US22).
+- **Migraciones `012` a `015`:** `012` código de recojo y `resenas` (US15), `013` compra anticipada (US13), `014_avistamientos` (US09), `014_moderacion` (US25) y `015` noticias (US22). Hay dos `014` porque se crearon en ramas distintas; ya están aplicadas en Neon con esos nombres y **no se deben renombrar** (el sistema las reconoce por el nombre del archivo). La próxima migración es la `016`.
+- **Pedidos:** la compra anticipada (US13) crea la orden en `pendiente_pago` y ya con su código de recojo; el código se valida (US15) cuando la orden pasa a `pendiente`, es decir, cuando está pagada.
 - **Migraciones del sprint 2:** `008` puntos habituales (US10), `009` catálogo (US11), `010` fuente `avistamiento_verificado` (US08) y `011` descripción y categorías del catálogo (US11 + US12). Antes de crear una migración nueva, revisa el último número en `main` para no repetirlo.
 
 - **Órdenes:** la tabla `ordenes` (migración 007) sirve para la regla de US06 (no cerrar la jornada con órdenes `pendiente` o `en_camino`) y para la entrega con código de recojo (US15). Crear órdenes desde la app corresponde a US13.
