@@ -8,6 +8,7 @@ import PuntosHabituales from './pages/PuntosHabituales.jsx'
 import GestionCatalogo from './pages/GestionCatalogo.jsx'
 import CatalogoEmolientero from './pages/CatalogoEmolientero.jsx'
 import CompraAnticipada from './pages/CompraAnticipada.jsx'
+import ValidarRecojo from './pages/ValidarRecojo.jsx'
 import RecuperarPage from './pages/RecuperarPage.jsx'
 import NuevaPasswordPage from './pages/NuevaPasswordPage.jsx'
 import PanelRolPage from './pages/PanelRolPage.jsx'
@@ -68,6 +69,11 @@ export default function App() {
   // US13: Compra anticipada: carrito y orden pendiente de pago (#comprar?id=<emolientero>) (Matías)
   if (ruta === 'comprar') {
     return <CompraAnticipada key={window.location.hash} />
+  }
+
+  // US15: Validación del código de recojo (emolientero)
+  if (ruta === 'validar-recojo') {
+    return <ValidarRecojo key={window.location.hash || window.location.pathname} />
   }
 
   // Rutas del equipo (US03 / US04 - Matías)

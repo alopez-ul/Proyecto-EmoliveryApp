@@ -97,6 +97,9 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | POST   | /api/ordenes             | US13: el cliente confirma su carrito `{emolienteroId, lineas: [{productoId, cantidad}]}` → orden `pendiente_pago` con vigencia de 15 min y precios congelados. 400 si el carrito está vacío o es inválido; 422 si el emolientero cerró su jornada o un producto ya no está disponible (solo cliente) |
 | GET    | /api/ordenes/:id         | US13: orden propia con sus líneas, `total`, `expiraEn` y `vencida` (solo cliente) |
 | GET    | /api/ubicaciones/estimadas | US10: ubicación aproximada (`fuente: horario_habitual`, 300 m, `confiabilidad: bajo`) de los emolienteros **sin** jornada abierta que suelen estar en un punto a esta hora (público, para el mapa) |
+| GET    | /api/ordenes/mias        | US15: pedidos del cliente con sesión, con su `codigoRecojo` ("ABC-23X") y si ya tiene la reseña habilitada |
+| GET    | /api/ordenes/por-entregar | US15: pedidos pendientes o en camino del emolientero con sesión (sin el código) |
+| POST   | /api/ordenes/entregar    | US15: valida `{codigo}` y entrega el pedido. 200 `{orden, resena}`; 400 si el formato es inválido; 404 si no existe; 403 si es de otro emolientero; 409 si ya se usó o el pedido está cancelado |
 | GET    | /api/admin/emolienteros/pendientes | US23: bandeja de emolienteros por verificar (solo admin) |
 | GET    | /api/admin/emolienteros/historial  | US23: decisiones tomadas (solo admin) |
 | POST   | /api/admin/emolienteros/:id/aprobar  | US23: aprueba → cuenta `activo` y notifica (solo admin) |
@@ -134,11 +137,18 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 - Solo publican su catálogo los emolienteros con cuenta activa. Uno pendiente, rechazado o suspendido responde 404.
 - Al crear la compra anticipada, US13 debe volver a comprobar en el servidor la jornada y la disponibilidad, porque deshabilitar el botón en pantalla no basta.
 
+## Código de recojo (US15)
+
+- Cada pedido tiene un código de recojo de un solo uso: 6 caracteres sin 0/O ni 1/I, generado con `crypto` (`backend/src/codigoRecojo.js`). Se crea con `crearOrden()`, que US13 debe usar al crear la compra anticipada. El cliente lo ve en su panel ("Mis pedidos").
+- El emolientero lo valida en `#validar-recojo` (botón en su panel). En **una sola transacción** (RNF12) la orden pasa a `entregada`, el código queda usado (`entregada_en`), se habilita la reseña del cliente (tabla `resenas`, migración `012`) y se le notifica. Si un paso falla no se guarda nada, y dos validaciones simultáneas del mismo código entregan una sola vez.
+- `npm run db:seed` crea un pedido de `cliente@` a `emolientero@` por entregar e imprime su código.
+
 ## Base de datos
 
+- **Migración `012`** (US15): código de recojo en `ordenes` y tabla `resenas`.
 - **Migraciones del sprint 2:** `008` puntos habituales (US10), `009` catálogo (US11), `010` fuente `avistamiento_verificado` (US08) y `011` descripción y categorías del catálogo (US11 + US12). Antes de crear una migración nueva, revisa el último número en `main` para no repetirlo.
 
-- **Órdenes:** la tabla `ordenes` (migración 007) por ahora solo sirve para la regla de US06 (no cerrar la jornada con órdenes `pendiente` o `en_camino`). Crear y entregar órdenes corresponde a la historia de pedidos.
+- **Órdenes:** la tabla `ordenes` (migración 007) sirve para la regla de US06 (no cerrar la jornada con órdenes `pendiente` o `en_camino`) y para la entrega con código de recojo (US15). Crear órdenes desde la app corresponde a US13.
 
 - **Driver:** `pg` (node-postgres) con un pool, porque el backend es un servidor de larga duración.
 - **Conexiones:** la app usa `DATABASE_URL` (con pooling); las migraciones usan `DATABASE_URL_UNPOOLED` (directa), como recomienda Neon.
