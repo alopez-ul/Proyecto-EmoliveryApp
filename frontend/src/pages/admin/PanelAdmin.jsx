@@ -9,6 +9,7 @@ import {
   listarPendientes,
   rechazarEmolientero,
 } from '../../services/adminService.js'
+import NoticiasAdmin from './NoticiasAdmin.jsx'
 import './PanelAdmin.css'
 
 const formatoFecha = new Intl.DateTimeFormat('es-PE', { dateStyle: 'medium', timeStyle: 'short' })
@@ -71,8 +72,17 @@ export default function PanelAdmin({ usuario, onCerrarSesion }) {
       <main className="panel-admin-contenido">
         <div className="panel-admin-encabezado">
           <p className="pa-etiqueta">Panel del administrador</p>
-          <h2>Verificación de emolienteros</h2>
-          <p className="pa-ayuda">Revisa los registros nuevos y apruébalos o recházalos indicando el motivo.</p>
+          {pestana === 'noticias' ? (
+            <>
+              <h2>Noticias</h2>
+              <p className="pa-ayuda">Publica avisos para todos, solo para clientes o solo para emolienteros, desde hoy o desde una fecha futura.</p>
+            </>
+          ) : (
+            <>
+              <h2>Verificación de emolienteros</h2>
+              <p className="pa-ayuda">Revisa los registros nuevos y apruébalos o recházalos indicando el motivo.</p>
+            </>
+          )}
         </div>
 
         {aviso && (
@@ -113,9 +123,19 @@ export default function PanelAdmin({ usuario, onCerrarSesion }) {
             >
               Historial
             </button>
+            {/* US22: publicación de noticias */}
+            <button
+              type="button"
+              role="tab"
+              aria-selected={pestana === 'noticias'}
+              className={pestana === 'noticias' ? 'is-activa' : ''}
+              onClick={() => setPestana('noticias')}
+            >
+              Noticias
+            </button>
           </div>
 
-          {pestana === 'pendientes' ? (
+          {pestana === 'pendientes' && (
             <BandejaPendientes
               pendientes={pendientes}
               onDecidir={(tipo, emolientero) => {
@@ -123,9 +143,9 @@ export default function PanelAdmin({ usuario, onCerrarSesion }) {
                 setDecision({ tipo, emolientero })
               }}
             />
-          ) : (
-            <Historial historial={historial} />
           )}
+          {pestana === 'historial' && <Historial historial={historial} />}
+          {pestana === 'noticias' && <NoticiasAdmin onAviso={setAviso} onError={setError} />}
         </section>
       </main>
 

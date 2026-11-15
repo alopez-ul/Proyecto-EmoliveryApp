@@ -4,7 +4,7 @@ import { query } from '../db.js'
 import { ErrorHttp } from '../errores.js'
 import { requiereRol, requiereSesion } from '../autenticacion.js'
 import { validarUbicacion } from '../zonaCobertura.js'
-import { PatronHistorico, VIGENCIA_MAXIMA_MIN, resolverUbicaciones } from '../fuentesUbicacion.js'
+import { PatronHistorico, ubicacionesVigentes } from '../fuentesUbicacion.js'
 
 const router = crearRouter()
 
@@ -14,18 +14,7 @@ const COLUMNAS = `id, lat, lng, precision_m AS "precisionM", fuente, registrada_
 // confiable (T43), con su antigüedad y nivel de confiabilidad (T44). Excluye las ubicaciones no
 // confirmadas (T45). Es pública: la usa el mapa de los clientes.
 router.get('/', async (_req, res) => {
-  // Una lectura con más de 4 h tiene puntaje 0 y nunca está confirmada, así que no hace falta traerla.
-  const { rows } = await query(
-    `SELECT ub.id, ub.emolientero_id AS "emolienteroId", u.nombre, ub.lat, ub.lng,
-            ub.precision_m AS "precisionM", ub.fuente, ub.registrada_en AS "registradaEn"
-     FROM ubicaciones ub
-     JOIN usuarios u ON u.id = ub.emolientero_id
-     WHERE u.rol = 'emolientero' AND u.estado = 'activo'
-       AND EXISTS (SELECT 1 FROM jornadas j WHERE j.emolientero_id = u.id AND j.cerrada_en IS NULL)
-       AND ub.registrada_en > now() - make_interval(mins => $1)`,
-    [VIGENCIA_MAXIMA_MIN],
-  )
-  res.json(resolverUbicaciones(rows))
+  res.json(await ubicacionesVigentes())
 })
 
 // US10 - T48: ubicación APROXIMADA (fuente 'horario_habitual', baja precisión) de los emolienteros
@@ -35,10 +24,12 @@ router.get('/estimadas', async (_req, res) => {
   res.json(await PatronHistorico.estimar())
 })
 
-// Última ubicación registrada por el emolientero con sesión (o null si aún no registró ninguna).
+// Última ubicación registrada por el emolientero con sesión con SU GPS (o null si aún no registró ninguna).
+// Los avistamientos de clientes (US09) no cuentan: son reportes de otros.
 router.get('/mia', requiereSesion, requiereRol('emolientero'), async (req, res) => {
   const { rows } = await query(
-    `SELECT ${COLUMNAS} FROM ubicaciones WHERE emolientero_id = $1 ORDER BY registrada_en DESC LIMIT 1`,
+    `SELECT ${COLUMNAS} FROM ubicaciones WHERE emolientero_id = $1 AND fuente = 'gps_emolientero'
+     ORDER BY registrada_en DESC LIMIT 1`,
     [req.usuario.id],
   )
   res.json(rows[0] ?? null)

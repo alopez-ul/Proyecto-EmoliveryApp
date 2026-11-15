@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { obtenerCatalogo } from '../services/catalogoService.js'
+import ConfirmarAvistamiento from '../components/ConfirmarAvistamiento.jsx'
 
 // US12 - Consulta de catálogo y precios (Renzo - Sprint 2)
 // Vista pública: el cliente la abre desde el mapa (#catalogo?id=<emolientero>). Agrupa por categoría (T54),
@@ -136,6 +137,9 @@ export default function CatalogoEmolientero() {
                   {enJornada ? 'Atendiendo ahora' : 'Fuera de jornada'}
                 </span>
               </div>
+
+              {/* US09: con la jornada abierta, el cliente puede confirmar que lo está viendo */}
+              {enJornada && <ConfirmarAvistamiento emolienteroId={catalogo.emolientero.id} nombre={catalogo.emolientero.nombre} />}
 
               {/* T56: la compra se deshabilita fuera de jornada; el catálogo se sigue viendo */}
               {!catalogo.puedeComprar && cantidad > 0 && (

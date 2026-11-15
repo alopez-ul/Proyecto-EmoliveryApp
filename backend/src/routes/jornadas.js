@@ -15,7 +15,7 @@ const INICIO_HOY = "date_trunc('day', now() AT TIME ZONE 'America/Lima') AT TIME
 async function ubicacionDeHoy(emolienteroId) {
   const { rows } = await query(
     `SELECT registrada_en AS "registradaEn" FROM ubicaciones
-     WHERE emolientero_id = $1 AND registrada_en >= ${INICIO_HOY}
+     WHERE emolientero_id = $1 AND fuente = 'gps_emolientero' AND registrada_en >= ${INICIO_HOY}
      ORDER BY registrada_en DESC LIMIT 1`,
     [emolienteroId],
   )
