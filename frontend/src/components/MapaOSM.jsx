@@ -33,10 +33,11 @@ function CentrarEnSeleccion({ punto }) {
   return null
 }
 
-export default function MapaOSM({ puntos, seleccionado, onSelect, modoRegistro, borrador, onPick }) {
+// centro/zoom: vista inicial (por defecto, Lima). p.aproximado marca una ubicación de baja precisión (US10).
+export default function MapaOSM({ puntos, seleccionado, onSelect, modoRegistro, borrador, onPick, centro, zoom = 12 }) {
   return (
     <div className={`mapa-lima ${modoRegistro ? 'is-picking' : ''}`}>
-      <MapContainer center={LIMA_CENTER} zoom={12} zoomControl={false} className="mapa-osm">
+      <MapContainer center={centro ? [centro.lat, centro.lng] : LIMA_CENTER} zoom={zoom} zoomControl={false} className="mapa-osm">
         <TileLayer
           attribution='Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap'
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
@@ -50,7 +51,7 @@ export default function MapaOSM({ puntos, seleccionado, onSelect, modoRegistro, 
             key={p.id}
             position={[p.lat, p.lng]}
             icon={iconoEmoliente(
-              [p.activo ? '' : 'is-offline', seleccionado?.id === p.id ? 'is-selected' : ''].join(' '),
+              [p.activo ? '' : 'is-offline', p.aproximado ? 'is-aproximado' : '', seleccionado?.id === p.id ? 'is-selected' : ''].join(' '),
             )}
             eventHandlers={{ click: () => onSelect(p) }}
           >

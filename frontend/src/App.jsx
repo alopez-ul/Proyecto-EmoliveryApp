@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage.jsx'
 import RegistroCliente from './pages/RegistroCliente.jsx'
 import RegistroEmolientero from './pages/RegistroEmolientero.jsx'
 import ControlJornada from './pages/ControlJornada.jsx'
+import PuntosHabituales from './pages/PuntosHabituales.jsx'
 import RecuperarPage from './pages/RecuperarPage.jsx'
 import NuevaPasswordPage from './pages/NuevaPasswordPage.jsx'
 import PanelRolPage from './pages/PanelRolPage.jsx'
@@ -44,6 +45,11 @@ export default function App() {
   // US06: Apertura y Cierre de Jornada
   if (ruta === 'control-jornada') {
     return <ControlJornada key={window.location.hash || window.location.pathname} />
+  }
+
+  // US10: Puntos habituales del emolientero
+  if (ruta === 'puntos-habituales') {
+    return <PuntosHabituales key={window.location.hash || window.location.pathname} />
   }
 
   // Rutas del equipo (US03 / US04 - Matías)
