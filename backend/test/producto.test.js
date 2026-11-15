@@ -86,3 +86,18 @@ describe('T51/T53: nombre único en el catálogo', () => {
     assert.equal(buscarNombreRepetido('quinua con manzana', catalogo, 1)?.id, 2)
   })
 })
+
+describe('Sprint 2: catálogo unificado (US11 + US12)', () => {
+  test('acepta las categorías de la vista pública', () => {
+    for (const categoria of ['emoliente', 'quinua_avena', 'maca', 'bebida', 'acompanamiento']) {
+      assert.deepEqual(errores({ categoria }), {}, categoria)
+    }
+  })
+
+  test('la descripción es opcional, se limpia y tiene un máximo de 200 caracteres', () => {
+    assert.equal(validarProducto(valido()).datos.descripcion, '')
+    assert.equal(validarProducto({ ...valido(), descripcion: '  Con  linaza ' }).datos.descripcion, 'Con linaza')
+    assert.ok(errores({ descripcion: 'x'.repeat(201) }).descripcion)
+    assert.ok(errores({ descripcion: 123 }).descripcion)
+  })
+})

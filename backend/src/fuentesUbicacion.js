@@ -2,6 +2,14 @@
 // Jerarquía de fuentes de ubicación: cada subclase sabe qué tan confiable es su dato
 // (calcularConfiabilidad) y la clase base aplica a todas la misma regla de vigencia (puntaje).
 // Agregar una fuente nueva solo requiere una subclase y registrarla en FUENTES (RNF18).
+import { query } from './db.js'
+import { aMinutos } from './validaciones/puntoHabitual.js'
+
+// Hora de Lima, para comparar con los puntos habituales (US10).
+const DIA_ISO = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 }
+const FORMATO_LIMA = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/Lima', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+})
 
 // Cortes de antigüedad del criterio de aceptación de US08 (en minutos).
 export const LIMITE_ALTA_MIN = 15 // alta si es menor a 15 minutos
@@ -102,9 +110,14 @@ export class AvistamientoVerificado extends FuenteUbicacion {
   }
 }
 
-// Punto y horario habitual que declara el emolientero (US10): fuente de baja precisión.
+// US10 - T48: punto y horario habitual que declara el emolientero: fuente de BAJA precisión.
+// No usa GPS: deduce dónde suele estar a partir de sus puntos habituales (tabla puntos_habituales:
+// día y rango horario). Es el último recurso: si el emolientero tiene la jornada abierta, manda su
+// GPS (US05/US06) y estimar() no lo incluye.
 export class PatronHistorico extends FuenteUbicacion {
   static CODIGO = 'horario_habitual'
+  // Radio de incertidumbre que se informa (el GPS exige 50 m o mejor): el emolientero está "por la zona".
+  static PRECISION_M = 300
 
   calcularConfiabilidad() {
     return CONFIABILIDAD.patronHistorico
@@ -113,6 +126,42 @@ export class PatronHistorico extends FuenteUbicacion {
   // Criterio de US08: si la ubicación proviene solo del horario habitual, la confiabilidad es baja.
   nivelConfiabilidad() {
     return 'bajo'
+  }
+
+  // Día ISO (1 = lunes) y minutos desde la medianoche, en hora de Lima, del instante dado.
+  static momentoEnLima(fecha) {
+    const partes = Object.fromEntries(FORMATO_LIMA.formatToParts(fecha).map((p) => [p.type, p.value]))
+    return { diaSemana: DIA_ISO[partes.weekday], minutos: Number(partes.hour) * 60 + Number(partes.minute) }
+  }
+
+  // Punto habitual que corresponde al instante dado (rango [inicio, fin)), o null.
+  static puntoVigente(puntos, fecha) {
+    const { diaSemana, minutos } = PatronHistorico.momentoEnLima(fecha)
+    return (
+      puntos.find((p) => p.diaSemana === diaSemana && aMinutos(p.horaInicio) <= minutos && minutos < aMinutos(p.horaFin)) ?? null
+    )
+  }
+
+  // Ubicación estimada de cada emolientero activo SIN jornada abierta que, según su horario, suele
+  // estar en un punto a esta hora. Como los rangos no se traslapan, hay a lo sumo una por emolientero.
+  static async estimar(fecha = new Date()) {
+    const { diaSemana } = PatronHistorico.momentoEnLima(fecha)
+    const { rows } = await query(
+      `SELECT ph.id, ph.emolientero_id AS "emolienteroId", u.nombre, ph.referencia, ph.lat, ph.lng,
+              ph.dia_semana AS "diaSemana",
+              to_char(ph.hora_inicio, 'HH24:MI') AS "horaInicio", to_char(ph.hora_fin, 'HH24:MI') AS "horaFin"
+       FROM puntos_habituales ph
+       JOIN usuarios u ON u.id = ph.emolientero_id
+       WHERE ph.dia_semana = $1 AND u.rol = 'emolientero' AND u.estado = 'activo'
+         AND NOT EXISTS (SELECT 1 FROM jornadas j WHERE j.emolientero_id = u.id AND j.cerrada_en IS NULL)`,
+      [diaSemana],
+    )
+    return rows
+      .filter((p) => PatronHistorico.puntoVigente([p], fecha))
+      .map((p) => {
+        const fuente = new PatronHistorico({ ...p, precisionM: PatronHistorico.PRECISION_M, registradaEn: fecha })
+        return { ...p, precisionM: fuente.precisionM, fuente: fuente.fuente, confiabilidad: fuente.nivelConfiabilidad() }
+      })
   }
 }
 

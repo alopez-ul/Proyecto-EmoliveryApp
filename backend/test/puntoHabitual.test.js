@@ -2,7 +2,7 @@
 import { describe, test } from 'node:test'
 import assert from 'node:assert/strict'
 import { buscarTraslape, seTraslapan, validarPuntoHabitual } from '../src/validaciones/puntoHabitual.js'
-import { PatronHistorico } from '../src/fuentes/patronHistorico.js'
+import { PatronHistorico } from '../src/fuentesUbicacion.js'
 
 const valido = () => ({
   referencia: 'Parque Los Fresnos',
@@ -107,7 +107,7 @@ describe('T48: PatronHistorico', () => {
   })
 
   test('es una fuente de baja precisión comparada con el GPS', () => {
-    assert.equal(PatronHistorico.FUENTE, 'horario_habitual')
+    assert.equal(PatronHistorico.CODIGO, 'horario_habitual')
     assert.ok(PatronHistorico.PRECISION_M > 50)
   })
 })

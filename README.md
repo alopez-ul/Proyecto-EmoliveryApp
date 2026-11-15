@@ -94,7 +94,7 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | GET    | /api/catalogo            | US11: catálogo del emolientero con sesión, por categoría y nombre |
 | POST   | /api/catalogo            | US11: agrega un producto `{nombre, descripcion?, categoria ("emoliente", "quinua_avena", "maca", "bebida" o "acompanamiento"), precio, disponible}`. 400 con `campos` si hay datos inválidos; 409 si ya tiene un producto con ese nombre |
 | PATCH  | /api/catalogo/:id        | US11: edita un producto propio (mismos campos y reglas; 404 si no existe o es de otro) |
-| GET    | /api/ubicaciones/estimadas | US10: ubicación aproximada (`fuente: horario_habitual`, 300 m) de los emolienteros **sin** jornada abierta que suelen estar en un punto a esta hora (público, para el mapa) |
+| GET    | /api/ubicaciones/estimadas | US10: ubicación aproximada (`fuente: horario_habitual`, 300 m, `confiabilidad: bajo`) de los emolienteros **sin** jornada abierta que suelen estar en un punto a esta hora (público, para el mapa) |
 | GET    | /api/admin/emolienteros/pendientes | US23: bandeja de emolienteros por verificar (solo admin) |
 | GET    | /api/admin/emolienteros/historial  | US23: decisiones tomadas (solo admin) |
 | POST   | /api/admin/emolienteros/:id/aprobar  | US23: aprueba → cuenta `activo` y notifica (solo admin) |
@@ -121,7 +121,7 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 
 - El emolientero los registra en `#puntos-habituales` (enlace en su panel): zona marcada en el mapa dentro de La Molina con una referencia, día de la semana y rango horario.
 - Reglas (`backend/src/validaciones/puntoHabitual.js`, repetidas en el frontend solo para avisar antes): la hora de fin debe ser posterior a la de inicio (no se admiten rangos que crucen la medianoche) y los rangos de un mismo día no pueden cruzarse. Los rangos son `[inicio, fin)`: 08:00–10:00 y 10:00–12:00 son válidos. La restricción `EXCLUDE` de la migración 008 frena los registros simultáneos.
-- `PatronHistorico` (`backend/src/fuentes/patronHistorico.js`) es la fuente de localización de baja precisión (`horario_habitual`, 300 m): a quien no tiene la jornada abierta lo ubica en su punto habitual del momento (hora de Lima). Si tiene la jornada abierta manda su GPS. El mapa muestra estas ubicaciones con un marcador punteado.
+- `PatronHistorico` es la fuente de localización de baja precisión (`horario_habitual`, 300 m, confiabilidad `bajo`) dentro de la jerarquía de fuentes de US08 (`backend/src/fuentesUbicacion.js`): a quien no tiene la jornada abierta lo ubica en su punto habitual del momento (hora de Lima). Si tiene la jornada abierta manda su GPS. El mapa muestra estas ubicaciones con un marcador punteado.
 
 ## Catálogo: gestión (US11) y consulta (US12)
 
@@ -133,6 +133,8 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 - Al crear la compra anticipada, US13 debe volver a comprobar en el servidor la jornada y la disponibilidad, porque deshabilitar el botón en pantalla no basta.
 
 ## Base de datos
+
+- **Migraciones del sprint 2:** `008` puntos habituales (US10), `009` catálogo (US11), `010` fuente `avistamiento_verificado` (US08) y `011` descripción y categorías del catálogo (US11 + US12). Antes de crear una migración nueva, revisa el último número en `main` para no repetirlo.
 
 - **Órdenes:** la tabla `ordenes` (migración 007) por ahora solo sirve para la regla de US06 (no cerrar la jornada con órdenes `pendiente` o `en_camino`). Crear y entregar órdenes corresponde a la historia de pedidos.
 

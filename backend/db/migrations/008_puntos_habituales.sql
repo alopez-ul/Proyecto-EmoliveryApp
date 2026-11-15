@@ -1,5 +1,5 @@
 -- US10: puntos habituales del emolientero (zona, día de la semana y rango horario).
--- Alimentan a PatronHistorico (src/fuentes/patronHistorico.js), la fuente de localización de baja
+-- Alimentan a PatronHistorico (src/fuentesUbicacion.js), la fuente de localización de baja
 -- precisión ('horario_habitual'), que ubica de forma aproximada a quien no tiene la jornada abierta.
 
 -- btree_gist permite combinar "=" (emolientero, día) con "&&" (rango horario) en una restricción EXCLUDE.

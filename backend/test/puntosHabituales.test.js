@@ -6,7 +6,7 @@ import { randomBytes } from 'node:crypto'
 import { app } from '../src/app.js'
 import { pool } from '../src/db.js'
 import { hashContrasena } from '../src/seguridad.js'
-import { PatronHistorico } from '../src/fuentes/patronHistorico.js'
+import { PatronHistorico } from '../src/fuentesUbicacion.js'
 
 const SUFIJO = randomBytes(4).toString('hex')
 const PASSWORD = 'Prueba1234'
@@ -121,6 +121,7 @@ describe('US10 - T48: ubicaciones estimadas por PatronHistorico', () => {
     assert.equal(estimada.fuente, 'horario_habitual')
     assert.equal(estimada.precisionM, PatronHistorico.PRECISION_M)
     assert.equal(estimada.referencia, 'Todo el día')
+    assert.equal(estimada.confiabilidad, 'bajo', 'US08: el horario habitual siempre es de confiabilidad baja')
   })
 
   test('con la jornada abierta deja de estimarse (manda el GPS)', async () => {

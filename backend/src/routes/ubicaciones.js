@@ -4,8 +4,7 @@ import { query } from '../db.js'
 import { ErrorHttp } from '../errores.js'
 import { requiereRol, requiereSesion } from '../autenticacion.js'
 import { validarUbicacion } from '../zonaCobertura.js'
-import { PatronHistorico } from '../fuentes/patronHistorico.js'
-import { VIGENCIA_MAXIMA_MIN, resolverUbicaciones } from '../fuentesUbicacion.js'
+import { PatronHistorico, VIGENCIA_MAXIMA_MIN, resolverUbicaciones } from '../fuentesUbicacion.js'
 
 const router = crearRouter()
 
