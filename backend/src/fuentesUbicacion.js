@@ -92,13 +92,82 @@ export class GpsDelVendedor extends FuenteUbicacion {
   }
 }
 
+// ---------- US09: confirmación de avistamiento ----------
+
+// T79: el cliente debe estar a esta distancia o menos de la ubicación que confirma.
+export const RADIO_CONFIRMACION_M = 100
+// T81: un cliente confirma a un emolientero una vez por ventana de 30 min (bloques fijos de reloj).
+// T80: los reportes de los últimos 30 min cuentan para la coincidencia.
+export const VENTANA_AVISTAMIENTO_MIN = 30
+// T80: reportes de clientes distintos que deben coincidir para verificar el avistamiento.
+export const MIN_COINCIDENCIAS = 2
+
+const RADIO_TIERRA_M = 6_371_000
+const rad = (grados) => (grados * Math.PI) / 180
+
+// Distancia en metros entre dos puntos {lat, lng} (fórmula del semiverseno).
+export function distanciaMetros(a, b) {
+  const h = Math.sin(rad(b.lat - a.lat) / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(rad(b.lng - a.lng) / 2) ** 2
+  return 2 * RADIO_TIERRA_M * Math.asin(Math.sqrt(h))
+}
+
+// Número de la ventana de 30 min a la que pertenece un instante.
+export const ventanaDe = (fecha) => Math.floor(new Date(fecha).getTime() / (VENTANA_AVISTAMIENTO_MIN * MS_POR_MIN))
+
+// Hash de 32 bits de un texto, como String.hashCode() de Java.
+function hashTexto(texto) {
+  let h = 0
+  for (const c of texto) h = (Math.imul(31, h) + c.codePointAt(0)) | 0
+  return h
+}
+
 // Un cliente reporta haber visto al emolientero en ese punto (US09).
 export class AvistamientoCliente extends FuenteUbicacion {
   static CODIGO = 'avistamiento_cliente'
 
+  constructor(datos) {
+    super(datos)
+    this.clienteId = datos.clienteId
+  }
+
   calcularConfiabilidad() {
     return CONFIABILIDAD.avistamientoCliente
   }
+
+  get ventana() {
+    return ventanaDe(this.registradaEn)
+  }
+
+  // T81 (RNF19): dos avistamientos son el mismo si el mismo cliente confirmó al mismo emolientero en la
+  // misma ventana de 30 min, aunque las coordenadas difieran un poco (el GPS varía entre lecturas).
+  equals(otro) {
+    return (
+      otro instanceof AvistamientoCliente &&
+      otro.emolienteroId === this.emolienteroId &&
+      otro.clienteId === this.clienteId &&
+      otro.ventana === this.ventana
+    )
+  }
+
+  // Coherente con equals: usa exactamente los mismos campos, así dos avistamientos iguales tienen el mismo hash.
+  hashCode() {
+    return hashTexto(`${this.emolienteroId}|${this.clienteId}|${this.ventana}`)
+  }
+}
+
+// T81: quita los avistamientos repetidos como lo haría un HashSet: agrupa por hashCode y, dentro de cada
+// grupo, compara con equals (dos objetos distintos pueden compartir hash). Conserva el primero de cada uno.
+export function deduplicar(avistamientos) {
+  const porHash = new Map()
+  const unicos = []
+  for (const a of avistamientos) {
+    const grupo = porHash.get(a.hashCode()) ?? []
+    if (grupo.some((b) => b.equals(a))) continue
+    grupo.push(a)
+    porHash.set(a.hashCode(), grupo)
+    unicos.push(a)
+  }
+  return unicos
 }
 
 // Avistamiento respaldado por la coincidencia de varios reportes de clientes (US09).
@@ -107,6 +176,36 @@ export class AvistamientoVerificado extends FuenteUbicacion {
 
   calcularConfiabilidad() {
     return CONFIABILIDAD.avistamientoVerificado
+  }
+
+  // T80: si al menos MIN_COINCIDENCIAS clientes distintos vieron al emolientero en los últimos 30 min, a
+  // 100 m o menos del reporte más reciente, devuelve el avistamiento verificado en el punto medio de esos
+  // reportes. Si no hay coincidencia, devuelve null. Los repetidos se descartan antes (T81).
+  static porCoincidencia(reportes, ahora = new Date()) {
+    const desde = ahora.getTime() - VENTANA_AVISTAMIENTO_MIN * MS_POR_MIN
+    const recientes = deduplicar(reportes).filter((r) => r.registradaEn.getTime() >= desde)
+    if (!recientes.length) return null
+
+    const ultimo = recientes.reduce((a, b) => (b.registradaEn > a.registradaEn ? b : a))
+    const cercanos = recientes.filter((r) => distanciaMetros(r, ultimo) <= RADIO_CONFIRMACION_M)
+    const clientes = new Set(cercanos.map((r) => r.clienteId))
+    if (clientes.size < MIN_COINCIDENCIAS) return null
+
+    const centro = {
+      lat: cercanos.reduce((s, r) => s + r.lat, 0) / cercanos.length,
+      lng: cercanos.reduce((s, r) => s + r.lng, 0) / cercanos.length,
+    }
+    // Precisión: lo que más se aleja un reporte del punto medio (al menos 10 m).
+    const dispersion = Math.max(...cercanos.map((r) => distanciaMetros(r, centro)))
+    const verificado = new AvistamientoVerificado({
+      emolienteroId: ultimo.emolienteroId,
+      nombre: ultimo.nombre,
+      ...centro,
+      precisionM: Math.max(10, Math.round(dispersion)),
+      registradaEn: ahora,
+    })
+    verificado.confirmaciones = clientes.size
+    return verificado
   }
 }
 
@@ -219,4 +318,23 @@ export function resolverUbicaciones(filas, ahora = new Date()) {
     })
   }
   return resultado
+}
+
+// Ubicación que se muestra en el mapa (T43-T45) de cada emolientero activo con la jornada abierta, o solo
+// la de `emolienteroId`. `db` puede ser un cliente dentro de una transacción. La usan GET /api/ubicaciones
+// y la confirmación de avistamientos (US09), para que el cliente confirme exactamente lo que ve.
+export async function ubicacionesVigentes(db = { query }, emolienteroId = null, ahora = new Date()) {
+  // Una lectura con más de 4 h tiene puntaje 0 y nunca está confirmada, así que no hace falta traerla.
+  const { rows } = await db.query(
+    `SELECT ub.id, ub.emolientero_id AS "emolienteroId", u.nombre, ub.lat, ub.lng,
+            ub.precision_m AS "precisionM", ub.fuente, ub.registrada_en AS "registradaEn"
+     FROM ubicaciones ub
+     JOIN usuarios u ON u.id = ub.emolientero_id
+     WHERE u.rol = 'emolientero' AND u.estado = 'activo'
+       AND EXISTS (SELECT 1 FROM jornadas j WHERE j.emolientero_id = u.id AND j.cerrada_en IS NULL)
+       AND ub.registrada_en > $1::timestamptz - make_interval(mins => $2)
+       AND ($3::uuid IS NULL OR u.id = $3)`,
+    [ahora, VIGENCIA_MAXIMA_MIN, emolienteroId],
+  )
+  return resolverUbicaciones(rows, ahora)
 }

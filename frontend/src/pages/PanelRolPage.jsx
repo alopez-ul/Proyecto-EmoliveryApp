@@ -3,6 +3,7 @@ import AuthCard, { estilos } from '../components/AuthCard.jsx'
 import Notificaciones from '../components/Notificaciones.jsx'
 import RegistroUbicacion from '../components/RegistroUbicacion.jsx'
 import MisPedidos from '../components/MisPedidos.jsx'
+import NoticiasPanel from '../components/NoticiasPanel.jsx'
 import PanelAdmin from './admin/PanelAdmin.jsx'
 import { cerrarSesion, verificarSesion } from '../services/authService.js'
 
@@ -49,6 +50,7 @@ export default function PanelRolPage({ rol }) {
         Iniciaste sesión como <strong>{rol}</strong> ({usuario.correo}).
       </p>
       <Notificaciones />
+      <NoticiasPanel />
       {rol === 'cliente' && <MisPedidos />}
       {rol === 'emolientero' && (
         <a
