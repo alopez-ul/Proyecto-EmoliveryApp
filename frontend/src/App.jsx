@@ -8,6 +8,8 @@ import PuntosHabituales from './pages/PuntosHabituales.jsx'
 import GestionCatalogo from './pages/GestionCatalogo.jsx'
 import CatalogoEmolientero from './pages/CatalogoEmolientero.jsx'
 import ValidarRecojo from './pages/ValidarRecojo.jsx'
+import MapaCercanos from './pages/MapaCercanos.jsx'
+import PagoYape from './pages/PagoYape.jsx'
 import RecuperarPage from './pages/RecuperarPage.jsx'
 import NuevaPasswordPage from './pages/NuevaPasswordPage.jsx'
 import PanelRolPage from './pages/PanelRolPage.jsx'
@@ -68,6 +70,16 @@ export default function App() {
   // US15: Validación del código de recojo (emolientero)
   if (ruta === 'validar-recojo') {
     return <ValidarRecojo key={window.location.hash || window.location.pathname} />
+  }
+
+  // US07: Mapa de emolienteros cercanos (Jorge Rodrigo Burga)
+  if (ruta === 'mapa-cercanos') {
+    return <MapaCercanos key={window.location.hash || window.location.pathname} />
+  }
+
+  // US14: Pago con QR de Yape (Jorge Rodrigo Burga)
+  if (ruta === 'pago-yape') {
+    return <PagoYape key={window.location.hash || window.location.pathname} />
   }
 
   // Rutas del equipo (US03 / US04 - Matías)
