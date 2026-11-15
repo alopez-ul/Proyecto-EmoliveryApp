@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 // Íconos de línea (24x24) para cada opción del menú
 const ICONOS = {
   inicio: 'M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z',
+  'mapa-cercanos': 'M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z M12 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4z',
+  'pago-yape': 'M4 7h16v10H4z M7 11h4 M15 13h2',
   noticias: 'M4 5h13v14H6a2 2 0 0 1-2-2zM17 9h3v8a2 2 0 0 1-2 2M8 9h5M8 13h5M8 16h3',
   registro: 'M15 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6M19 8v6M22 11h-6',
   login: 'M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H3',
@@ -10,6 +12,8 @@ const ICONOS = {
 
 const OPCIONES = [
   { id: 'inicio', label: 'Inicio' },
+  { id: 'mapa-cercanos', label: 'Mapa de Cercanos (US07)' },
+  { id: 'pago-yape', label: 'Pago QR Yape (US14)' },
   { id: 'noticias', label: 'Noticias' },
   { id: 'registro', label: 'Registrarse' },
   { id: 'login', label: 'Iniciar Sesión' },
