@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { verificarSesion } from '../services/authService.js'
-import { SIN_COMPRAS, nombreEstado, obtenerHistorial, validarRango } from '../services/historialService.js'
+import { SIN_COMPRAS, cuentaComoCompra, nombreEstado, obtenerHistorial, validarRango } from '../services/historialService.js'
 
 // US20 - Historial de compras (Fabio - Release 2 / Sprint 1)
 // T76: perfil con el conteo de compras y el monto acumulado. T77: listado con filtro por rango de fechas.
@@ -11,7 +11,8 @@ const formatoFecha = new Intl.DateTimeFormat('es-PE', { dateStyle: 'medium', tim
 // Color de apoyo por estado; el texto del estado siempre se muestra (RNF15).
 const COLOR_ESTADO = {
   entregada: 'bg-emerald-50 text-emerald-800',
-  pagada: 'bg-sky-50 text-sky-800',
+  pendiente: 'bg-sky-50 text-sky-800',
+  en_camino: 'bg-sky-50 text-sky-800',
   cancelada: 'bg-stone-100 text-stone-600',
 }
 
@@ -35,12 +36,15 @@ function Compra({ compra }) {
         <div className="text-right shrink-0">
           <p className="font-extrabold text-base text-[#2b1a0f] tabular-nums">{soles.format(compra.monto)}</p>
           <span
-            className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[11px] font-bold ${COLOR_ESTADO[compra.estado] ?? 'bg-amber-50 text-amber-800'}`}
+            className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[11px] font-bold ${
+              compra.vencida ? 'bg-stone-100 text-stone-600' : COLOR_ESTADO[compra.estado] ?? 'bg-amber-50 text-amber-800'
+            }`}
           >
-            {nombreEstado(compra.estado)}
+            {nombreEstado(compra)}
           </span>
         </div>
       </div>
+      {!cuentaComoCompra(compra) && <p className="mt-1 text-[11px] text-[#9a8676]">No suma al total de compras.</p>}
       <ul className="mt-2 text-xs text-[#6b5443] space-y-0.5">
         {compra.productos.map((p, i) => (
           <li key={i}>

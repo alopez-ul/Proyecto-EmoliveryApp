@@ -8,7 +8,7 @@ import { listarComprasDeCliente } from '../repositorios/historialCompras.js'
 
 const router = crearRouter()
 
-// GET /api/compras?desde=AAAA-MM-DD&hasta=AAAA-MM-DD (ambas opcionales).
+// GET /api/historial-compras?desde=AAAA-MM-DD&hasta=AAAA-MM-DD (ambas opcionales).
 // T76: conteo y monto acumulado del periodo. T77: listado con fecha, emolientero, productos, monto y estado.
 // Solo el cliente con sesión, y solo sus propias compras.
 router.get('/', requiereSesion, requiereRol('cliente'), async (req, res) => {

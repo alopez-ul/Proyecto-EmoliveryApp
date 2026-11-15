@@ -27,11 +27,16 @@ describe('T76: conteo y monto acumulado', () => {
     assert.equal(r.montoAcumulado, 4)
     assert.equal(r.mensaje, null)
   })
-  test('una orden cancelada se lista pero no cuenta ni suma', () => {
-    const r = resumirHistorial([compra(1, 2.5), compra(2, 10, 'cancelada')])
+  test('cuentan las pagadas, en camino y entregadas', () => {
+    const r = resumirHistorial([compra(1, 2, 'pendiente'), compra(2, 3, 'en_camino'), compra(3, 4, 'entregada')])
+    assert.equal(r.conteo, 3)
+    assert.equal(r.montoAcumulado, 9)
+  })
+  test('una orden cancelada o pendiente de pago se lista pero no cuenta ni suma', () => {
+    const r = resumirHistorial([compra(1, 2.5), compra(2, 10, 'cancelada'), compra(3, 7, 'pendiente_pago')])
     assert.equal(r.conteo, 1)
     assert.equal(r.montoAcumulado, 2.5)
-    assert.equal(r.compras.length, 2)
+    assert.equal(r.compras.length, 3)
   })
   test('suma sin errores de redondeo (0.1 + 0.2 = 0.3)', () => {
     assert.equal(resumirHistorial([compra(1, 0.1), compra(2, 0.2)]).montoAcumulado, 0.3)
