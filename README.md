@@ -87,6 +87,10 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | GET    | /api/jornadas/estado     | US06: jornada abierta, ubicación de hoy y jornadas de hoy (solo emolientero) |
 | POST   | /api/jornadas/abrir      | US06: abre la jornada; exige ubicación registrada hoy (422 si no) y una sola abierta (409) |
 | POST   | /api/jornadas/cerrar     | US06: cierra la jornada abierta (409 si no hay; 422 si quedan órdenes sin entregar) |
+| GET    | /api/puntos-habituales   | US10: puntos habituales del emolientero con sesión, por día y hora |
+| POST   | /api/puntos-habituales   | US10: registra `{referencia, lat, lng, diaSemana (1=lunes…7=domingo), horaInicio, horaFin ("HH:MM")}`. 400 con `campos` si hay datos inválidos (p. ej. fin no posterior al inicio); 409 si se cruza con otro punto suyo del mismo día |
+| DELETE | /api/puntos-habituales/:id | US10: elimina un punto propio (404 si no existe o es de otro) |
+| GET    | /api/ubicaciones/estimadas | US10: ubicación aproximada (`fuente: horario_habitual`, 300 m) de los emolienteros **sin** jornada abierta que suelen estar en un punto a esta hora (público, para el mapa) |
 | GET    | /api/admin/emolienteros/pendientes | US23: bandeja de emolienteros por verificar (solo admin) |
 | GET    | /api/admin/emolienteros/historial  | US23: decisiones tomadas (solo admin) |
 | POST   | /api/admin/emolienteros/:id/aprobar  | US23: aprueba → cuenta `activo` y notifica (solo admin) |
@@ -108,6 +112,12 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 - DNI, código municipal y correo son únicos. Se revisan antes de insertar, y los índices únicos de la BD resuelven los registros simultáneos.
 - La cuenta y el aviso a cada administrador activo se crean en una sola transacción. El aviso se ve en las notificaciones del panel del admin.
 - `npm test` incluye las pruebas de T09: DNI duplicado y código inválido, contra la BD de `.env.local`.
+
+## Puntos habituales del emolientero (US10)
+
+- El emolientero los registra en `#puntos-habituales` (enlace en su panel): zona marcada en el mapa dentro de La Molina con una referencia, día de la semana y rango horario.
+- Reglas (`backend/src/validaciones/puntoHabitual.js`, repetidas en el frontend solo para avisar antes): la hora de fin debe ser posterior a la de inicio (no se admiten rangos que crucen la medianoche) y los rangos de un mismo día no pueden cruzarse. Los rangos son `[inicio, fin)`: 08:00–10:00 y 10:00–12:00 son válidos. La restricción `EXCLUDE` de la migración 008 frena los registros simultáneos.
+- `PatronHistorico` (`backend/src/fuentes/patronHistorico.js`) es la fuente de localización de baja precisión (`horario_habitual`, 300 m): a quien no tiene la jornada abierta lo ubica en su punto habitual del momento (hora de Lima). Si tiene la jornada abierta manda su GPS. El mapa muestra estas ubicaciones con un marcador punteado.
 
 ## Base de datos
 

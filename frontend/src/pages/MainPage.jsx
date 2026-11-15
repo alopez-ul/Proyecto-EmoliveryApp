@@ -3,6 +3,7 @@ import { api } from '../services/api.js'
 import MapaLima from '../components/MapaLima.jsx'
 import MenuPrincipal from '../components/MenuPrincipal.jsx'
 import { listarUbicaciones } from '../services/ubicacionesService.js'
+import { listarUbicacionesEstimadas } from '../services/puntosHabitualesService.js'
 
 export default function MainPage() {
   const [puntos, setPuntos] = useState([])
@@ -19,6 +20,26 @@ export default function MainPage() {
       .catch(() => setUbicaciones([]))
   }, [])
 
+  // US10 - T48: ubicación aproximada (PatronHistorico, baja precisión) de quien no tiene la jornada
+  // abierta pero suele estar en un punto a esta hora. Marcador punteado para distinguirla del GPS.
+  const [estimadas, setEstimadas] = useState([])
+  useEffect(() => {
+    listarUbicacionesEstimadas()
+      .then((lista) =>
+        setEstimadas(
+          lista.map((u) => ({
+            id: `estimada-${u.id}`,
+            nombre: `${u.nombre} · ubicación aproximada (${u.referencia}, suele estar de ${u.horaInicio} a ${u.horaFin})`,
+            lat: u.lat,
+            lng: u.lng,
+            activo: true,
+            aproximado: true,
+          })),
+        ),
+      )
+      .catch(() => setEstimadas([]))
+  }, [])
+
   return (
     <div className="main-page">
       <header className="barra-superior">
@@ -28,7 +49,7 @@ export default function MainPage() {
 
       <main className="marco-mapa">
         <MapaLima
-          puntos={[...puntos, ...ubicaciones]}
+          puntos={[...puntos, ...ubicaciones, ...estimadas]}
           seleccionado={null}
           onSelect={() => {}}
           modoRegistro={false}

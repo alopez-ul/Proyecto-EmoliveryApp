@@ -63,7 +63,8 @@ export async function pedirConSesion(ruta, { method = 'GET', body } = {}) {
     cerrarSesion()
     window.location.hash = 'login'
   }
-  if (!res.ok) throw Object.assign(new Error(datos.error || 'No se pudo conectar con el servidor.'), { status: res.status })
+  // campos: errores por campo de formulario que devuelve el backend (400/409), si los hay.
+  if (!res.ok) throw Object.assign(new Error(datos.error || 'No se pudo conectar con el servidor.'), { status: res.status, campos: datos.campos })
   return datos
 }
 

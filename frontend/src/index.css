@@ -224,6 +224,8 @@
 .marcador.is-selected { border-color: var(--hierba); background: #e8f3e9; transform: rotate(-45deg) scale(1.15); }
 .marcador.is-offline { border-color: var(--offline); filter: grayscale(1); opacity: 0.75; }
 .marcador.is-draft { border-style: dashed; border-color: var(--hierba); }
+/* US10: ubicación aproximada por horario habitual (baja precisión): borde punteado y más tenue. */
+.marcador.is-aproximado { border-style: dotted; opacity: 0.7; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 600px) {

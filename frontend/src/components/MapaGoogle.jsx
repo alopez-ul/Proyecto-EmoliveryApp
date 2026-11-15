@@ -16,14 +16,15 @@ function CentrarEnSeleccion({ punto }) {
   return null
 }
 
-export default function MapaGoogle({ apiKey, puntos, seleccionado, onSelect, modoRegistro, borrador, onPick }) {
+// centro/zoom: vista inicial (por defecto, Lima). p.aproximado marca una ubicación de baja precisión (US10).
+export default function MapaGoogle({ apiKey, puntos, seleccionado, onSelect, modoRegistro, borrador, onPick, centro, zoom = 12 }) {
   return (
     <div className={`mapa-lima ${modoRegistro ? 'is-picking' : ''}`}>
       <APIProvider apiKey={apiKey} language="es" region="PE">
         <Map
           mapId={MAP_ID}
-          defaultCenter={LIMA_CENTER}
-          defaultZoom={12}
+          defaultCenter={centro ?? LIMA_CENTER}
+          defaultZoom={zoom}
           gestureHandling="greedy"
           disableDefaultUI
           zoomControl
@@ -46,6 +47,7 @@ export default function MapaGoogle({ apiKey, puntos, seleccionado, onSelect, mod
                 className={[
                   'marcador',
                   p.activo ? '' : 'is-offline',
+                  p.aproximado ? 'is-aproximado' : '',
                   seleccionado?.id === p.id ? 'is-selected' : '',
                 ].join(' ')}
               >

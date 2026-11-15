@@ -4,6 +4,7 @@ import { query } from '../db.js'
 import { ErrorHttp } from '../errores.js'
 import { requiereRol, requiereSesion } from '../autenticacion.js'
 import { validarUbicacion } from '../zonaCobertura.js'
+import { PatronHistorico } from '../fuentes/patronHistorico.js'
 
 const router = crearRouter()
 
@@ -23,6 +24,13 @@ router.get('/', async (_req, res) => {
      ORDER BY u.id, ub.registrada_en DESC`,
   )
   res.json(rows)
+})
+
+// US10 - T48: ubicación APROXIMADA (fuente 'horario_habitual', baja precisión) de los emolienteros
+// sin jornada abierta que, según sus puntos habituales, suelen estar en una zona a esta hora.
+// Pública, para el mapa. Quien tiene la jornada abierta sale en GET / con su GPS y no aquí.
+router.get('/estimadas', async (_req, res) => {
+  res.json(await PatronHistorico.estimar())
 })
 
 // Última ubicación registrada por el emolientero con sesión (o null si aún no registró ninguna).

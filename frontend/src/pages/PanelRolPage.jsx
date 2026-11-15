@@ -57,6 +57,14 @@ export default function PanelRolPage({ rol }) {
           Control de jornada (abrir o cerrar)
         </a>
       )}
+      {rol === 'emolientero' && (
+        <a
+          href="#puntos-habituales"
+          style={{ ...estilos.botonSecundario, display: 'block', marginBottom: 12, textAlign: 'center', textDecoration: 'none' }}
+        >
+          Mis puntos habituales (zona, día y horario)
+        </a>
+      )}
       <button
         type="button"
         style={estilos.boton}
