@@ -10,6 +10,7 @@ import CatalogoEmolientero from './pages/CatalogoEmolientero.jsx'
 import ValidarRecojo from './pages/ValidarRecojo.jsx'
 import MapaCercanos from './pages/MapaCercanos.jsx'
 import PagoYape from './pages/PagoYape.jsx'
+import EmolienterosFavoritos from './pages/EmolienterosFavoritos.jsx'
 import CompraAnticipada from './pages/CompraAnticipada.jsx'
 import ResenasEmolientero from './pages/ResenasEmolientero.jsx'
 import Moderacion from './pages/Moderacion.jsx'
@@ -83,6 +84,11 @@ export default function App() {
   // US14: Pago con QR de Yape (Jorge Rodrigo Burga)
   if (ruta === 'pago-yape') {
     return <PagoYape key={window.location.hash || window.location.pathname} />
+  }
+
+  // US21: Emolienteros favoritos y avisos de apertura de jornada (Jorge Rodrigo Burga)
+  if (ruta === 'favoritos' || ruta === 'emolienteros-favoritos') {
+    return <EmolienterosFavoritos key={window.location.hash || window.location.pathname} />
   }
 
   // US25: Moderación de contenido (solo administrador) (Matías)

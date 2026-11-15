@@ -86,6 +86,13 @@ export default function MainPage() {
           >
             Pago Yape (US14)
           </a>
+          <a
+            href="#favoritos"
+            className="px-3 py-1.5 rounded-xl bg-amber-900 hover:bg-amber-950 text-white text-xs font-bold shadow-xs transition-colors"
+            style={{ textDecoration: 'none' }}
+          >
+            ♥ Mis Favoritos (US21)
+          </a>
         </div>
       </header>
 

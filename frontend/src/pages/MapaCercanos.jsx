@@ -306,6 +306,12 @@ export default function MapaCercanos() {
             Mapa General
           </a>
           <a
+            href="#favoritos"
+            className="text-xs sm:text-sm font-bold text-[#b8581a] hover:bg-amber-50 py-1.5 px-3 rounded-xl border border-amber-200 transition-colors"
+          >
+            ♥ Mis Favoritos (US21)
+          </a>
+          <a
             href="#pago-yape"
             className="text-xs sm:text-sm font-bold bg-[#742384] hover:bg-[#5c1b69] text-white py-2 px-3.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5"
           >

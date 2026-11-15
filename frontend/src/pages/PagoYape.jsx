@@ -303,6 +303,12 @@ export default function PagoYape() {
             ← Volver a Mapa Cercanos (US07)
           </a>
           <a
+            href="#favoritos"
+            className="text-xs sm:text-sm font-bold text-[#b8581a] hover:bg-amber-50 py-1.5 px-3 rounded-xl border border-amber-200 transition-colors"
+          >
+            ♥ Mis Favoritos (US21)
+          </a>
+          <a
             href="#validar-recojo"
             className="text-xs sm:text-sm font-semibold text-[#6b5443] hover:text-[#2b1a0f] py-1.5 px-3 rounded-xl hover:bg-[#fbf6ef] transition-colors"
           >
