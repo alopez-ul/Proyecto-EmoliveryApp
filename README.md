@@ -100,6 +100,14 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | POST   | /api/moderacion/resenas/:id/reportes | US25: reporta una reseña `{motivo}` (10–300 caracteres; con sesión). 409 si ya la reportaste y sigue pendiente; 422 si es tuya |
 | GET    | /api/moderacion/reportes?estado=pendientes o atendidos | US25: bandeja de reportes pendientes o registro de decisiones (solo admin) |
 | POST   | /api/moderacion/reportes/:id/decision | US25: `{decision: "ocultar" o "mantener", nota}`. Ocultar oculta la reseña y baja 10 puntos la reputación del autor. 409 si ya fue atendido; 410 si el autor eliminó la reseña (solo admin) |
+| POST   | /api/ordenes/:id/cancelar | US16: el cliente cancela su orden pagada y no entregada dentro de los 30 min posteriores al pago. Registra la devolución y avisa al emolientero. 409 fuera de plazo, ya entregada, ya cancelada o sin pagar |
+| GET    | /api/devoluciones        | US16: devoluciones del emolientero por pedidos cancelados, primero las pendientes (solo emolientero) |
+| POST   | /api/devoluciones/:id/realizada | US16: el emolientero marca la devolución como hecha y se avisa al cliente. 409 si ya estaba realizada |
+| GET    | /api/resenas/mias        | US19: reseñas publicadas sobre el emolientero con sesión, con su respuesta y si fueron ocultadas |
+| POST   | /api/resenas/:id/respuesta | US19: responde una reseña `{respuesta}` (2–500 caracteres). Solo una respuesta por reseña; 409 si ya tiene respuesta o fue ocultada por moderación |
+| GET    | /api/admin/usuarios?rol=&estado=&desde=&hasta= | US24: usuarios filtrados por rol, estado y fecha de registro (AAAA-MM-DD, hora de Lima), con `totales` por rol y por estado (solo admin) |
+| POST   | /api/admin/usuarios/:id/suspender | US24: suspende una cuenta activa `{motivo}` (10–500). 409 con la lista `ordenes` si es un emolientero con pedidos pagados por entregar; 422 si es un admin o tu propia cuenta |
+| POST   | /api/admin/usuarios/:id/reactivar | US24: reactiva una cuenta suspendida `{motivo}` y le avisa |
 | GET    | /api/ubicaciones/estimadas | US10: ubicación aproximada (`fuente: horario_habitual`, 300 m, `confiabilidad: bajo`) de los emolienteros **sin** jornada abierta que suelen estar en un punto a esta hora (público, para el mapa) |
 | GET    | /api/ordenes/mias        | US15: pedidos del cliente con sesión, con su `codigoRecojo` ("ABC-23X") y si ya tiene la reseña habilitada |
 | GET    | /api/ordenes/por-entregar | US15: pedidos pendientes o en camino del emolientero con sesión (sin el código) |
@@ -146,6 +154,13 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 - Cada pedido tiene un código de recojo de un solo uso: 6 caracteres sin 0/O ni 1/I, generado con `crypto` (`backend/src/codigoRecojo.js`). Se crea con `crearOrden()`, que US13 debe usar al crear la compra anticipada. El cliente lo ve en su panel ("Mis pedidos").
 - El emolientero lo valida en `#validar-recojo` (botón en su panel). En **una sola transacción** (RNF12) la orden pasa a `entregada`, el código queda usado (`entregada_en`), se habilita la reseña del cliente (tabla `resenas`, migración `012`) y se le notifica. Si un paso falla no se guarda nada, y dos validaciones simultáneas del mismo código entregan una sola vez.
 - `npm run db:seed` crea un pedido de `cliente@` a `emolientero@` por entregar e imprime su código.
+
+## Cancelación, respuestas y gestión de usuarios (US16, US19, US24)
+
+- **US16:** el plazo de cancelación (30 min) se cuenta desde `ordenes.pagada_en` (migración `015`), que debe llenar el pago con QR de US14. Cancelar anula la orden y libera lo que ocupaba: sale de los pedidos por entregar, su código de recojo deja de servir y ya no impide cerrar la jornada. Además registra una devolución en `devoluciones` que el emolientero ve en su panel. Cancelación y entrega van en una sola consulta, así que si llegan a la vez solo una se aplica.
+- **US19:** la respuesta se guarda en la misma fila de la reseña (`resenas.respuesta`, migración `016`), así que solo puede haber una. Se ve en la vista pública de reseñas (US18) y se oculta junto con la reseña si la modera US25. El emolientero responde desde `#mis-resenas`.
+- **US24:** pestaña "Usuarios" del panel del administrador. Cada suspensión o reactivación queda en `cambios_estado_cuenta` (migración `017`) con su motivo y el admin que la hizo. Suspender a un emolientero le cierra la jornada abierta.
+- Mientras no existan US14 (pago) y US17 (publicar reseña), `npm run db:seed` crea un pedido pagado cancelable y una reseña publicada para probar estas historias.
 
 ## Base de datos
 

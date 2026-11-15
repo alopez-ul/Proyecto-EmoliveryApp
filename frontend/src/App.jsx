@@ -11,6 +11,7 @@ import CompraAnticipada from './pages/CompraAnticipada.jsx'
 import ValidarRecojo from './pages/ValidarRecojo.jsx'
 import ResenasEmolientero from './pages/ResenasEmolientero.jsx'
 import Moderacion from './pages/Moderacion.jsx'
+import MisResenas from './pages/MisResenas.jsx'
 import RecuperarPage from './pages/RecuperarPage.jsx'
 import NuevaPasswordPage from './pages/NuevaPasswordPage.jsx'
 import PanelRolPage from './pages/PanelRolPage.jsx'
@@ -81,6 +82,11 @@ export default function App() {
   // US13: Compra anticipada: carrito y orden pendiente de pago (#comprar?id=<emolientero>) (Matías)
   if (ruta === 'comprar') {
     return <CompraAnticipada key={window.location.hash} />
+  }
+
+  // US19: Respuesta del emolientero a sus reseñas (Renzo)
+  if (ruta === 'mis-resenas') {
+    return <MisResenas />
   }
 
   // US15: Validación del código de recojo (emolientero)

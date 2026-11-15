@@ -23,7 +23,8 @@ router.get('/emolientero/:emolienteroId', async (req, res) => {
   // Solo las publicadas y no ocultas por moderación (US25). Una reseña habilitada (US15) que el cliente aún
   // no escribe no tiene calificación.
   const { rows } = await query(
-    `SELECT r.id, r.calificacion, r.comentario, r.publicada_en AS "publicadaEn", u.nombre AS autor
+    `SELECT r.id, r.calificacion, r.comentario, r.publicada_en AS "publicadaEn", u.nombre AS autor,
+            r.respuesta, r.respondida_en AS "respondidaEn"
      FROM resenas r JOIN usuarios u ON u.id = r.cliente_id
      WHERE r.emolientero_id = $1 AND r.publicada_en IS NOT NULL AND r.oculta_en IS NULL`,
     [emolienteroId],

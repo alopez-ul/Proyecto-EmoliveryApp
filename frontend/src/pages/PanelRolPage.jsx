@@ -3,6 +3,7 @@ import AuthCard, { estilos } from '../components/AuthCard.jsx'
 import Notificaciones from '../components/Notificaciones.jsx'
 import RegistroUbicacion from '../components/RegistroUbicacion.jsx'
 import MisPedidos from '../components/MisPedidos.jsx'
+import Devoluciones from '../components/Devoluciones.jsx'
 import PanelAdmin from './admin/PanelAdmin.jsx'
 import { cerrarSesion, verificarSesion } from '../services/authService.js'
 
@@ -58,6 +59,8 @@ export default function PanelRolPage({ rol }) {
           Entregar un pedido (código de recojo)
         </a>
       )}
+      {/* US16 - T74: devoluciones por pedidos cancelados */}
+      {rol === 'emolientero' && <Devoluciones />}
       {rol === 'emolientero' && <RegistroUbicacion />}
       {rol === 'emolientero' && (
         <a
@@ -81,6 +84,14 @@ export default function PanelRolPage({ rol }) {
           style={{ ...estilos.botonSecundario, display: 'block', marginBottom: 12, textAlign: 'center', textDecoration: 'none' }}
         >
           Mi catálogo (productos y precios)
+        </a>
+      )}
+      {rol === 'emolientero' && (
+        <a
+          href="#mis-resenas"
+          style={{ ...estilos.botonSecundario, display: 'block', marginBottom: 12, textAlign: 'center', textDecoration: 'none' }}
+        >
+          Mis reseñas (responder a clientes)
         </a>
       )}
       <button

@@ -9,6 +9,7 @@ import {
   listarPendientes,
   rechazarEmolientero,
 } from '../../services/adminService.js'
+import GestionUsuarios from './GestionUsuarios.jsx'
 import './PanelAdmin.css'
 
 const formatoFecha = new Intl.DateTimeFormat('es-PE', { dateStyle: 'medium', timeStyle: 'short' })
@@ -113,6 +114,16 @@ export default function PanelAdmin({ usuario, onCerrarSesion }) {
             >
               Historial
             </button>
+            {/* US24: gestión de usuarios registrados */}
+            <button
+              type="button"
+              role="tab"
+              aria-selected={pestana === 'usuarios'}
+              className={pestana === 'usuarios' ? 'is-activa' : ''}
+              onClick={() => setPestana('usuarios')}
+            >
+              Usuarios
+            </button>
           </div>
 
           {pestana === 'pendientes' ? (
@@ -123,8 +134,10 @@ export default function PanelAdmin({ usuario, onCerrarSesion }) {
                 setDecision({ tipo, emolientero })
               }}
             />
-          ) : (
+          ) : pestana === 'historial' ? (
             <Historial historial={historial} />
+          ) : (
+            <GestionUsuarios usuarioActual={usuario} />
           )}
         </section>
       </main>
