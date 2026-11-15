@@ -54,7 +54,15 @@ export default function MapaOSM({ puntos, seleccionado, onSelect, modoRegistro, 
             )}
             eventHandlers={{ click: () => onSelect(p) }}
           >
-            <Tooltip direction="top">{p.nombre}</Tooltip>
+            <Tooltip direction="top">
+              {p.nombre}
+              {p.detalle && (
+                <>
+                  <br />
+                  {p.detalle}
+                </>
+              )}
+            </Tooltip>
           </Marker>
         ))}
         {borrador && <Marker position={[borrador.lat, borrador.lng]} icon={iconoEmoliente('is-draft')} />}

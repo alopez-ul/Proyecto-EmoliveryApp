@@ -39,7 +39,7 @@ export default function MapaGoogle({ apiKey, puntos, seleccionado, onSelect, mod
             <AdvancedMarker
               key={p.id}
               position={{ lat: p.lat, lng: p.lng }}
-              title={p.nombre}
+              title={p.detalle ? `${p.nombre} — ${p.detalle}` : p.nombre}
               onClick={() => onSelect(p)}
             >
               <div

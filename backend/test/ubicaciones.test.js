@@ -1,4 +1,4 @@
-// US05: pruebas del registro de ubicación contra la API real (BD de .env.local).
+// US05 y US08: pruebas del registro y la confiabilidad de la ubicación contra la API real (BD de .env.local).
 // Crea usuarios propios (test-<id>@emolivery.test) y los borra al terminar.
 import { after, before, describe, test } from 'node:test'
 import assert from 'node:assert/strict'
@@ -111,5 +111,64 @@ describe('US05: consultar ubicación', () => {
     const mias = datos.filter((u) => u.nombre === 'Test emolientero')
     assert.equal(mias.length, 1)
     assert.equal(mias[0].lat, -12.09)
+  })
+})
+
+// Inserta una lectura con la antigüedad indicada (en minutos) para un usuario de prueba.
+async function insertarUbicacion(nombre, { fuente = 'gps_emolientero', haceMin, lat = EN_LA_MOLINA.lat }) {
+  await pool.query(
+    `INSERT INTO ubicaciones (emolientero_id, lat, lng, precision_m, fuente, registrada_en)
+     SELECT id, $2, $3, 10, $4, now() - make_interval(mins => $5) FROM usuarios WHERE correo = $1`,
+    [correo(nombre), lat, EN_LA_MOLINA.lng, fuente, haceMin],
+  )
+}
+
+// El listado público solo muestra a quien tiene la jornada abierta (US06).
+async function abrirJornada(nombre) {
+  await pool.query('INSERT INTO jornadas (emolientero_id) SELECT id FROM usuarios WHERE correo = $1', [correo(nombre)])
+}
+
+describe('US08: confiabilidad de la ubicación', () => {
+  before(async () => {
+    await crearUsuario('media', 'emolientero', 'activo')
+    await crearUsuario('vieja', 'emolientero', 'activo')
+    await crearUsuario('confirmada', 'emolientero', 'activo')
+    for (const n of ['media', 'vieja', 'confirmada']) await abrirJornada(n)
+    await insertarUbicacion('media', { haceMin: 30 })
+    await insertarUbicacion('vieja', { haceMin: 300 })
+    await insertarUbicacion('confirmada', { haceMin: 300 })
+    await insertarUbicacion('confirmada', { fuente: 'avistamiento_cliente', haceMin: 10, lat: -12.08 })
+  })
+
+  const buscar = (lista, nombre) => lista.filter((u) => u.nombre === `Test ${nombre}`)
+
+  test('muestra la antigüedad y el nivel alto de un registro recién hecho', async () => {
+    const [u] = buscar((await api('GET', '/api/ubicaciones')).datos, 'emolientero')
+    assert.equal(u.confiabilidad, 'alto')
+    assert.ok(u.antiguedadMin >= 0 && u.antiguedadMin < 15)
+  })
+
+  test('un registro de hace 30 min tiene nivel medio', async () => {
+    const [u] = buscar((await api('GET', '/api/ubicaciones')).datos, 'media')
+    assert.equal(u.confiabilidad, 'medio')
+    assert.ok(u.antiguedadMin >= 29 && u.antiguedadMin <= 31)
+  })
+
+  test('más de 4 h sin confirmación: no aparece en los resultados por defecto', async () => {
+    assert.equal(buscar((await api('GET', '/api/ubicaciones')).datos, 'vieja').length, 0)
+  })
+
+  test('con un avistamiento reciente se muestra esa fuente, no el GPS vencido', async () => {
+    const mias = buscar((await api('GET', '/api/ubicaciones')).datos, 'confirmada')
+    assert.equal(mias.length, 1)
+    assert.equal(mias[0].fuente, 'avistamiento_cliente')
+    assert.equal(mias[0].lat, -12.08)
+  })
+
+  test('acepta la fuente avistamiento_verificado (migración 009)', async () => {
+    await insertarUbicacion('vieja', { fuente: 'avistamiento_verificado', haceMin: 1 })
+    const [u] = buscar((await api('GET', '/api/ubicaciones')).datos, 'vieja')
+    assert.equal(u.fuente, 'avistamiento_verificado')
+    assert.equal(u.confiabilidad, 'alto')
   })
 })

@@ -1,11 +1,28 @@
 // US05: llamadas a la API de ubicaciones.
 import { pedirConSesion } from './authService.js'
 
-// Pública: ubicación actual de cada emolientero activo (para el mapa de los clientes).
+// Pública: ubicación más confiable de cada emolientero activo (para el mapa de los clientes).
+// US08: cada una trae antiguedadMin y confiabilidad ('alto' | 'medio' | 'bajo').
 export async function listarUbicaciones() {
   const res = await fetch('/api/ubicaciones')
   if (!res.ok) throw new Error('No se pudieron cargar las ubicaciones.')
   return res.json()
+}
+
+// US08 - T44: antigüedad legible del dato.
+export function formatearAntiguedad(min) {
+  if (min < 1) return 'hace menos de 1 min'
+  if (min < 60) return `hace ${min} min`
+  const h = Math.floor(min / 60)
+  const resto = min % 60
+  return resto ? `hace ${h} h ${resto} min` : `hace ${h} h`
+}
+
+// US08 - T44 (RNF15): el nivel se comunica con texto, no solo con color.
+const NIVELES = { alto: 'Confiabilidad alta', medio: 'Confiabilidad media', bajo: 'Confiabilidad baja' }
+
+export function describirConfiabilidad({ confiabilidad, antiguedadMin }) {
+  return `${NIVELES[confiabilidad] ?? 'Confiabilidad desconocida'} · ${formatearAntiguedad(antiguedadMin)}`
 }
 
 // Con sesión de emolientero.

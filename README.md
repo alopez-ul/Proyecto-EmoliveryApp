@@ -81,7 +81,7 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | POST   | /api/auth/nueva-password | US04: define la nueva contraseña `{token, password}` |
 | POST   | /api/emolienteros/registro | US02: registra un emolientero `{nombreNegocio, dni, codigoMunicipal, telefono, correo, password}` en `pendiente_verificacion` y notifica a los admins. 400 con `campos` si hay datos inválidos; 409 si el DNI, el código o el correo ya existen |
 | POST   | /api/clientes/registro   | US01: registra un cliente `{nombre, telefono, correo, password}` como `activo`. 400 con `campos` si hay datos inválidos; 409 si el correo ya existe |
-| GET    | /api/ubicaciones         | US05: ubicación actual de los emolienteros **con la jornada abierta** (público, para el mapa) |
+| GET    | /api/ubicaciones         | US05/US08: ubicación más confiable de los emolienteros **con la jornada abierta** (público, para el mapa), con `antiguedadMin` y `confiabilidad` (`alto` < 15 min, `medio` ≤ 1 h, `bajo` > 1 h o solo horario habitual). Excluye las de más de 4 h sin confirmación |
 | GET    | /api/ubicaciones/mia     | US05: última ubicación del emolientero con sesión |
 | POST   | /api/ubicaciones         | US05: registra la ubicación `{lat, lng, precision}` (solo La Molina, precisión de 50 m o mejor) |
 | GET    | /api/jornadas/estado     | US06: jornada abierta, ubicación de hoy y jornadas de hoy (solo emolientero) |
