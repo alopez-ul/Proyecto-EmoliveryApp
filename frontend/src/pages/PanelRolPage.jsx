@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import AuthCard, { estilos } from '../components/AuthCard.jsx'
 import Notificaciones from '../components/Notificaciones.jsx'
 import RegistroUbicacion from '../components/RegistroUbicacion.jsx'
+import MisPedidos from '../components/MisPedidos.jsx'
 import PanelAdmin from './admin/PanelAdmin.jsx'
 import { cerrarSesion, verificarSesion } from '../services/authService.js'
 
@@ -48,6 +49,15 @@ export default function PanelRolPage({ rol }) {
         Iniciaste sesión como <strong>{rol}</strong> ({usuario.correo}).
       </p>
       <Notificaciones />
+      {rol === 'cliente' && <MisPedidos />}
+      {rol === 'emolientero' && (
+        <a
+          href="#validar-recojo"
+          style={{ ...estilos.boton, display: 'block', margin: '0 0 18px', textAlign: 'center', textDecoration: 'none' }}
+        >
+          Entregar un pedido (código de recojo)
+        </a>
+      )}
       {rol === 'emolientero' && <RegistroUbicacion />}
       {rol === 'emolientero' && (
         <a

@@ -1,8 +1,9 @@
 // Crea (o restablece) los usuarios de prueba de US03/US04, los emolienteros pendientes de US23 y el
-// catálogo de prueba de US12. Solo para desarrollo:
+// catálogo de prueba de US12 y un pedido por entregar de US15. Solo para desarrollo:
 // sus contraseñas son públicas, así que no debe ejecutarse en una base con usuarios reales.
 import { pool } from './db.js'
 import { hashContrasena } from './seguridad.js'
+import { crearOrden, formatearCodigo } from './codigoRecojo.js'
 
 const USUARIOS_PRUEBA = [
   { nombre: 'Carla Cliente', correo: 'cliente@emolivery.pe', password: 'Cliente123', rol: 'cliente', estado: 'activo' },
@@ -50,6 +51,18 @@ try {
     )
   }
   console.log(`Catálogo de prueba listo: ${CATALOGO_PRUEBA.length} productos de emolientero@emolivery.pe`)
+
+  // US15: un pedido de Carla a Elmer por entregar, para probar la validación del código de recojo.
+  // Si ya tiene uno pendiente con código, no crea otro.
+  const { rows: [carla] } = await pool.query("SELECT id FROM usuarios WHERE correo = 'cliente@emolivery.pe'")
+  const { rows: [pendiente] } = await pool.query(
+    `SELECT codigo_recojo AS codigo FROM ordenes
+     WHERE cliente_id = $1 AND emolientero_id = $2 AND estado IN ('pendiente', 'en_camino') AND codigo_recojo IS NOT NULL
+     LIMIT 1`,
+    [carla.id, elmer.id],
+  )
+  const codigo = pendiente?.codigo ?? (await crearOrden(pool, { clienteId: carla.id, emolienteroId: elmer.id })).codigoRecojo
+  console.log(`Pedido de prueba por entregar: código de recojo ${formatearCodigo(codigo)} (cliente@ → emolientero@)`)
 } finally {
   await pool.end()
 }
