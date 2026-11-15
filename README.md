@@ -84,6 +84,7 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | GET    | /api/ubicaciones         | US05: ubicación actual de los emolienteros **con la jornada abierta** (público, para el mapa) |
 | GET    | /api/ubicaciones/mia     | US05: última ubicación del emolientero con sesión |
 | POST   | /api/ubicaciones         | US05: registra la ubicación `{lat, lng, precision}` (solo La Molina, precisión de 50 m o mejor) |
+| GET    | /api/catalogo/:emolienteroId | US12: catálogo público agrupado por categoría, con `precio`, `disponible` y `comprable` por producto; `puedeComprar` es false fuera de jornada. 404 si el emolientero no existe o no está activo |
 | GET    | /api/jornadas/estado     | US06: jornada abierta, ubicación de hoy y jornadas de hoy (solo emolientero) |
 | POST   | /api/jornadas/abrir      | US06: abre la jornada; exige ubicación registrada hoy (422 si no) y una sola abierta (409) |
 | POST   | /api/jornadas/cerrar     | US06: cierra la jornada abierta (409 si no hay; 422 si quedan órdenes sin entregar) |
@@ -108,6 +109,14 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 - DNI, código municipal y correo son únicos. Se revisan antes de insertar, y los índices únicos de la BD resuelven los registros simultáneos.
 - La cuenta y el aviso a cada administrador activo se crean en una sola transacción. El aviso se ve en las notificaciones del panel del admin.
 - `npm test` incluye las pruebas de T09: DNI duplicado y código inválido, contra la BD de `.env.local`.
+
+## Consulta de catálogo (US12)
+
+- Cada emolientero tiene su catálogo en `catalogo_productos` (migración `009`), con categoría, precio y disponibilidad. US11 se encargará de crearlo y editarlo; mientras tanto, `npm run db:seed` carga un catálogo de prueba para `emolientero@emolivery.pe`.
+- Al tocar un emolientero en el mapa se abre `#catalogo?id=<emolientero>`. La vista agrupa los productos por categoría, siempre en el mismo orden: Emolientes, Quinua y avena, Maca, Otras bebidas y Acompañamientos.
+- Un producto agotado sigue visible, pero no se puede comprar. Fuera de jornada todo el catálogo se ve, pero ningún producto se puede comprar.
+- Solo publican su catálogo los emolienteros con cuenta activa. Uno pendiente, rechazado o suspendido responde 404.
+- Al crear la compra anticipada, US13 debe volver a comprobar en el servidor la jornada y la disponibilidad, porque deshabilitar el botón en pantalla no basta.
 
 ## Base de datos
 

@@ -14,7 +14,7 @@ const COLUMNAS = `id, lat, lng, precision_m AS "precisionM", fuente, registrada_
 router.get('/', async (_req, res) => {
   const { rows } = await query(
     `SELECT DISTINCT ON (u.id)
-            ub.id, u.nombre, ub.lat, ub.lng, ub.precision_m AS "precisionM",
+            ub.id, u.id AS "emolienteroId", u.nombre, ub.lat, ub.lng, ub.precision_m AS "precisionM",
             ub.fuente, ub.registrada_en AS "registradaEn"
      FROM ubicaciones ub
      JOIN usuarios u ON u.id = ub.emolientero_id
