@@ -61,6 +61,32 @@ export default function MainPage() {
       <header className="barra-superior">
         <MenuPrincipal />
         <h1 className="titulo">Emolivery</h1>
+        <div
+          style={{
+            position: 'absolute',
+            right: 20,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            display: 'flex',
+            gap: 8,
+            alignItems: 'center',
+          }}
+        >
+          <a
+            href="#mapa-cercanos"
+            className="px-3 py-1.5 rounded-xl bg-[#b8581a] hover:bg-[#9e4a14] text-white text-xs font-bold shadow-xs transition-colors"
+            style={{ textDecoration: 'none' }}
+          >
+            Cercanos (US07)
+          </a>
+          <a
+            href="#pago-yape"
+            className="px-3 py-1.5 rounded-xl bg-[#742384] hover:bg-[#5c1b69] text-white text-xs font-bold shadow-xs transition-colors"
+            style={{ textDecoration: 'none' }}
+          >
+            Pago Yape (US14)
+          </a>
+        </div>
       </header>
 
       <main className="marco-mapa">

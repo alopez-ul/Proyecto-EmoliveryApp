@@ -112,6 +112,11 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | GET    | /api/ordenes/mias        | US15: pedidos del cliente con sesión, con su `codigoRecojo` ("ABC-23X") y si ya tiene la reseña habilitada |
 | GET    | /api/ordenes/por-entregar | US15: pedidos pendientes o en camino del emolientero con sesión (sin el código) |
 | POST   | /api/ordenes/entregar    | US15: valida `{codigo}` y entrega el pedido. 200 `{orden, resena}`; 400 si el formato es inválido; 404 si no existe; 403 si es de otro emolientero; 409 si ya se usó o el pedido está cancelado |
+| POST   | /api/avistamientos       | US09: el cliente confirma `{emolienteroId, lat, lng, precision}` (su GPS). 201 `{avistamiento, verificado, confirmaciones}`; 422 si está a más de 100 m, el GPS es impreciso o el emolientero no atiende; 409 si ya lo confirmó en esta ventana de 30 min; 404 si no existe |
+| GET    | /api/noticias            | US22: noticias del usuario con sesión (de su público o para todos) cuya fecha ya llegó, de la más reciente a la más antigua |
+| GET    | /api/noticias/todas      | US22: todas las noticias, con `programada` (solo admin) |
+| POST   | /api/noticias            | US22: publica `{titulo, contenido, publico ("todos", "clientes" o "emolienteros"), fechaPublicacion ("AAAA-MM-DD")}` (solo admin). 400 con `campos` si hay datos inválidos o la fecha es anterior a hoy |
+| DELETE | /api/noticias/:id        | US22: elimina una noticia (solo admin) |
 | GET    | /api/admin/emolienteros/pendientes | US23: bandeja de emolienteros por verificar (solo admin) |
 | GET    | /api/admin/emolienteros/historial  | US23: decisiones tomadas (solo admin) |
 | POST   | /api/admin/emolienteros/:id/aprobar  | US23: aprueba → cuenta `activo` y notifica (solo admin) |
@@ -155,16 +160,30 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 - El emolientero lo valida en `#validar-recojo` (botón en su panel). En **una sola transacción** (RNF12) la orden pasa a `entregada`, el código queda usado (`entregada_en`), se habilita la reseña del cliente (tabla `resenas`, migración `012`) y se le notifica. Si un paso falla no se guarda nada, y dos validaciones simultáneas del mismo código entregan una sola vez.
 - `npm run db:seed` crea un pedido de `cliente@` a `emolientero@` por entregar e imprime su código.
 
+## Confirmación de avistamiento (US09)
+
+- En el catálogo de un emolientero que está atendiendo (se abre desde el mapa), el cliente con sesión pulsa "Sí, lo estoy viendo aquí". Se usa su GPS: debe estar a **100 m o menos** de la ubicación que muestra el mapa.
+- La confirmación se guarda como una ubicación con fuente `avistamiento_cliente` (entra en la confiabilidad de US08) y en la tabla `avistamientos` (migración `014`), con el cliente y la distancia.
+- `AvistamientoCliente` implementa `equals` y `hashCode` (RNF19): es el mismo avistamiento si el mismo cliente confirma al mismo emolientero en la misma ventana de 30 min. Así se rechaza la confirmación repetida (409) y no se cuenta dos veces.
+- Cuando 2 clientes distintos coinciden (últimos 30 min, a 100 m o menos entre sí) se registra un `AvistamientoVerificado` en el punto medio de sus reportes.
+- La regla para abrir jornada (US06) y "Mi ubicación" (US05) solo cuentan el GPS del propio emolientero, no los avistamientos.
+
+## Noticias (US22)
+
+- El administrador las publica en la pestaña "Noticias" de su panel: título, contenido, público objetivo (todos, clientes o emolienteros) y fecha de publicación, que no puede ser anterior a hoy (hora de Lima). Con fecha futura quedan programadas.
+- Clientes y emolienteros ven en su panel las noticias de su público cuya fecha ya llegó, de la más reciente a la más antigua (tabla `noticias`, migración `015`).
+
 ## Cancelación, respuestas y gestión de usuarios (US16, US19, US24)
 
-- **US16:** el plazo de cancelación (30 min) se cuenta desde `ordenes.pagada_en` (migración `015`), que debe llenar el pago con QR de US14. Cancelar anula la orden y libera lo que ocupaba: sale de los pedidos por entregar, su código de recojo deja de servir y ya no impide cerrar la jornada. Además registra una devolución en `devoluciones` que el emolientero ve en su panel. Cancelación y entrega van en una sola consulta, así que si llegan a la vez solo una se aplica.
-- **US19:** la respuesta se guarda en la misma fila de la reseña (`resenas.respuesta`, migración `016`), así que solo puede haber una. Se ve en la vista pública de reseñas (US18) y se oculta junto con la reseña si la modera US25. El emolientero responde desde `#mis-resenas`.
-- **US24:** pestaña "Usuarios" del panel del administrador. Cada suspensión o reactivación queda en `cambios_estado_cuenta` (migración `017`) con su motivo y el admin que la hizo. Suspender a un emolientero le cierra la jornada abierta.
+- **US16:** el plazo de cancelación (30 min) se cuenta desde `ordenes.pagada_en` (migración `015_cancelacion.sql`), que debe llenar el pago con QR de US14. Cancelar anula la orden y libera lo que ocupaba: sale de los pedidos por entregar, su código de recojo deja de servir y ya no impide cerrar la jornada. Además registra una devolución en `devoluciones` que el emolientero ve en su panel. Cancelación y entrega van en una sola consulta, así que si llegan a la vez solo una se aplica.
+- **US19:** la respuesta se guarda en la misma fila de la reseña (`resenas.respuesta`, migración `016_respuesta_resenas.sql`), así que solo puede haber una. Se ve en la vista pública de reseñas (US18) y se oculta junto con la reseña si la modera US25. El emolientero responde desde `#mis-resenas`.
+- **US24:** pestaña "Usuarios" del panel del administrador. Cada suspensión o reactivación queda en `cambios_estado_cuenta` (migración `017_suspensiones.sql`) con su motivo y el admin que la hizo. Suspender a un emolientero le cierra la jornada abierta.
 - Mientras no existan US14 (pago) y US17 (publicar reseña), `npm run db:seed` crea un pedido pagado cancelable y una reseña publicada para probar estas historias.
 
 ## Base de datos
 
-- **Migración `012`** (US15): código de recojo en `ordenes` y tabla `resenas`.
+- **Migraciones `012` a `015`:** `012` código de recojo y `resenas` (US15), `013` compra anticipada (US13), `014_avistamientos` (US09), `014_moderacion` (US25) y `015` noticias (US22). Hay dos `014` porque se crearon en ramas distintas; ya están aplicadas en Neon con esos nombres y **no se deben renombrar** (el sistema las reconoce por el nombre del archivo). La próxima migración es la `016`.
+- **Pedidos:** la compra anticipada (US13) crea la orden en `pendiente_pago` y ya con su código de recojo; el código se valida (US15) cuando la orden pasa a `pendiente`, es decir, cuando está pagada.
 - **Migraciones del sprint 2:** `008` puntos habituales (US10), `009` catálogo (US11), `010` fuente `avistamiento_verificado` (US08) y `011` descripción y categorías del catálogo (US11 + US12). Antes de crear una migración nueva, revisa el último número en `main` para no repetirlo.
 
 - **Órdenes:** la tabla `ordenes` (migración 007) sirve para la regla de US06 (no cerrar la jornada con órdenes `pendiente` o `en_camino`) y para la entrega con código de recojo (US15). Crear órdenes desde la app corresponde a US13.

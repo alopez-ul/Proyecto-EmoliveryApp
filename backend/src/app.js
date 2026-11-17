@@ -12,8 +12,12 @@ import clientesRouter from './routes/clientes.js'
 import jornadasRouter from './routes/jornadas.js'
 import puntosHabitualesRouter from './routes/puntosHabituales.js'
 import catalogoRouter from './routes/catalogo.js'
-import comprasRouter from './routes/compras.js'
 import ordenesRouter from './routes/ordenes.js'
+import avistamientosRouter from './routes/avistamientos.js'
+import noticiasRouter from './routes/noticias.js'
+import mapaRouter from './routes/mapa.js'
+import pagosRouter from './routes/pagos.js'
+import comprasRouter from './routes/compras.js'
 import consultaResenasRouter from './routes/consultaResenas.js'
 import moderacionRouter from './routes/moderacion.js'
 import { cancelacionRouter, devolucionesRouter } from './routes/cancelacion.js'
@@ -49,6 +53,10 @@ app.use('/api/clientes', clientesRouter)
 app.use('/api/jornadas', jornadasRouter)
 app.use('/api/puntos-habituales', puntosHabitualesRouter)
 app.use('/api/catalogo', catalogoRouter)
+app.use('/api/avistamientos', avistamientosRouter)
+app.use('/api/noticias', noticiasRouter)
+app.use('/api/mapa', mapaRouter)
+app.use('/api/pagos', pagosRouter)
 // US13 (compras.js), US15 (ordenes.js) y US16 (cancelacion.js) comparten /api/ordenes: cada ruta exige su propio rol.
 app.use('/api/ordenes', comprasRouter)
 app.use('/api/ordenes', cancelacionRouter)

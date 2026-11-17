@@ -7,6 +7,7 @@ import { ErrorHttp } from '../errores.js'
 import { requiereRol, requiereSesion } from '../autenticacion.js'
 import { Orden, verificarCompra } from '../orden.js'
 import { validarCarrito } from '../validaciones/compra.js'
+import { generarCodigoRecojo } from '../codigoRecojo.js'
 
 const router = crearRouter()
 const soloCliente = [requiereSesion, requiereRol('cliente')]
@@ -40,9 +41,10 @@ router.post('/', ...soloCliente, async (req, res) => {
     const orden = Orden.crear({ clienteId: req.usuario.id, emolienteroId: emolientero.id, lineas })
 
     const { rows: [creada] } = await cliente.query(
-      `INSERT INTO ordenes (cliente_id, emolientero_id, estado, total, expira_en)
-       VALUES ($1, $2, $3, $4, $5) RETURNING id, creada_en`,
-      [orden.clienteId, orden.emolienteroId, orden.estado, orden.total, orden.expiraEn],
+      // US15: la orden nace con su código de recojo de un solo uso (se entrega cuando ya está pagada).
+      `INSERT INTO ordenes (cliente_id, emolientero_id, estado, total, expira_en, codigo_recojo)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, creada_en`,
+      [orden.clienteId, orden.emolienteroId, orden.estado, orden.total, orden.expiraEn, generarCodigoRecojo()],
     )
     for (const linea of orden.lineas) {
       await cliente.query(
