@@ -69,11 +69,17 @@ describe('US05: registrar ubicación', () => {
   })
 
   test('fuera de La Molina: rechaza con el mensaje del criterio (422) y no guarda', async () => {
-    const antes = (await pool.query('SELECT count(*)::int n FROM ubicaciones')).rows[0].n
+    // Solo las de este emolientero: otras pruebas que corren en paralelo agregan ubicaciones a la BD compartida.
+    const contar = async () =>
+      (await pool.query(
+        'SELECT count(*)::int n FROM ubicaciones WHERE emolientero_id = (SELECT id FROM usuarios WHERE correo = $1)',
+        [correo('emolientero')],
+      )).rows[0].n
+    const antes = await contar()
     const r = await api('POST', '/api/ubicaciones', { token: tokens.emolientero, body: { lat: -12.0464, lng: -77.0306, precision: 10 } })
     assert.equal(r.status, 422)
     assert.equal(r.datos.error, 'Ubicación fuera de la zona de cobertura.')
-    assert.equal((await pool.query('SELECT count(*)::int n FROM ubicaciones')).rows[0].n, antes)
+    assert.equal(await contar(), antes)
   })
 
   test('precisión peor que 50 m: rechaza (422)', async () => {

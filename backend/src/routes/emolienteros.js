@@ -60,7 +60,11 @@ router.post('/registro', async (req, res) => {
       [datos.nombreNegocio, datos.correo, passwordHash, ESTADO_INICIAL, datos.dni, datos.codigoMunicipal, datos.telefono],
     )
 
-    const { rows: admins } = await cliente.query("SELECT id, correo FROM usuarios WHERE rol = 'admin' AND estado = 'activo'")
+    // FOR KEY SHARE: si en este instante se elimina a un administrador, el borrado espera a que termine el
+    // registro. Sin el bloqueo, su notificación apuntaría a un usuario que ya no existe y el registro fallaría.
+    const { rows: admins } = await cliente.query(
+      "SELECT id, correo FROM usuarios WHERE rol = 'admin' AND estado = 'activo' FOR KEY SHARE",
+    )
     for (const admin of admins) {
       await notificar(cliente, admin, {
         tipo: 'registro_emolientero',
