@@ -15,6 +15,7 @@ import CompraAnticipada from './pages/CompraAnticipada.jsx'
 import ResenasEmolientero from './pages/ResenasEmolientero.jsx'
 import Moderacion from './pages/Moderacion.jsx'
 import MisResenas from './pages/MisResenas.jsx'
+import MisCompras from './pages/MisCompras.jsx'
 import RecuperarPage from './pages/RecuperarPage.jsx'
 import NuevaPasswordPage from './pages/NuevaPasswordPage.jsx'
 import PanelRolPage from './pages/PanelRolPage.jsx'
@@ -110,6 +111,11 @@ export default function App() {
   // US19: Respuesta del emolientero a sus reseñas (Renzo)
   if (ruta === 'mis-resenas') {
     return <MisResenas />
+  }
+
+  // US20: Historial de compras del cliente (Fabio)
+  if (ruta === 'mis-compras') {
+    return <MisCompras key={window.location.hash || window.location.pathname} />
   }
 
   // Rutas del equipo (US03 / US04 - Matías)

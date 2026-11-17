@@ -63,6 +63,14 @@ export default function PanelRolPage({ rol }) {
       )}
       {/* US16 - T74: devoluciones por pedidos cancelados */}
       {rol === 'emolientero' && <Devoluciones />}
+      {rol === 'cliente' && (
+        <a
+          href="#mis-compras"
+          style={{ ...estilos.botonSecundario, display: 'block', marginBottom: 12, textAlign: 'center', textDecoration: 'none' }}
+        >
+          Mis compras (historial y total)
+        </a>
+      )}
       {rol === 'emolientero' && <RegistroUbicacion />}
       {rol === 'emolientero' && (
         <a

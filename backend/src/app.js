@@ -24,6 +24,7 @@ import favoritosRouter from './routes/favoritos.js'
 import { cancelacionRouter, devolucionesRouter } from './routes/cancelacion.js'
 import respuestasResenasRouter from './routes/respuestasResenas.js'
 import adminUsuariosRouter from './routes/adminUsuarios.js'
+import historialComprasRouter from './routes/historialCompras.js'
 import { pool } from './db.js'
 
 // La app se crea aquí y se arranca en server.js, para que las pruebas puedan levantarla en otro puerto.
@@ -68,6 +69,7 @@ app.use('/api/resenas', consultaResenasRouter)
 app.use('/api/resenas', respuestasResenasRouter)
 app.use('/api/moderacion', moderacionRouter)
 app.use('/api/favoritos', favoritosRouter)
+app.use('/api/historial-compras', historialComprasRouter)
 
 app.use((err, _req, res, _next) => {
   // JSON mal formado en el cuerpo de la petición
