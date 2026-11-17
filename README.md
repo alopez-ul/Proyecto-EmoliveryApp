@@ -183,8 +183,16 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 
 ## Base de datos
 
-- **Migraciones `012` a `018`:** `012` código de recojo y `resenas` (US15), `013` compra anticipada (US13), `014_avistamientos` (US09), `014_moderacion` (US25), `015` noticias (US22), `016` cancelación (US16), `017` respuesta a reseñas (US19) y `018` suspensiones (US24). Hay dos `014` porque se crearon en ramas distintas; ya están aplicadas en Neon con esos nombres y **no se deben renombrar** (el sistema las reconoce por el nombre del archivo). La próxima migración es la `019`: antes de crear una, revisa el último número en `main`.
-- **Pedidos:** la compra anticipada (US13) crea la orden en `pendiente_pago` y ya con su código de recojo; el código se valida (US15) cuando la orden pasa a `pendiente`, es decir, cuando está pagada.
+- **Migraciones `012` a `018`:** `012` código de recojo y `resenas` (US15), `013` compra anticipada (US13), `014_avistamientos` (US09), `014_moderacion` (US25), `015` noticias (US22), `016` cancelación (US16), `017` respuesta a reseñas (US19), `018` suspensiones (US24) y `019` pago con Yape de órdenes reales (US14). Hay dos `014` porque se crearon en ramas distintas; ya están aplicadas en Neon con esos nombres y **no se deben renombrar** (el sistema las reconoce por el nombre del archivo). La próxima migración es la `020`: antes de crear una, revisa el último número en `main`.
+- **Flujo de un pedido:**
+  1. **US13 compra:** crea la orden en `pendiente_pago`, con vigencia de 15 min y ya con su código de recojo.
+  2. **US14 pago:** `POST /api/pagos/yape/ordenes/:id` `{numeroOperacion, montoIngresado}` (solo el cliente dueño) valida la constancia con las reglas de `Yape` (vigencia, formato y unicidad del número de operación, monto exacto). En una transacción:
+     - **Si es válida:** la orden pasa a `pendiente`, guarda `pagada_en` y `numero_operacion`, y se avisa al emolientero. Responde con el código de recojo.
+     - **Si no es válida:** se libera la reserva, es decir, la orden pasa a `cancelada` (422).
+     - **En ambos casos:** cada intento queda en `transacciones_pago` (RNF06, migración `019`).
+  3. **US15 entrega:** el emolientero valida el código.
+  4. **US16 cancelación:** el cliente puede cancelar hasta 30 min después de `pagada_en`.
+- **Pantallas del pago:** la pantalla de pago real es `#pago-yape?orden=<id>`; se llega desde la compra o desde "Mis pedidos". `#pago-yape` sin `?orden=` sigue siendo la demostración de US14, y `POST /api/pagos/yape/validar` sigue siendo su endpoint de demostración, que no toca la BD.
 - **Migraciones del sprint 2:** `008` puntos habituales (US10), `009` catálogo (US11), `010` fuente `avistamiento_verificado` (US08) y `011` descripción y categorías del catálogo (US11 + US12). Antes de crear una migración nueva, revisa el último número en `main` para no repetirlo.
 
 - **Órdenes:** la tabla `ordenes` (migración 007) sirve para la regla de US06 (no cerrar la jornada con órdenes `pendiente` o `en_camino`) y para la entrega con código de recojo (US15). Crear órdenes desde la app corresponde a US13.

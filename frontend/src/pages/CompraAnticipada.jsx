@@ -81,8 +81,16 @@ function OrdenCreada({ orden, onSeguir }) {
         <span className="tabular-nums">{soles.format(orden.total)}</span>
       </p>
 
-      {/* El pago con QR de Yape es US14: se conectará aquí con esta orden. */}
-      <p className="mt-6 p-3 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9] text-xs text-[#6b5443]">
+      {/* US14: el pago con QR de Yape de esta orden */}
+      {!vencida && (
+        <a
+          href={`#pago-yape?orden=${orden.id}`}
+          className="block mt-6 py-3.5 rounded-xl bg-[#742384] hover:bg-[#5c1b69] text-white font-bold text-sm"
+        >
+          Pagar {soles.format(orden.total)} con Yape
+        </a>
+      )}
+      <p className="mt-4 p-3 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9] text-xs text-[#6b5443]">
         El precio quedó fijado al confirmar: aunque el emolientero lo cambie, pagarás {soles.format(orden.total)}.
       </p>
       <button type="button" onClick={onSeguir} className="mt-4 text-sm font-bold text-[#b8581a] hover:underline">

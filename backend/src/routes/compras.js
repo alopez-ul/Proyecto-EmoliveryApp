@@ -68,7 +68,8 @@ async function buscarOrden(id, clienteId) {
   const { rows: [orden] } = await query(
     `SELECT o.id, o.estado, o.total, o.creada_en AS "creadaEn", o.expira_en AS "expiraEn",
             (o.estado = 'pendiente_pago' AND o.expira_en <= now()) AS vencida,
-            json_build_object('id', u.id, 'nombre', u.nombre) AS emolientero
+            -- El teléfono es su número de Yape: lo usa el QR del pago (US14).
+            json_build_object('id', u.id, 'nombre', u.nombre, 'telefono', u.telefono) AS emolientero
      FROM ordenes o JOIN usuarios u ON u.id = o.emolientero_id
      WHERE o.id = $1 AND o.cliente_id = $2`,
     [id, clienteId],

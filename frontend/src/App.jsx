@@ -10,6 +10,7 @@ import CatalogoEmolientero from './pages/CatalogoEmolientero.jsx'
 import ValidarRecojo from './pages/ValidarRecojo.jsx'
 import MapaCercanos from './pages/MapaCercanos.jsx'
 import PagoYape from './pages/PagoYape.jsx'
+import PagoOrden from './pages/PagoOrden.jsx'
 import EmolienterosFavoritos from './pages/EmolienterosFavoritos.jsx'
 import CompraAnticipada from './pages/CompraAnticipada.jsx'
 import ResenasEmolientero from './pages/ResenasEmolientero.jsx'
@@ -83,8 +84,11 @@ export default function App() {
     return <MapaCercanos key={window.location.hash || window.location.pathname} />
   }
 
-  // US14: Pago con QR de Yape (Jorge Rodrigo Burga)
+  // US14: Pago con QR de Yape (Jorge Rodrigo Burga). Con ?orden=<id> paga una orden real de US13;
+  // sin ella, muestra la demostración.
   if (ruta === 'pago-yape') {
+    const ordenId = new URLSearchParams(window.location.hash.split('?')[1] ?? '').get('orden')
+    if (ordenId) return <PagoOrden key={window.location.hash} />
     return <PagoYape key={window.location.hash || window.location.pathname} />
   }
 

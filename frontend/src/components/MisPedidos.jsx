@@ -90,6 +90,12 @@ export default function MisPedidos() {
                 <strong>Pedido #{p.id} · {p.emolientero}</strong>
                 <span style={{ color: 'var(--cafe-medio)' }}>{ESTADOS[p.estado] ?? p.estado}</span>
               </div>
+              {/* US14: una orden sin pagar se paga con Yape (si ya venció, la pantalla de pago lo indica) */}
+              {p.estado === 'pendiente_pago' && (
+                <a href={`#pago-yape?orden=${p.id}`} style={{ display: 'inline-block', marginTop: 6, color: '#742384', fontWeight: 700 }}>
+                  Pagar con Yape →
+                </a>
+              )}
               {porRecoger && p.codigoRecojo && (
                 <div style={{ marginTop: 6 }}>
                   Código de recojo:{' '}

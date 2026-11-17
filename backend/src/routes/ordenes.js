@@ -56,6 +56,10 @@ async function motivoRechazo(db, codigo, emolienteroId) {
     const cuando = orden.entregadaEn ? ` el ${formatoLima.format(orden.entregadaEn)}` : ''
     return new ErrorHttp(409, `Este código ya se usó: el pedido se entregó${cuando}.`)
   }
+  // US13/US14: la orden existe pero el cliente aún no la paga con Yape.
+  if (orden.estado === 'pendiente_pago') {
+    return new ErrorHttp(409, 'Este pedido todavía no está pagado. El cliente debe pagarlo con Yape antes de recogerlo.')
+  }
   return new ErrorHttp(409, 'Este pedido fue cancelado y no se puede entregar.')
 }
 

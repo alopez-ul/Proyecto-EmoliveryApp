@@ -46,8 +46,13 @@ export default function ValidarRecojo() {
   }
 
   const aviso = rechazo && (AVISOS[rechazo.status] ?? { titulo: 'No se pudo validar', clase: 'bg-red-50 border-red-200 text-red-800' })
-  // Un 409 también puede ser un pedido cancelado: el título sigue al mensaje del servidor.
-  const tituloAviso = rechazo?.status === 409 && /cancelado/.test(rechazo.mensaje) ? 'Pedido cancelado' : aviso?.titulo
+  // Un 409 también puede ser un pedido cancelado o aún sin pagar: el título sigue al mensaje del servidor.
+  const tituloAviso =
+    rechazo?.status === 409 && /cancelado/.test(rechazo.mensaje)
+      ? 'Pedido cancelado'
+      : rechazo?.status === 409 && /no está pagado/.test(rechazo.mensaje)
+        ? 'Pedido sin pagar'
+        : aviso?.titulo
 
   return (
     <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col">

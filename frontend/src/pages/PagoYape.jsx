@@ -17,7 +17,7 @@ function obtenerEmolienteroIdDesdeHash() {
 /**
  * T64: Renderizador determinista de matriz QR en SVG nítido para la orden de Yape.
  */
-function CodigoQRYapeSVG({ payload = '', size = 200 }) {
+export function CodigoQRYapeSVG({ payload = '', size = 200 }) {
   const N = 25
   const matriz = useMemo(() => {
     const grid = Array.from({ length: N }, () => Array(N).fill(false))
