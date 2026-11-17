@@ -3,7 +3,7 @@
 export const ROLES = ['cliente', 'emolientero', 'admin']
 export const ESTADOS = ['activo', 'pendiente_verificacion', 'rechazado', 'suspendido']
 export const MOTIVO_MIN = 10
-export const MOTIVO_MAX = 500 // deben coincidir con el CHECK de 017_suspensiones.sql
+export const MOTIVO_MAX = 500 // deben coincidir con el CHECK de 018_suspensiones.sql
 
 const FECHA = /^\d{4}-\d{2}-\d{2}$/
 // Rechaza también fechas imposibles como 2026-02-30 (Date las convertiría en 2026-03-02).

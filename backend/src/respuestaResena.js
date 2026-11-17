@@ -2,7 +2,7 @@
 import { ErrorHttp } from './errores.js'
 
 export const RESPUESTA_MIN = 2
-export const RESPUESTA_MAX = 500 // debe coincidir con el CHECK de 016_respuesta_resenas.sql
+export const RESPUESTA_MAX = 500 // debe coincidir con el CHECK de 017_respuesta_resenas.sql
 
 export function validarRespuesta(body) {
   const datos = { respuesta: typeof body?.respuesta === 'string' ? body.respuesta.trim().replace(/[ \t]+/g, ' ') : '' }
