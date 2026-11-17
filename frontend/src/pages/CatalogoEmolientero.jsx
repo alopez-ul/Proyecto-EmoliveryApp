@@ -67,7 +67,6 @@ export default function CatalogoEmolientero() {
   const [id] = useState(idDeLaRuta)
   const [catalogo, setCatalogo] = useState(null)
   const [error, setError] = useState(null) // { status, mensaje }
-  const [aviso, setAviso] = useState('')
 
   const cargar = useCallback(() => {
     obtenerCatalogo(id)
@@ -84,8 +83,11 @@ export default function CatalogoEmolientero() {
     return () => clearInterval(intervalo)
   }, [cargar])
 
-  // La compra anticipada (orden, pago con QR de Yape) es US13; aquí solo se habilita o no el botón.
-  const comprar = (producto) => setAviso(`Pronto podrás reservar "${producto.nombre}" y pagarlo con Yape desde aquí.`)
+  // El botón solo está activo si el producto es comprable (T56); al presionarlo se abre el carrito de la
+  // compra anticipada de este emolientero (US13), donde se arma la orden y se paga con Yape.
+  const comprar = () => {
+    window.location.hash = `comprar?id=${id}`
+  }
 
   const enJornada = catalogo?.emolientero.enJornada
   const cantidad = catalogo?.categorias.reduce((n, c) => n + c.productos.length, 0) ?? 0
@@ -146,12 +148,6 @@ export default function CatalogoEmolientero() {
                 <div role="status" className="mb-5 p-4 rounded-2xl bg-amber-50 border border-amber-200 text-sm text-amber-900">
                   <p className="font-bold mb-0.5">Compra no disponible</p>
                   <p>{catalogo.motivoNoCompra}</p>
-                </div>
-              )}
-
-              {aviso && (
-                <div role="status" className="mb-5 p-3 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9] text-sm text-[#6b5443]">
-                  {aviso}
                 </div>
               )}
 
