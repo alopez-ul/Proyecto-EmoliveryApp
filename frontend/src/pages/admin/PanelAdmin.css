@@ -9,7 +9,7 @@
 .panel-admin-contenido { max-width: 1040px; margin: 0 auto; padding: 32px 24px 48px; }
 .panel-admin-encabezado { margin-bottom: 20px; }
 .panel-admin-encabezado h2 { margin: 2px 0 4px; font-size: 1.6rem; letter-spacing: -0.02em; }
-.pa-etiqueta { margin: 0; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--caramelo); }
+.pa-etiqueta { margin: 0; font-size: 0.8rem; font-weight: 700; color: var(--caramelo); }
 .pa-ayuda { margin: 0; color: var(--cafe-medio); font-size: 0.92rem; line-height: 1.5; }
 
 /* Tarjeta y pestañas */
@@ -37,7 +37,7 @@
 .pa-tabla { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
 .pa-tabla th {
   padding: 12px 18px; text-align: left; font-size: 0.78rem; font-weight: 700;
-  letter-spacing: 0.03em; text-transform: uppercase; color: var(--cafe-suave); background: var(--crema);
+  color: var(--cafe-medio); background: var(--crema);
 }
 .pa-tabla td { padding: 14px 18px; border-top: 1px solid var(--borde); vertical-align: middle; }
 .pa-tabla tbody tr:hover { background: #fdfaf6; }
@@ -107,7 +107,7 @@
   .pa-tabla td { padding: 6px 14px; border: none; }
   .pa-tabla td[data-titulo]::before {
     content: attr(data-titulo); display: block; font-size: 0.72rem; font-weight: 700;
-    text-transform: uppercase; color: var(--cafe-suave);
+    color: var(--cafe-suave);
   }
   .pa-acciones { text-align: left; }
 }

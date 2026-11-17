@@ -38,9 +38,13 @@ export default function LoginPage() {
 
   return (
     <AuthCard
-      titulo="Iniciar sesión"
-      subtitulo="Ingresa con tu cuenta de Emolivery."
-      pie={<a href="#inicio" style={estilos.enlace}>Volver al mapa</a>}
+      titulo="Hola de nuevo"
+      subtitulo="Ingresa para pedir tu emoliente o atender tu puesto."
+      pie={
+        <>
+          ¿Aún no tienes cuenta? <a href="#registro-cliente" style={estilos.enlace}>Créala aquí</a>
+        </>
+      }
     >
       {passwordCambiada && !error && (
         <div style={estilos.exito} role="status">Tu contraseña se actualizó. Ya puedes iniciar sesión.</div>

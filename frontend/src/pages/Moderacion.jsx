@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { decidirReporte, listarReportes } from '../services/moderacionService.js'
+import Encabezado from '../components/Encabezado.jsx'
 
 // US25 - Moderación de contenido (#moderacion, solo administrador).
 // T104: bandeja de reportes pendientes. T105: ocultar o mantener con el motivo registrado (RNF06).
@@ -95,27 +96,12 @@ export default function Moderacion() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col">
-      <header className="bg-white border-b border-[#ebe3d9] py-4 px-6 flex items-center justify-between shadow-xs sticky top-0 z-20">
-        <a href="#inicio" className="flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#b8581a] to-[#e67e22] flex items-center justify-center text-white font-bold text-lg shadow-sm">
-            E
-          </span>
-          <span className="font-extrabold text-2xl tracking-tight text-[#2b1a0f]">
-            Emolivery<span className="text-[#b8581a]">.</span>
-          </span>
-        </a>
-        <a href="#admin" className="text-sm font-semibold text-[#6b5443] hover:text-[#2b1a0f] transition-colors py-1.5 px-3 rounded-lg hover:bg-[#fbf6ef]">
-          ← Panel Administrador
-        </a>
-      </header>
+    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+      <Encabezado volver={{ href: '#admin', texto: 'Administración' }} />
 
       <main className="flex-1 w-full max-w-3xl mx-auto p-4 sm:p-6 lg:p-8">
         <div className="text-center mb-6">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 text-[#b8581a] mb-2">
-            US25 - Moderación de contenido
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Reportes de reseñas</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold">Reportes de reseñas</h1>
         </div>
 
         <div className="flex gap-2 mb-4" role="tablist">
@@ -139,7 +125,7 @@ export default function Moderacion() {
           ))}
         </div>
 
-        <div className="bg-white rounded-3xl border border-[#ebe3d9] shadow-xl p-5 sm:p-6">
+        <div className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6">
           {aviso && <div role="status" className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium">{aviso}</div>}
           {error && <div role="alert" className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm font-medium">{error}</div>}
           {!reportes && !error && <p className="text-sm text-[#9a8676]">Cargando…</p>}

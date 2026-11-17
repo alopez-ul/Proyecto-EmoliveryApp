@@ -12,6 +12,7 @@ import MapaCercanos from './pages/MapaCercanos.jsx'
 import PagoYape from './pages/PagoYape.jsx'
 import PagoOrden from './pages/PagoOrden.jsx'
 import EmolienterosFavoritos from './pages/EmolienterosFavoritos.jsx'
+import EmolienterosFavoritosDemo from './pages/EmolienterosFavoritosDemo.jsx'
 import CompraAnticipada from './pages/CompraAnticipada.jsx'
 import ResenasEmolientero from './pages/ResenasEmolientero.jsx'
 import Moderacion from './pages/Moderacion.jsx'
@@ -93,7 +94,9 @@ export default function App() {
   }
 
   // US21: Emolienteros favoritos y avisos de apertura de jornada (Jorge Rodrigo Burga)
+  // Con ?demo se abre la demostración en memoria (simulador de aperturas); sin él, los favoritos reales.
   if (ruta === 'favoritos' || ruta === 'emolienteros-favoritos') {
+    if (/[?&]demo\b/.test(window.location.hash)) return <EmolienterosFavoritosDemo key={window.location.hash} />
     return <EmolienterosFavoritos key={window.location.hash || window.location.pathname} />
   }
 

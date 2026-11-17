@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { abrirJornada, cerrarJornada, estadoJornada } from '../services/jornadasService.js'
+import Encabezado from '../components/Encabezado.jsx'
 
 // US06 - Apertura y Cierre de Jornada del Emolientero (Jorge Burga - Sprint 1)
 // Conectado al backend: las jornadas se guardan en Neon (tabla jornadas). Para abrir se exige
@@ -53,37 +54,16 @@ export default function ControlJornada() {
   const cerrarJornadaActual = () => ejecutar(cerrarJornada, setAvisoOrdenes)
 
   return (
-    <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-[#ebe3d9] py-4 px-6 flex items-center justify-between shadow-xs sticky top-0 z-20">
-        <a href="#inicio" className="flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#b8581a] to-[#e67e22] flex items-center justify-center text-white font-bold text-lg shadow-sm">
-            E
-          </span>
-          <span className="font-extrabold text-2xl tracking-tight text-[#2b1a0f]">
-            Emolivery<span className="text-[#b8581a]">.</span>
-          </span>
-        </a>
-        <a
-          href="#emolientero"
-          className="text-sm font-semibold text-[#6b5443] hover:text-[#2b1a0f] transition-colors py-1.5 px-3 rounded-lg hover:bg-[#fbf6ef]"
-        >
-          ← Panel Emolientero
-        </a>
-      </header>
+      <Encabezado volver={{ href: '#emolientero', texto: 'Mi puesto' }} />
 
       {/* Main */}
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-lg bg-white rounded-3xl border border-[#ebe3d9] shadow-xl p-6 sm:p-8">
+        <div className="w-full max-w-lg bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-6 sm:p-8">
           {/* Title */}
           <div className="text-center mb-6">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 text-[#b8581a] mb-2">
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              US06 - Control de Jornada
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#2b1a0f]">
+            <h1 className="text-2xl sm:text-3xl font-semibold text-[#2b1a0f]">
               Apertura y Cierre de Jornada
             </h1>
             <p className="text-sm text-[#6b5443] mt-1.5">
@@ -110,13 +90,13 @@ export default function ControlJornada() {
 
             <div className="grid grid-cols-2 gap-4 mt-3 text-xs text-[#6b5443]">
               <div>
-                <span className="block font-bold uppercase tracking-wider text-[10px] text-[#9a8676] mb-0.5">Hora de Apertura</span>
+                <span className="block font-bold text-[10px] text-[#9a8676] mb-0.5">Hora de Apertura</span>
                 <span className={`text-base font-mono font-bold ${jornadaAbierta ? 'text-emerald-700' : 'text-stone-400'}`}>
                   {formatearHora(horaInicio)}
                 </span>
               </div>
               <div>
-                <span className="block font-bold uppercase tracking-wider text-[10px] text-[#9a8676] mb-0.5">Hora de Cierre</span>
+                <span className="block font-bold text-[10px] text-[#9a8676] mb-0.5">Hora de Cierre</span>
                 <span className={`text-base font-mono font-bold ${horaCierre ? 'text-red-600' : 'text-stone-400'}`}>
                   {formatearHora(horaCierre)}
                 </span>
@@ -216,7 +196,7 @@ export default function ControlJornada() {
               className={`py-3.5 px-4 rounded-xl font-bold text-sm shadow-md transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 ${
                 !estado || jornadaAbierta
                   ? 'bg-stone-200 text-stone-400 cursor-not-allowed shadow-none'
-                  : 'bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white hover:shadow-lg'
+                  : 'bg-emerald-700 hover:bg-emerald-800 text-white hover:shadow-lg'
               }`}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -234,7 +214,7 @@ export default function ControlJornada() {
               className={`py-3.5 px-4 rounded-xl font-bold text-sm shadow-md transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 ${
                 !jornadaAbierta
                   ? 'bg-stone-200 text-stone-400 cursor-not-allowed shadow-none'
-                  : 'bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white hover:shadow-lg'
+                  : 'bg-red-700 hover:bg-red-800 text-white hover:shadow-lg'
               }`}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,7 +228,7 @@ export default function ControlJornada() {
           {/* Registro de actividad de hoy (desde la base de datos) */}
           {estado?.jornadasHoy.length > 0 && (
             <div className="mt-6 pt-5 border-t border-[#ebe3d9]">
-              <h3 className="text-xs font-bold text-[#9a8676] uppercase tracking-wider mb-3">Registro de actividad de hoy</h3>
+              <h3 className="text-xs font-bold text-[#9a8676] mb-3">Registro de actividad de hoy</h3>
               <div className="space-y-2">
                 {estado.jornadasHoy.flatMap((j) => [
                   <div key={`a${j.id}`} className="flex items-center gap-2.5 text-sm">
@@ -270,10 +250,6 @@ export default function ControlJornada() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="py-4 text-center text-xs text-[#9a8676]">
-        EMOLIVERY &copy; {new Date().getFullYear()} - Plataforma de Emolientes Tradicionales de Lima
-      </footer>
     </div>
   )
 }

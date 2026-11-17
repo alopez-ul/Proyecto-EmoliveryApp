@@ -114,6 +114,10 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | GET    | /api/ordenes/por-entregar | US15: pedidos pendientes o en camino del emolientero con sesión (sin el código) |
 | POST   | /api/ordenes/entregar    | US15: valida `{codigo}` y entrega el pedido. 200 `{orden, resena}`; 400 si el formato es inválido; 404 si no existe; 403 si es de otro emolientero; 409 si ya se usó o el pedido está cancelado |
 | POST   | /api/avistamientos       | US09: el cliente confirma `{emolienteroId, lat, lng, precision}` (su GPS). 201 `{avistamiento, verificado, confirmaciones}`; 422 si está a más de 100 m, el GPS es impreciso o el emolientero no atiende; 409 si ya lo confirmó en esta ventana de 30 min; 404 si no existe |
+| GET    | /api/favoritos           | US21: favoritos del cliente con sesión (si atienden y en qué zona), sus preferencias de aviso, las zonas de La Molina y los últimos avisos |
+| GET    | /api/favoritos/directorio | US21: emolienteros verificados, marcando cuáles son favoritos del cliente |
+| POST / DELETE | /api/favoritos/:emolienteroId | US21: marca o desmarca un favorito (404 si no es un emolientero activo) |
+| PUT    | /api/favoritos/preferencias | US21: `{avisosActivos, zonas}`; zonas vacío = cualquier zona. 400 si una zona no existe |
 | GET    | /api/noticias            | US22: noticias del usuario con sesión (de su público o para todos) cuya fecha ya llegó, de la más reciente a la más antigua |
 | GET    | /api/noticias/todas      | US22: todas las noticias, con `programada` (solo admin) |
 | POST   | /api/noticias            | US22: publica `{titulo, contenido, publico ("todos", "clientes" o "emolienteros"), fechaPublicacion ("AAAA-MM-DD")}` (solo admin). 400 con `campos` si hay datos inválidos o la fecha es anterior a hoy |
@@ -181,9 +185,15 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 - **US24:** pestaña "Usuarios" del panel del administrador. Cada suspensión o reactivación queda en `cambios_estado_cuenta` (migración `018_suspensiones.sql`) con su motivo y el admin que la hizo. Suspender a un emolientero le cierra la jornada abierta.
 - Mientras no existan US14 (pago) y US17 (publicar reseña), `npm run db:seed` crea un pedido pagado cancelable y una reseña publicada para probar estas historias.
 
+## Favoritos (US21)
+
+- El cliente guarda favoritos desde `#favoritos` o con el corazón de la carta de cada puesto. Se guardan en la base (`favoritos`, `preferencias_avisos`, migración `020`).
+- Al abrir su jornada (US06), en la misma transacción se ubica la zona de La Molina del emolientero según su GPS (`backend/src/avisosFavoritos.js`) y, para cada cliente que lo tiene de favorito, se aplican las reglas de `FavoritoService`: se avisa (T95, con la `NotificacionEnApp` de `src/favoritos.js`) si tiene los avisos activos y la zona está entre las suyas; si no, solo se registra el motivo (T96). Todo queda en `avisos_apertura`.
+- La demostración en memoria con emolienteros de ejemplo sigue en `#favoritos?demo` (endpoints `/api/favoritos/demo/...`).
+
 ## Base de datos
 
-- **Migraciones `012` a `018`:** `012` código de recojo y `resenas` (US15), `013` compra anticipada (US13), `014_avistamientos` (US09), `014_moderacion` (US25), `015` noticias (US22), `016` cancelación (US16), `017` respuesta a reseñas (US19), `018` suspensiones (US24) y `019` pago con Yape de órdenes reales (US14). Hay dos `014` porque se crearon en ramas distintas; ya están aplicadas en Neon con esos nombres y **no se deben renombrar** (el sistema las reconoce por el nombre del archivo). La próxima migración es la `020`: antes de crear una, revisa el último número en `main`.
+- **Migraciones `012` a `018`:** `012` código de recojo y `resenas` (US15), `013` compra anticipada (US13), `014_avistamientos` (US09), `014_moderacion` (US25), `015` noticias (US22), `016` cancelación (US16), `017` respuesta a reseñas (US19), `018` suspensiones (US24), `019` pago con Yape de órdenes reales (US14) y `020` favoritos (US21). Hay dos `014` porque se crearon en ramas distintas; ya están aplicadas en Neon con esos nombres y **no se deben renombrar** (el sistema las reconoce por el nombre del archivo). La próxima migración es la `021`: antes de crear una, revisa el último número en `main`.
 - **Flujo de un pedido:**
   1. **US13 compra:** crea la orden en `pendiente_pago`, con vigencia de 15 min y ya con su código de recojo.
   2. **US14 pago:** `POST /api/pagos/yape/ordenes/:id` `{numeroOperacion, montoIngresado}` (solo el cliente dueño) valida la constancia con las reglas de `Yape` (vigencia, formato y unicidad del número de operación, monto exacto). En una transacción:

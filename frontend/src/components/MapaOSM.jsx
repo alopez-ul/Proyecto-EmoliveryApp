@@ -16,6 +16,8 @@ function iconoEmoliente(clases) {
   })
 }
 
+const ICONO_YO = L.divIcon({ className: '', html: '<div class="marcador-yo" title="Estás aquí"></div>', iconSize: [18, 18], iconAnchor: [9, 9] })
+
 function CapturarClic({ activo, onPick }) {
   useMapEvents({
     click(e) {
@@ -34,13 +36,14 @@ function CentrarEnSeleccion({ punto }) {
 }
 
 // centro/zoom: vista inicial (por defecto, Lima). p.aproximado marca una ubicación de baja precisión (US10).
-export default function MapaOSM({ puntos, seleccionado, onSelect, modoRegistro, borrador, onPick, centro, zoom = 12 }) {
+// yo: posición del usuario {lat, lng} (opcional), dibujada como un punto azul.
+export default function MapaOSM({ puntos, seleccionado, onSelect, modoRegistro, borrador, onPick, centro, zoom = 12, yo }) {
   return (
     <div className={`mapa-lima ${modoRegistro ? 'is-picking' : ''}`}>
       <MapContainer center={centro ? [centro.lat, centro.lng] : LIMA_CENTER} zoom={zoom} zoomControl={false} className="mapa-osm">
         <TileLayer
-          attribution='Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap'
-          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           maxZoom={19}
         />
         <ZoomControl position="bottomright" zoomInTitle="Acercar" zoomOutTitle="Alejar" />
@@ -67,6 +70,7 @@ export default function MapaOSM({ puntos, seleccionado, onSelect, modoRegistro, 
           </Marker>
         ))}
         {borrador && <Marker position={[borrador.lat, borrador.lng]} icon={iconoEmoliente('is-draft')} />}
+        {yo && <Marker position={[yo.lat, yo.lng]} icon={ICONO_YO} interactive={false} zIndexOffset={-100} />}
       </MapContainer>
     </div>
   )

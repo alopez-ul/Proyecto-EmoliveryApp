@@ -4,7 +4,7 @@ import { Router } from 'express'
 // (por ejemplo, una consulta a Postgres que falla) en vez de dejarlos sin capturar.
 export function crearRouter() {
   const router = Router()
-  for (const metodo of ['get', 'post', 'patch', 'delete']) {
+  for (const metodo of ['get', 'post', 'put', 'patch', 'delete']) {
     const original = router[metodo].bind(router)
     router[metodo] = (ruta, ...handlers) =>
       original(ruta, ...handlers.map((h) => (req, res, next) => Promise.resolve(h(req, res, next)).catch(next)))

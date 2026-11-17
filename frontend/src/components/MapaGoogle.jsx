@@ -17,7 +17,8 @@ function CentrarEnSeleccion({ punto }) {
 }
 
 // centro/zoom: vista inicial (por defecto, Lima). p.aproximado marca una ubicación de baja precisión (US10).
-export default function MapaGoogle({ apiKey, puntos, seleccionado, onSelect, modoRegistro, borrador, onPick, centro, zoom = 12 }) {
+// yo: posición del usuario {lat, lng} (opcional), dibujada como un punto azul.
+export default function MapaGoogle({ apiKey, puntos, seleccionado, onSelect, modoRegistro, borrador, onPick, centro, zoom = 12, yo }) {
   return (
     <div className={`mapa-lima ${modoRegistro ? 'is-picking' : ''}`}>
       <APIProvider apiKey={apiKey} language="es" region="PE">
@@ -60,6 +61,11 @@ export default function MapaGoogle({ apiKey, puntos, seleccionado, onSelect, mod
               <div className="marcador is-draft">
                 <EmolienteIcon size={34} />
               </div>
+            </AdvancedMarker>
+          )}
+          {yo && (
+            <AdvancedMarker position={yo} zIndex={0}>
+              <div className="marcador-yo" title="Estás aquí" />
             </AdvancedMarker>
           )}
         </Map>

@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { obtenerCatalogo } from '../services/catalogoService.js'
 import ConfirmarAvistamiento from '../components/ConfirmarAvistamiento.jsx'
+import Encabezado from '../components/Encabezado.jsx'
+import BotonFavorito from '../components/BotonFavorito.jsx'
 
 // US12 - Consulta de catálogo y precios (Renzo - Sprint 2)
 // Vista pública: el cliente la abre desde el mapa (#catalogo?id=<emolientero>). Agrupa por categoría (T54),
@@ -91,26 +93,11 @@ export default function CatalogoEmolientero() {
   const cantidad = catalogo?.categorias.reduce((n, c) => n + c.productos.length, 0) ?? 0
 
   return (
-    <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col">
-      <header className="bg-white border-b border-[#ebe3d9] py-4 px-6 flex items-center justify-between shadow-xs sticky top-0 z-20">
-        <a href="#inicio" className="flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#b8581a] to-[#e67e22] flex items-center justify-center text-white font-bold text-lg shadow-sm">
-            E
-          </span>
-          <span className="font-extrabold text-2xl tracking-tight text-[#2b1a0f]">
-            Emolivery<span className="text-[#b8581a]">.</span>
-          </span>
-        </a>
-        <a
-          href="#inicio"
-          className="text-sm font-semibold text-[#6b5443] hover:text-[#2b1a0f] transition-colors py-1.5 px-3 rounded-lg hover:bg-[#fbf6ef]"
-        >
-          ← Volver al mapa
-        </a>
-      </header>
+    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+      <Encabezado volver={{ href: '#inicio', texto: 'Volver al mapa' }} />
 
       <main className="flex-1 flex justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-xl bg-white rounded-3xl border border-[#ebe3d9] shadow-xl p-6 sm:p-8 self-start">
+        <div className="w-full max-w-xl bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-6 sm:p-8 self-start">
           {error ? (
             error.status === 404 ? (
               <Estado titulo="Emolientero no disponible">Este emolientero no existe o su cuenta no está activa.</Estado>
@@ -124,10 +111,7 @@ export default function CatalogoEmolientero() {
           ) : (
             <>
               <div className="text-center mb-6">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 text-[#b8581a] mb-2">
-                  Catálogo y precios
-                </span>
-                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#2b1a0f]">{catalogo.emolientero.nombre}</h1>
+                <h1 className="text-2xl sm:text-3xl font-semibold text-[#2b1a0f]">{catalogo.emolientero.nombre}</h1>
                 <span
                   className={`inline-flex items-center gap-2 mt-3 px-3 py-1 rounded-full text-xs font-bold ${
                     enJornada ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-200 text-stone-700'
@@ -136,6 +120,7 @@ export default function CatalogoEmolientero() {
                   <span className={`w-2 h-2 rounded-full ${enJornada ? 'bg-emerald-500 animate-pulse' : 'bg-stone-400'}`} aria-hidden="true" />
                   {enJornada ? 'Atendiendo ahora' : 'Fuera de jornada'}
                 </span>
+                <BotonFavorito emolienteroId={catalogo.emolientero.id} />
               </div>
 
               {/* US09: con la jornada abierta, el cliente puede confirmar que lo está viendo */}
@@ -165,7 +150,7 @@ export default function CatalogoEmolientero() {
                   <section key={categoria.id} aria-labelledby={`cat-${categoria.id}`} className="mb-5 last:mb-0">
                     <h2
                       id={`cat-${categoria.id}`}
-                      className="text-xs font-bold uppercase tracking-wider text-[#9a8676] pb-2 border-b border-[#ebe3d9]"
+                      className="text-xs font-bold text-[#9a8676] pb-2 border-b border-[#ebe3d9]"
                     >
                       {categoria.nombre}
                     </h2>

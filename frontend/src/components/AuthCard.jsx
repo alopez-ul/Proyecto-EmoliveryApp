@@ -1,32 +1,33 @@
-// Contenedor visual compartido por las pantallas de autenticación (US03 y US04).
-// Los estilos van en línea para no modificar index.css.
+// Contenedor visual compartido por las pantallas de autenticación (US03 y US04) y los paneles.
+import Encabezado from './Encabezado.jsx'
 
 export const estilos = {
-  campo: { display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 14 },
-  etiqueta: { fontSize: '0.85rem', fontWeight: 600, color: 'var(--cafe-medio)' },
+  campo: { display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 16 },
+  etiqueta: { fontSize: '0.9rem', fontWeight: 600, color: 'var(--cafe)' },
   input: {
     font: 'inherit',
-    padding: '11px 12px',
+    padding: '12px 14px',
     border: '1px solid var(--borde-fuerte)',
-    borderRadius: 10,
-    background: 'var(--crema)',
+    borderRadius: 12,
+    background: 'var(--superficie)',
     color: 'var(--cafe)',
   },
   boton: {
     width: '100%',
-    padding: '12px',
+    padding: '13px',
     marginTop: 6,
     border: 'none',
-    borderRadius: 10,
+    borderRadius: 999,
     background: 'var(--caramelo)',
     color: '#fff',
-    fontWeight: 700,
+    fontWeight: 600,
+    fontSize: '1rem',
     cursor: 'pointer',
   },
   botonSecundario: {
-    padding: '8px 12px',
+    padding: '11px 14px',
     border: '1px solid var(--borde-fuerte)',
-    borderRadius: 10,
+    borderRadius: 999,
     background: 'var(--superficie)',
     color: 'var(--cafe)',
     fontWeight: 600,
@@ -34,48 +35,45 @@ export const estilos = {
   },
   enlace: { color: 'var(--caramelo)', fontWeight: 600, textDecoration: 'none' },
   error: {
-    padding: '10px 12px',
-    marginBottom: 14,
-    borderRadius: 10,
+    padding: '12px 14px',
+    marginBottom: 16,
+    borderRadius: 12,
     background: '#fdecea',
     color: '#9b2c1f',
-    fontSize: '0.9rem',
+    fontSize: '0.92rem',
   },
   exito: {
-    padding: '10px 12px',
-    marginBottom: 14,
-    borderRadius: 10,
-    background: '#e8f3e9',
+    padding: '12px 14px',
+    marginBottom: 16,
+    borderRadius: 12,
+    background: 'var(--hierba-suave)',
     color: 'var(--hierba)',
-    fontSize: '0.9rem',
+    fontSize: '0.92rem',
   },
-  errorCampo: { fontSize: '0.8rem', color: '#9b2c1f' },
+  errorCampo: { fontSize: '0.82rem', color: '#9b2c1f' },
 }
 
-export default function AuthCard({ titulo, subtitulo, children, pie }) {
+// ancho: el panel del usuario usa una tarjeta más ancha que el inicio de sesión.
+export default function AuthCard({ titulo, subtitulo, children, pie, ancho = 440 }) {
   return (
-    <div style={{ height: '100vh', overflowY: 'auto', background: 'var(--fondo)' }}>
-      <header className="barra-superior">
-        <a href="#inicio" style={{ textDecoration: 'none' }}>
-          <h1 className="titulo">Emolivery</h1>
-        </a>
-      </header>
-      <main style={{ display: 'grid', placeItems: 'center', padding: '40px 16px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--fondo)' }}>
+      <Encabezado />
+      <main style={{ display: 'grid', placeItems: 'start center', padding: '48px 16px 64px' }}>
         <section
           style={{
             width: '100%',
-            maxWidth: 420,
-            padding: 28,
+            maxWidth: ancho,
+            padding: '32px 28px',
             background: 'var(--superficie)',
             border: '1px solid var(--borde)',
-            borderRadius: 'calc(var(--radio) + 6px)',
-            boxShadow: 'var(--sombra-lg)',
+            borderRadius: 20,
+            boxShadow: 'var(--sombra-md)',
           }}
         >
-          <h2 style={{ margin: '0 0 6px', fontSize: '1.35rem', letterSpacing: '-0.02em' }}>{titulo}</h2>
-          {subtitulo && <p style={{ margin: '0 0 22px', color: 'var(--cafe-medio)', fontSize: '0.92rem' }}>{subtitulo}</p>}
+          <h1 style={{ margin: '0 0 6px', fontSize: '1.75rem', lineHeight: 1.2 }}>{titulo}</h1>
+          {subtitulo && <p style={{ margin: '0 0 24px', color: 'var(--cafe-medio)' }}>{subtitulo}</p>}
           {children}
-          {pie && <div style={{ marginTop: 20, textAlign: 'center', fontSize: '0.9rem' }}>{pie}</div>}
+          {pie && <div style={{ marginTop: 22, textAlign: 'center', fontSize: '0.95rem', color: 'var(--cafe-medio)' }}>{pie}</div>}
         </section>
       </main>
     </div>

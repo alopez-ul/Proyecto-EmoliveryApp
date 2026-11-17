@@ -1,8 +1,9 @@
 // US06 - Apertura y cierre de jornada del emolientero.
 import { crearRouter } from '../router.js'
-import { query } from '../db.js'
+import { pool, query } from '../db.js'
 import { ErrorHttp } from '../errores.js'
 import { requiereRol, requiereSesion } from '../autenticacion.js'
+import { avisarAperturaJornada } from '../avisosFavoritos.js'
 
 const router = crearRouter()
 router.use(requiereSesion, requiereRol('emolientero'))
@@ -38,17 +39,31 @@ router.get('/estado', async (req, res) => {
 })
 
 // Abrir: exige haber registrado la ubicación hoy (US05; esa ruta ya valida que sea en La Molina).
+// US21: en la misma transacción se avisa a los clientes que lo tienen de favorito (o se registra por qué no).
 router.post('/abrir', async (req, res) => {
-  if (!(await ubicacionDeHoy(req.usuario.id))) {
+  const { rows: [ubicacion] } = await query(
+    `SELECT lat, lng FROM ubicaciones
+     WHERE emolientero_id = $1 AND fuente = 'gps_emolientero' AND registrada_en >= ${INICIO_HOY}
+     ORDER BY registrada_en DESC LIMIT 1`,
+    [req.usuario.id],
+  )
+  if (!ubicacion) {
     throw new ErrorHttp(422, 'No puedes iniciar jornada sin registrar tu ubicación en La Molina. Regístrala primero desde tu panel.')
   }
+  const cliente = await pool.connect()
   try {
-    const { rows } = await query(`INSERT INTO jornadas (emolientero_id) VALUES ($1) RETURNING ${COLUMNAS}`, [req.usuario.id])
-    res.status(201).json(rows[0])
+    await cliente.query('BEGIN')
+    const { rows: [jornada] } = await cliente.query(`INSERT INTO jornadas (emolientero_id) VALUES ($1) RETURNING ${COLUMNAS}`, [req.usuario.id])
+    const avisosEnviados = await avisarAperturaJornada(cliente, { emolientero: req.usuario, jornadaId: jornada.id, ubicacion })
+    await cliente.query('COMMIT')
+    res.status(201).json({ ...jornada, avisosEnviados })
   } catch (err) {
+    await cliente.query('ROLLBACK')
     // El índice único impide dos jornadas abiertas, incluso con pedidos simultáneos.
     if (err.code === '23505' && err.constraint === 'jornadas_una_abierta') throw new ErrorHttp(409, 'Ya tienes una jornada abierta.')
     throw err
+  } finally {
+    cliente.release()
   }
 })
 

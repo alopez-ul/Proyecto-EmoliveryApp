@@ -1,3 +1,4 @@
+import Encabezado from '../components/Encabezado.jsx'
 import { useCallback, useEffect, useState } from 'react'
 import {
   CATEGORIAS,
@@ -94,30 +95,12 @@ export default function GestionCatalogo() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col">
-      <header className="bg-white border-b border-[#ebe3d9] py-4 px-6 flex items-center justify-between shadow-xs sticky top-0 z-20">
-        <a href="#inicio" className="flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#b8581a] to-[#e67e22] flex items-center justify-center text-white font-bold text-lg shadow-sm">
-            E
-          </span>
-          <span className="font-extrabold text-2xl tracking-tight text-[#2b1a0f]">
-            Emolivery<span className="text-[#b8581a]">.</span>
-          </span>
-        </a>
-        <a
-          href="#emolientero"
-          className="text-sm font-semibold text-[#6b5443] hover:text-[#2b1a0f] transition-colors py-1.5 px-3 rounded-lg hover:bg-[#fbf6ef]"
-        >
-          ← Panel Emolientero
-        </a>
-      </header>
+    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+      <Encabezado volver={{ href: '#emolientero', texto: 'Mi puesto' }} />
 
       <main className="flex-1 w-full max-w-5xl mx-auto p-4 sm:p-6 lg:p-8">
         <div className="text-center mb-6">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 text-[#b8581a] mb-2">
-            US11 - Gestión de catálogo
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Mi catálogo</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold">Mi catálogo</h1>
           <p className="text-sm text-[#6b5443] mt-1.5 max-w-xl mx-auto">
             Registra los productos que vendes, con su categoría y precio. Marca como no disponibles los que se te acabaron.
           </p>
@@ -125,7 +108,7 @@ export default function GestionCatalogo() {
 
         <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr]">
           {/* Formulario de alta y edición (T50) */}
-          <form onSubmit={guardar} noValidate className="bg-white rounded-3xl border border-[#ebe3d9] shadow-xl p-5 sm:p-6 space-y-4 self-start">
+          <form onSubmit={guardar} noValidate className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6 space-y-4 self-start">
             <h2 className="text-lg font-bold">{editandoId ? 'Editar producto' : 'Nuevo producto'}</h2>
 
             <div>
@@ -204,7 +187,7 @@ export default function GestionCatalogo() {
             <button
               type="submit"
               disabled={guardando || !productos}
-              className="w-full py-3.5 rounded-xl font-bold text-sm text-white shadow-md bg-gradient-to-r from-[#b8581a] to-[#e67e22] hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-3.5 rounded-xl font-bold text-sm text-white shadow-md bg-[#b4531a] hover:bg-[#96430f] disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {guardando ? 'Guardando…' : editandoId ? 'Guardar cambios' : 'Agregar producto'}
             </button>
@@ -216,7 +199,7 @@ export default function GestionCatalogo() {
           </form>
 
           {/* Catálogo agrupado por categoría */}
-          <section className="bg-white rounded-3xl border border-[#ebe3d9] shadow-xl p-5 sm:p-6">
+          <section className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6">
             <h2 className="text-lg font-bold mb-4">Mis productos</h2>
             {!productos && !error && <p className="text-sm text-[#9a8676]">Cargando…</p>}
             {productos?.length === 0 && <p className="text-sm text-[#9a8676]">Aún no registras productos.</p>}
@@ -226,7 +209,7 @@ export default function GestionCatalogo() {
                 if (!deCategoria.length) return null
                 return (
                   <div key={clave}>
-                    <h3 className="text-xs font-bold text-[#9a8676] uppercase tracking-wider mb-2">{nombreCategoria}</h3>
+                    <h3 className="text-xs font-bold text-[#9a8676] mb-2">{nombreCategoria}</h3>
                     <ul className="space-y-2">
                       {deCategoria.map((p) => (
                         <li
@@ -258,9 +241,6 @@ export default function GestionCatalogo() {
         </div>
       </main>
 
-      <footer className="py-4 text-center text-xs text-[#9a8676]">
-        EMOLIVERY &copy; {new Date().getFullYear()} - Plataforma de Emolientes Tradicionales de Lima
-      </footer>
     </div>
   )
 }

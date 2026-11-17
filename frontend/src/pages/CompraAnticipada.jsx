@@ -1,3 +1,4 @@
+import Encabezado from '../components/Encabezado.jsx'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { obtenerCatalogo } from '../services/catalogoService.js'
 import { verificarSesion } from '../services/authService.js'
@@ -53,10 +54,10 @@ function OrdenCreada({ orden, onSeguir }) {
 
   return (
     <div className="text-center">
-      <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-100 text-amber-900 mb-3">
+      <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 mb-3">
         {vencida ? 'Orden vencida' : 'Pendiente de pago'}
       </span>
-      <h2 className="text-2xl font-extrabold tracking-tight">Orden #{orden.id}</h2>
+      <h2 className="text-2xl font-semibold">Orden #{orden.id}</h2>
       <p className="text-sm text-[#6b5443] mt-1">Para {orden.emolientero.nombre}</p>
 
       <p className={`mt-5 text-4xl font-extrabold tabular-nums ${vencida ? 'text-stone-400' : 'text-[#b8581a]'}`} role="timer">
@@ -187,7 +188,7 @@ export default function CompraAnticipada() {
           {catalogo.categorias.length === 0 && <p className="text-sm text-[#9a8676]">Este emolientero todavía no ha publicado sus productos.</p>}
           {catalogo.categorias.map((categoria) => (
             <div key={categoria.id} className="mb-4">
-              <h3 className="text-xs font-bold text-[#9a8676] uppercase tracking-wider pb-1.5 border-b border-[#ebe3d9]">{categoria.nombre}</h3>
+              <h3 className="text-xs font-bold text-[#9a8676] pb-1.5 border-b border-[#ebe3d9]">{categoria.nombre}</h3>
               <ul className="divide-y divide-[#ebe3d9]">
                 {categoria.productos.map((p) => {
                   const enCarrito = cantidadEnCarrito(lineas, p.id)
@@ -272,7 +273,7 @@ export default function CompraAnticipada() {
             type="button"
             onClick={confirmar}
             disabled={!puedeConfirmar}
-            className="w-full mt-4 py-3.5 rounded-xl font-bold text-sm text-white shadow-md bg-gradient-to-r from-[#b8581a] to-[#e67e22] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-4 py-3.5 rounded-xl font-bold text-sm text-white shadow-md bg-[#b4531a] hover:bg-[#96430f] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {enviando ? 'Confirmando…' : 'Confirmar compra'}
           </button>
@@ -283,37 +284,16 @@ export default function CompraAnticipada() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col">
-      <header className="bg-white border-b border-[#ebe3d9] py-4 px-6 flex items-center justify-between shadow-xs sticky top-0 z-20">
-        <a href="#inicio" className="flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#b8581a] to-[#e67e22] flex items-center justify-center text-white font-bold text-lg shadow-sm">
-            E
-          </span>
-          <span className="font-extrabold text-2xl tracking-tight text-[#2b1a0f]">
-            Emolivery<span className="text-[#b8581a]">.</span>
-          </span>
-        </a>
-        <a
-          href={`#catalogo?id=${encodeURIComponent(id)}`}
-          className="text-sm font-semibold text-[#6b5443] hover:text-[#2b1a0f] transition-colors py-1.5 px-3 rounded-lg hover:bg-[#fbf6ef]"
-        >
-          ← Volver al catálogo
-        </a>
-      </header>
+    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+      <Encabezado volver={{ href: `#catalogo?id=${encodeURIComponent(id)}`, texto: 'Volver a la carta' }} />
 
       <main className="flex-1 w-full max-w-5xl mx-auto p-4 sm:p-6 lg:p-8">
         <div className="text-center mb-6">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 text-[#b8581a] mb-2">
-            US13 - Compra anticipada
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">{catalogo ? `Comprar a ${catalogo.emolientero.nombre}` : 'Compra anticipada'}</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold">{catalogo ? `Comprar a ${catalogo.emolientero.nombre}` : 'Compra anticipada'}</h1>
         </div>
-        <div className="bg-white rounded-3xl border border-[#ebe3d9] shadow-xl p-5 sm:p-6">{contenido()}</div>
+        <div className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6">{contenido()}</div>
       </main>
 
-      <footer className="py-4 text-center text-xs text-[#9a8676]">
-        EMOLIVERY &copy; {new Date().getFullYear()} - Plataforma de Emolientes Tradicionales de Lima
-      </footer>
     </div>
   )
 }

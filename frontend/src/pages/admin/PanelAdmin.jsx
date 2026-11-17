@@ -1,3 +1,4 @@
+import Encabezado from '../../components/Encabezado.jsx'
 // US23 - Verificación de emolienteros: panel del administrador.
 // T28 bandeja de pendientes · T29 aprobar / rechazar con motivo · historial de decisiones.
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -58,17 +59,7 @@ export default function PanelAdmin({ usuario, onCerrarSesion }) {
 
   return (
     <div className="panel-admin">
-      <header className="barra-superior panel-admin-barra">
-        <a href="#inicio" className="panel-admin-marca">
-          <h1 className="titulo">Emolivery</h1>
-        </a>
-        <div className="panel-admin-usuario">
-          <span>{usuario.nombre}</span>
-          <button type="button" className="pa-boton pa-boton-secundario" onClick={onCerrarSesion}>
-            Cerrar sesión
-          </button>
-        </div>
-      </header>
+      <Encabezado />
 
       <main className="panel-admin-contenido">
         <div className="panel-admin-encabezado">

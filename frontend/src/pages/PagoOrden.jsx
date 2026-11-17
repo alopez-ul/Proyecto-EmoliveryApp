@@ -4,6 +4,7 @@ import { obtenerOrden } from '../services/compraService.js'
 import { pagarOrdenConYape } from '../services/pagoYapeService.js'
 import { verificarSesion } from '../services/authService.js'
 import { CodigoQRYapeSVG } from './PagoYape.jsx'
+import Encabezado from '../components/Encabezado.jsx'
 
 // US14 conectado a la base: pago con QR de Yape de una orden REAL creada en la compra anticipada (US13).
 // Se abre con #pago-yape?orden=<id>. Al pagar, la orden queda lista para recoger con su código (US15).
@@ -78,19 +79,12 @@ export default function PagoOrden() {
   const operacionValida = /^\d{6,10}$/.test(numeroOperacion.trim())
 
   return (
-    <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col">
-      <header className="bg-white border-b border-[#ebe3d9] py-4 px-6 flex items-center justify-between shadow-xs sticky top-0 z-20">
-        <a href="#inicio" className="font-extrabold text-2xl tracking-tight">
-          Emolivery<span className="text-[#b8581a]">.</span>
-        </a>
-        <a href="#cliente" className="text-sm font-semibold text-[#6b5443] hover:text-[#2b1a0f] py-1.5 px-3 rounded-lg hover:bg-[#fbf6ef]">
-          ← Mi panel
-        </a>
-      </header>
+    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+      <Encabezado volver={{ href: '#cliente', texto: 'Mi panel' }} />
 
       <main className="flex-1 w-full max-w-lg mx-auto p-4 sm:p-6">
-        <div className="bg-white rounded-3xl border border-[#ebe3d9] shadow-xl p-6">
-          <p className="text-center text-xs font-bold uppercase tracking-wider text-[#742384]">Pago con Yape</p>
+        <div className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-6">
+          <p className="text-center text-xs font-bold text-[#742384]">Pago con Yape</p>
 
           {error && (
             <div role="alert" className="mt-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-sm">
@@ -105,7 +99,7 @@ export default function PagoOrden() {
               <p className="text-sm text-[#6b5443] mt-1">
                 Orden #{orden.id} · {soles.format(orden.total)} · {orden.emolientero.nombre}
               </p>
-              <p className="mt-5 text-xs font-bold uppercase tracking-wider text-[#9a8676]">Tu código de recojo</p>
+              <p className="mt-5 text-xs font-bold text-[#9a8676]">Tu código de recojo</p>
               <p className="mt-1 font-mono text-4xl font-extrabold tracking-[0.2em] text-emerald-700">{resultado.codigoRecojo}</p>
               <p className="mt-2 text-sm text-[#6b5443]">Muéstralo al emolientero al recoger tu pedido. Sirve una sola vez.</p>
               <a href="#cliente" className="inline-block mt-5 px-5 py-2.5 rounded-xl bg-[#b8581a] text-white font-bold text-sm">

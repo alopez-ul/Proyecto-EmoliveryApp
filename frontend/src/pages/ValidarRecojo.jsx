@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { codigoCompleto, entregarConCodigo, formatearMientrasEscribe, pedidosPorEntregar } from '../services/ordenesService.js'
+import Encabezado from '../components/Encabezado.jsx'
 
 // US15 - T69: el emolientero escribe el código de recojo que le muestra el cliente. Si es válido, el
 // pedido queda entregado y se habilita la reseña del cliente, todo a la vez (T70).
@@ -55,36 +56,18 @@ export default function ValidarRecojo() {
         : aviso?.titulo
 
   return (
-    <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col">
-      <header className="bg-white border-b border-[#ebe3d9] py-4 px-6 flex items-center justify-between shadow-xs sticky top-0 z-20">
-        <a href="#inicio" className="flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#b8581a] to-[#e67e22] flex items-center justify-center text-white font-bold text-lg shadow-sm">
-            E
-          </span>
-          <span className="font-extrabold text-2xl tracking-tight text-[#2b1a0f]">
-            Emolivery<span className="text-[#b8581a]">.</span>
-          </span>
-        </a>
-        <a
-          href="#emolientero"
-          className="text-sm font-semibold text-[#6b5443] hover:text-[#2b1a0f] transition-colors py-1.5 px-3 rounded-lg hover:bg-[#fbf6ef]"
-        >
-          ← Panel Emolientero
-        </a>
-      </header>
+    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+      <Encabezado volver={{ href: '#emolientero', texto: 'Mi puesto' }} />
 
       <main className="flex-1 w-full max-w-lg mx-auto p-4 sm:p-6 lg:p-8">
         <div className="text-center mb-6">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 text-[#b8581a] mb-2">
-            US15 - Código de recojo
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Entregar un pedido</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold">Entregar un pedido</h1>
           <p className="text-sm text-[#6b5443] mt-1.5">
             Pide al cliente su código de recojo y escríbelo aquí. Cada código sirve una sola vez.
           </p>
         </div>
 
-        <form onSubmit={validar} noValidate className="bg-white rounded-3xl border border-[#ebe3d9] shadow-xl p-5 sm:p-6">
+        <form onSubmit={validar} noValidate className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6">
           <label htmlFor="codigo" className="block text-sm font-semibold mb-2">Código de recojo</label>
           <input
             id="codigo"
@@ -125,13 +108,13 @@ export default function ValidarRecojo() {
           <button
             type="submit"
             disabled={!codigoCompleto(codigo) || validando}
-            className="mt-5 w-full py-3.5 rounded-xl font-bold text-sm text-white shadow-md bg-gradient-to-r from-emerald-600 to-emerald-500 hover:shadow-lg disabled:from-stone-300 disabled:to-stone-300 disabled:shadow-none disabled:cursor-not-allowed"
+            className="mt-5 w-full py-3.5 rounded-xl font-bold text-sm text-white shadow-md bg-emerald-700 hover:bg-emerald-800 hover:shadow-lg disabled:bg-stone-300 disabled:shadow-none disabled:cursor-not-allowed"
           >
             {validando ? 'Validando…' : 'Validar y entregar'}
           </button>
         </form>
 
-        <section className="mt-6 bg-white rounded-3xl border border-[#ebe3d9] shadow-xl p-5 sm:p-6">
+        <section className="mt-6 bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6">
           <h2 className="text-lg font-bold mb-3">Pedidos por entregar</h2>
           {errorCarga && <p className="text-sm text-red-700">{errorCarga}</p>}
           {!pendientes && !errorCarga && <p className="text-sm text-[#9a8676]">Cargando…</p>}
@@ -149,9 +132,6 @@ export default function ValidarRecojo() {
         </section>
       </main>
 
-      <footer className="py-4 text-center text-xs text-[#9a8676]">
-        EMOLIVERY &copy; {new Date().getFullYear()} - Plataforma de Emolientes Tradicionales de Lima
-      </footer>
     </div>
   )
 }

@@ -1,3 +1,4 @@
+import Encabezado from '../components/Encabezado.jsx'
 import { useEffect, useMemo, useState } from 'react'
 import { Circle, MapContainer, Marker, Popup, TileLayer, ZoomControl, useMap } from 'react-leaflet'
 import L from 'leaflet'
@@ -14,6 +15,9 @@ import {
   Ubicacion,
   ZONAS_LA_MOLINA,
 } from '../domain/ubicacion/index.js'
+
+// Los paneles técnicos (simuladores, benchmark, bitácora) solo se muestran en modo demostración: agrega ?demo a la ruta.
+const modoDemo = () => /[?&]demo\b/.test(window.location.hash)
 
 const CENTRO_LA_MOLINA = [-12.0780, -76.9420]
 
@@ -279,52 +283,9 @@ export default function MapaCercanos() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
       {/* Header Principal */}
-      <header className="bg-white border-b border-[#ebe3d9] py-3.5 px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3 shadow-xs sticky top-0 z-30">
-        <div className="flex items-center gap-3">
-          <a href="#inicio" className="flex items-center gap-2 text-decoration-none">
-            <span className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#b8581a] to-[#e67e22] flex items-center justify-center text-white font-extrabold text-lg shadow-sm">
-              E
-            </span>
-            <div>
-              <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-[#2b1a0f] block leading-none">
-                Emolivery<span className="text-[#b8581a]">.</span>
-              </span>
-              <span className="text-[11px] font-semibold text-[#6b5443]">
-                US07 · Mapa de Emolienteros Cercanos (La Molina)
-              </span>
-            </div>
-          </a>
-        </div>
-
-        <nav className="flex flex-wrap items-center gap-2">
-          <a
-            href="#inicio"
-            className="text-xs sm:text-sm font-semibold text-[#6b5443] hover:text-[#2b1a0f] py-1.5 px-3 rounded-xl hover:bg-[#fbf6ef] transition-colors"
-          >
-            Mapa General
-          </a>
-          <a
-            href="#favoritos"
-            className="text-xs sm:text-sm font-bold text-[#b8581a] hover:bg-amber-50 py-1.5 px-3 rounded-xl border border-amber-200 transition-colors"
-          >
-            ♥ Mis Favoritos (US21)
-          </a>
-          <a
-            href="#pago-yape"
-            className="text-xs sm:text-sm font-bold bg-[#742384] hover:bg-[#5c1b69] text-white py-2 px-3.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5"
-          >
-            <span>📱</span> Ir a Pago QR Yape (US14)
-          </a>
-          <a
-            href="#control-jornada"
-            className="text-xs sm:text-sm font-semibold text-[#b8581a] hover:bg-amber-50 py-1.5 px-3 rounded-xl border border-amber-200 transition-colors"
-          >
-            Control Jornada (US06)
-          </a>
-        </nav>
-      </header>
+      <Encabezado />
 
       {/* T34: Modal/Banner de Consentimiento Explícito de Geolocalización (Ley N.° 29733) */}
       {mostrarModalConsentimiento && (
@@ -332,12 +293,12 @@ export default function MapaCercanos() {
           role="dialog"
           aria-modal="false"
           aria-labelledby="titulo-consentimiento-gps"
-          className="bg-gradient-to-r from-amber-950 via-[#3b2313] to-amber-900 text-white px-4 py-4 sm:px-6 border-b border-amber-700/50 shadow-md"
+          className="bg-[#3b2313] text-white px-4 py-4 sm:px-6 border-b border-amber-700/50 shadow-md"
         >
           <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
             <div className="space-y-1 max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-200 text-xs font-bold uppercase tracking-wider">
-                <span>🔒</span> T34 · Consentimiento Explícito de Geolocalización (Ley N.° 29733)
+              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-200 text-xs font-bold">
+                <span>🔒</span> Consentimiento Explícito de Geolocalización (Ley N.° 29733)
               </div>
               <h2 id="titulo-consentimiento-gps" className="text-base sm:text-lg font-extrabold">
                 ¿Autorizas a EMOLIVERY a utilizar tu ubicación actual para buscar emolienteros cercanos en La Molina?
@@ -375,13 +336,14 @@ export default function MapaCercanos() {
       )}
 
       {/* Barra de Simulación Rápida para Evaluación / Sprint Review (T34, T39, T40) */}
+      {modoDemo() && (
       <section
         aria-label="Barra de simulación para evaluación de criterios de aceptación"
         className="bg-[#fbf6ef] border-b border-[#ebe3d9] px-4 py-3 sm:px-6"
       >
         <div className="max-w-7xl mx-auto flex flex-col xl:flex-row xl:items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-extrabold uppercase tracking-wider text-[#b8581a] bg-amber-100 px-2.5 py-1 rounded-lg">
+            <span className="text-xs font-extrabold text-[#b8581a] bg-amber-100 px-2.5 py-1 rounded-lg">
               Simulador Sprint Review:
             </span>
             <button
@@ -448,7 +410,7 @@ export default function MapaCercanos() {
           >
             <div className="flex items-center gap-2 font-bold">
               <span className="px-2 py-0.5 rounded bg-emerald-500 text-emerald-950 font-extrabold uppercase">
-                T40 · Evidencia RNF01
+                Evidencia RNF01
               </span>
               <span>
                 Tiempo de respuesta y renderizado con {resultadoBenchmark.cantidadGenerada} emolienteros:{' '}
@@ -462,6 +424,7 @@ export default function MapaCercanos() {
           </div>
         )}
       </section>
+      )}
 
       {/* Contenedor Principal: Panel de Controles / Lista + Mapa Interactivo */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -485,8 +448,8 @@ export default function MapaCercanos() {
 
             {/* Selector de Radio de Búsqueda (T36) */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#6b5443] mb-1.5">
-                Radio de búsqueda geodésica (T36):
+              <label className="block text-xs font-bold text-[#6b5443] mb-1.5">
+                Radio de búsqueda geodésica:
               </label>
               <div className="grid grid-cols-4 gap-2">
                 {RADIOS_DISPONIBLES_METROS.map((r) => (
@@ -515,9 +478,9 @@ export default function MapaCercanos() {
               <div>
                 <label
                   htmlFor="select-criterio-orden"
-                  className="block text-xs font-bold uppercase tracking-wider text-[#6b5443] mb-1"
+                  className="block text-xs font-bold text-[#6b5443] mb-1"
                 >
-                  Estrategia `CriterioOrden` (T37):
+                  Ordenar por:
                 </label>
                 <select
                   id="select-criterio-orden"
@@ -533,7 +496,7 @@ export default function MapaCercanos() {
               <div>
                 <label
                   htmlFor="select-zona-rapida"
-                  className="block text-xs font-bold uppercase tracking-wider text-[#6b5443] mb-1"
+                  className="block text-xs font-bold text-[#6b5443] mb-1"
                 >
                   Filtrar por zona de La Molina:
                 </label>
@@ -580,8 +543,8 @@ export default function MapaCercanos() {
 
               {/* Selector Manual por Zonas de La Molina (T39) */}
               <div className="pt-2 border-t border-amber-200/80 space-y-2.5">
-                <label className="block text-xs font-extrabold uppercase tracking-wider text-amber-950">
-                  T39 · Buscador Manual por Zonas de La Molina:
+                <label className="block text-xs font-extrabold text-amber-950">
+                  Buscador Manual por Zonas de La Molina:
                 </label>
                 <div className="flex flex-wrap gap-1.5">
                   {ZONAS_LA_MOLINA.map((zona) => (
@@ -693,13 +656,13 @@ export default function MapaCercanos() {
                       href={`#catalogo?id=${emo.id}`}
                       className="px-3 py-1.5 rounded-xl border border-[#ddd2c4] bg-[#fbf6ef] hover:bg-amber-50 text-xs font-bold text-[#2b1a0f] transition-colors"
                     >
-                      Ver Catálogo (US12)
+                      Ver Catálogo
                     </a>
                     <a
                       href={`#pago-yape?emolientero=${emo.id}`}
                       className="px-3.5 py-1.5 rounded-xl bg-[#742384] hover:bg-[#5c1b69] text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1"
                     >
-                      <span>⚡</span> Compra Anticipada / QR Yape (US14)
+                      <span>⚡</span> Compra Anticipada / QR Yape
                     </a>
                   </div>
                 </article>
@@ -710,7 +673,7 @@ export default function MapaCercanos() {
 
         {/* Columna Derecha: Mapa Interactivo de La Molina (T33, T38) */}
         <div className="lg:col-span-7 flex flex-col gap-3">
-          <div className="bg-white rounded-3xl border border-[#ebe3d9] p-3 shadow-lg flex-1 min-h-[520px] flex flex-col">
+          <div className="bg-white rounded-2xl border border-[#ebe3d9] p-3 shadow-lg flex-1 min-h-[520px] flex flex-col">
             <div className="flex flex-wrap items-center justify-between gap-2 px-2 pb-2.5 text-xs text-[#6b5443]">
               <div className="flex items-center gap-2">
                 <span className="inline-block w-3 h-3 rounded-full bg-blue-600 border-2 border-white shadow-xs" />

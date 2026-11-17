@@ -1,3 +1,4 @@
+import Encabezado from '../components/Encabezado.jsx'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { EMOLIENTEROS_SEMILLA_LA_MOLINA } from '../domain/ubicacion/index.js'
 import {
@@ -8,6 +9,9 @@ import {
   crearOrdenPendiente,
 } from '../domain/pago/index.js'
 import { validarPagoYapeRemotoOLocal } from '../services/pagoYapeService.js'
+
+// Los paneles técnicos (simuladores, bitácora) solo se muestran en modo demostración: agrega ?demo a la ruta.
+const modoDemo = () => /[?&]demo\b/.test(window.location.hash)
 
 function obtenerEmolienteroIdDesdeHash() {
   const query = window.location.hash.split('?')[1] ?? ''
@@ -276,56 +280,20 @@ export default function PagoYape() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
       {/* Header Principal */}
-      <header className="bg-white border-b border-[#ebe3d9] py-3.5 px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3 shadow-xs sticky top-0 z-30">
-        <div className="flex items-center gap-3">
-          <a href="#inicio" className="flex items-center gap-2 text-decoration-none">
-            <span className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#742384] to-[#b8581a] flex items-center justify-center text-white font-extrabold text-lg shadow-sm">
-              E
-            </span>
-            <div>
-              <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-[#2b1a0f] block leading-none">
-                Emolivery<span className="text-[#742384]">.</span>
-              </span>
-              <span className="text-[11px] font-semibold text-[#6b5443]">
-                US14 · Pago Anticipado con QR de Yape y Validación de Constancia
-              </span>
-            </div>
-          </a>
-        </div>
-
-        <nav className="flex flex-wrap items-center gap-2">
-          <a
-            href="#mapa-cercanos"
-            className="text-xs sm:text-sm font-bold text-[#b8581a] hover:bg-amber-50 py-1.5 px-3 rounded-xl border border-amber-200 transition-colors"
-          >
-            ← Volver a Mapa Cercanos (US07)
-          </a>
-          <a
-            href="#favoritos"
-            className="text-xs sm:text-sm font-bold text-[#b8581a] hover:bg-amber-50 py-1.5 px-3 rounded-xl border border-amber-200 transition-colors"
-          >
-            ♥ Mis Favoritos (US21)
-          </a>
-          <a
-            href="#validar-recojo"
-            className="text-xs sm:text-sm font-semibold text-[#6b5443] hover:text-[#2b1a0f] py-1.5 px-3 rounded-xl hover:bg-[#fbf6ef] transition-colors"
-          >
-            Validar Recojo (US15)
-          </a>
-        </nav>
-      </header>
+      <Encabezado volver={{ href: '#inicio', texto: 'Volver al mapa' }} />
 
       {/* T67: Panel Simulador de Casos de Prueba de Caja Negra */}
+      {modoDemo() && (
       <section
-        aria-label="Simulador de casos de prueba de caja negra T67"
+        aria-label="Simulador de casos de prueba de caja negra"
         className="bg-gradient-to-r from-[#3b0747] via-[#4c105c] to-[#2b1a0f] text-white px-4 py-3.5 sm:px-6 border-b border-purple-900"
       >
         <div className="max-w-7xl mx-auto flex flex-col xl:flex-row xl:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-1 rounded-lg bg-[#00cba9] text-[#2b1a0f] text-xs font-extrabold uppercase tracking-wider">
-              Simulador de Casos de Prueba (T67)
+            <span className="px-2.5 py-1 rounded-lg bg-[#00cba9] text-[#2b1a0f] text-xs font-extrabold">
+              Simulador de Casos de Prueba
             </span>
             <span className="text-xs text-purple-100 hidden sm:inline">
               Ejecuta con un clic los 4 escenarios de validación de `Yape extends MetodoPago`:
@@ -371,18 +339,19 @@ export default function PagoYape() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Contenido Principal */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Columna Izquierda (T64): Resumen de la Orden Anticipada, Temporizador 15:00 y QR de Yape */}
           <div className="lg:col-span-6 space-y-5">
-            <div className="bg-white rounded-3xl border border-[#ebe3d9] shadow-md p-5 sm:p-6 space-y-4">
+            <div className="bg-white rounded-2xl border border-[#ebe3d9] shadow-md p-5 sm:p-6 space-y-4">
               {/* Cabecera de la Orden y Estado */}
               <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#ebe3d9]">
                 <div>
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#9a8676] block">
-                    Orden de Compra Anticipada (T64)
+                  <span className="text-[11px] font-bold text-[#9a8676] block">
+                    Orden de Compra Anticipada
                   </span>
                   <h1 className="text-xl font-extrabold text-[#2b1a0f] font-mono">{orden.id}</h1>
                 </div>
@@ -414,7 +383,7 @@ export default function PagoYape() {
               <div>
                 <label
                   htmlFor="select-puesto-yape"
-                  className="block text-xs font-bold uppercase tracking-wider text-[#6b5443] mb-1"
+                  className="block text-xs font-bold text-[#6b5443] mb-1"
                 >
                   Puesto de Emoliente en La Molina:
                 </label>
@@ -447,7 +416,7 @@ export default function PagoYape() {
                 <div className="flex items-center gap-2.5">
                   <span className="text-lg">⏱</span>
                   <div>
-                    <p className="text-xs font-extrabold uppercase tracking-wider">
+                    <p className="text-xs font-extrabold">
                       Vigencia de la reserva (Máximo 15 minutos)
                     </p>
                     <p className="text-[11px] opacity-80">
@@ -470,7 +439,7 @@ export default function PagoYape() {
 
               {/* Detalle de Productos Reservados y Total Calculado */}
               <div className="space-y-2">
-                <h2 className="text-xs font-bold uppercase tracking-wider text-[#6b5443]">
+                <h2 className="text-xs font-bold text-[#6b5443]">
                   Productos Reservados:
                 </h2>
                 <ul className="divide-y divide-[#ebe3d9] border border-[#ebe3d9] rounded-2xl px-4 bg-[#fbf6ef]/60">
@@ -496,8 +465,8 @@ export default function PagoYape() {
               </div>
 
               {/* Tarjeta QR de Yape (T64) */}
-              <div className="rounded-3xl bg-gradient-to-br from-[#742384] to-[#4a1256] text-white p-5 text-center space-y-3 shadow-md">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00cba9] text-[#2b1a0f] text-xs font-extrabold uppercase tracking-wider">
+              <div className="rounded-2xl bg-[#742384] text-white p-5 text-center space-y-3 shadow-md">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00cba9] text-[#2b1a0f] text-xs font-extrabold">
                   <span>📱</span> Escanea con tu app Yape
                 </div>
                 <CodigoQRYapeSVG payload={datosQR.payloadQR} size={185} />
@@ -516,11 +485,8 @@ export default function PagoYape() {
 
           {/* Columna Derecha (T65, T66): Formulario de Constancia y Resolución Exitoso / Inválido */}
           <div className="lg:col-span-6 space-y-5">
-            <div className="bg-white rounded-3xl border border-[#ebe3d9] shadow-md p-5 sm:p-6 space-y-5">
+            <div className="bg-white rounded-2xl border border-[#ebe3d9] shadow-md p-5 sm:p-6 space-y-5">
               <div>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-purple-100 text-[#742384] mb-2">
-                  T65 · Validación de Constancia Yape
-                </span>
                 <h2 className="text-xl sm:text-2xl font-extrabold text-[#2b1a0f]">
                   Registrar Constancia de Operación
                 </h2>
@@ -535,7 +501,7 @@ export default function PagoYape() {
                 <div>
                   <label
                     htmlFor="input-numero-operacion"
-                    className="block text-xs font-bold uppercase tracking-wider text-[#6b5443] mb-1.5"
+                    className="block text-xs font-bold text-[#6b5443] mb-1.5"
                   >
                     Número de operación de Yape (6 a 10 dígitos) <span className="text-red-600">*</span>
                   </label>
@@ -562,7 +528,7 @@ export default function PagoYape() {
                   <div className="flex items-center justify-between mb-1.5">
                     <label
                       htmlFor="input-monto-yape"
-                      className="block text-xs font-bold uppercase tracking-wider text-[#6b5443]"
+                      className="block text-xs font-bold text-[#6b5443]"
                     >
                       Monto transferido (S/) <span className="text-red-600">*</span>
                     </label>
@@ -588,7 +554,7 @@ export default function PagoYape() {
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-[#742384] to-[#5c1b69] hover:from-[#5c1b69] hover:to-[#471352] text-white font-extrabold text-sm shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full py-3.5 px-5 rounded-xl bg-[#742384] hover:bg-[#5c1b69] text-white font-extrabold text-sm shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
                   <span>✓</span> Validar Constancia y Confirmar Pago
                 </button>
@@ -601,7 +567,7 @@ export default function PagoYape() {
                   className="rounded-2xl bg-emerald-50 border-2 border-emerald-400 p-5 text-emerald-950 space-y-3 shadow-sm"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="px-3 py-1 rounded-full bg-emerald-600 text-white text-xs font-extrabold uppercase tracking-wider">
+                    <span className="px-3 py-1 rounded-full bg-emerald-600 text-white text-xs font-extrabold">
                       Estado de la Orden: Pagada
                     </span>
                     <span className="text-xs font-mono font-bold text-emerald-800">
@@ -620,7 +586,7 @@ export default function PagoYape() {
                   {/* Destacado del Código de Recojo de un solo uso */}
                   <div className="bg-white rounded-2xl border-2 border-dashed border-emerald-500 p-4 text-center space-y-2">
                     <span className="text-[11px] font-extrabold uppercase tracking-widest text-emerald-800 block">
-                      Código de Recojo de un solo uso (US14 / US15)
+                      Código de Recojo de un solo uso
                     </span>
                     <div className="text-3xl sm:text-4xl font-mono font-extrabold tracking-wider text-[#2b1a0f]">
                       {resultadoValidacion.codigoRecojo}
@@ -647,7 +613,7 @@ export default function PagoYape() {
                   className="rounded-2xl bg-red-50 border-2 border-red-400 p-5 text-red-950 space-y-2.5 shadow-sm"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="px-3 py-1 rounded-full bg-red-600 text-white text-xs font-extrabold uppercase tracking-wider">
+                    <span className="px-3 py-1 rounded-full bg-red-600 text-white text-xs font-extrabold">
                       {resultadoValidacion.codigoCausa}
                     </span>
                     <span className="px-2.5 py-0.5 rounded-md bg-red-200 text-red-900 text-xs font-bold">
@@ -681,13 +647,14 @@ export default function PagoYape() {
         </div>
 
         {/* RNF06: Bitácora de Auditoría de Transacciones de Pago en Vivo */}
+        {modoDemo() && (
         <section
           aria-labelledby="titulo-bitacora-rnf06"
-          className="bg-white rounded-3xl border border-[#ebe3d9] shadow-md p-5 sm:p-6 space-y-4"
+          className="bg-white rounded-2xl border border-[#ebe3d9] shadow-md p-5 sm:p-6 space-y-4"
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#b8581a] block">
+              <span className="text-[11px] font-bold text-[#b8581a] block">
                 RNF06 · Trazabilidad y Auditoría de Operaciones
               </span>
               <h2 id="titulo-bitacora-rnf06" className="text-lg font-extrabold text-[#2b1a0f]">
@@ -702,13 +669,13 @@ export default function PagoYape() {
           {bitacora.length === 0 ? (
             <div className="p-6 rounded-2xl bg-[#fbf6ef] border border-dashed border-[#ddd2c4] text-center text-xs text-[#6b5443]">
               Aún no se han registrado intentos en esta sesión. Usa el formulario o los botones del{' '}
-              <strong>Simulador de Casos de Prueba (T67)</strong> para registrar transacciones en la bitácora.
+              <strong>Simulador de Casos de Prueba</strong> para registrar transacciones en la bitácora.
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="border-b border-[#ebe3d9] text-[#6b5443] uppercase tracking-wider text-[11px]">
+                  <tr className="border-b border-[#ebe3d9] text-[#6b5443] text-[11px]">
                     <th className="py-2.5 px-3">Fecha / Hora</th>
                     <th className="py-2.5 px-3">ID Orden</th>
                     <th className="py-2.5 px-3">N.° Operación</th>
@@ -753,6 +720,7 @@ export default function PagoYape() {
             </div>
           )}
         </section>
+        )}
       </main>
     </div>
   )

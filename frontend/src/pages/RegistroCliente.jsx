@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { registrarCliente } from '../services/registroService.js'
+import Encabezado from '../components/Encabezado.jsx'
 
 export default function RegistroCliente() {
   const [formData, setFormData] = useState({
@@ -108,37 +109,16 @@ export default function RegistroCliente() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f3ee] text-[#2b1a0f] flex flex-col justify-between">
+    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col justify-between">
       {/* Header */}
-      <header className="bg-white border-b border-[#ebe3d9] py-4 px-6 flex items-center justify-between shadow-xs sticky top-0 z-20">
-        <a href="#inicio" className="flex items-center gap-2 text-decoration-none group">
-          <span className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#b8581a] to-[#e67e22] flex items-center justify-center text-white font-bold text-lg shadow-sm">
-            E
-          </span>
-          <span className="font-extrabold text-2xl tracking-tight text-[#2b1a0f]">
-            Emolivery<span className="text-[#b8581a]">.</span>
-          </span>
-        </a>
-        <a
-          href="#login"
-          className="text-sm font-semibold text-[#b8581a] hover:text-[#9e4a14] transition-colors py-1.5 px-3 rounded-lg hover:bg-amber-50"
-        >
-          Iniciar sesión
-        </a>
-      </header>
+      <Encabezado />
 
       {/* Main Container */}
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-lg bg-white rounded-3xl border border-[#ebe3d9] shadow-xl p-6 sm:p-8">
-          {/* Badge & Title */}
+        <div className="w-full max-w-lg bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-6 sm:p-8">
+          {/* Título */}
           <div className="text-center mb-6">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-100 text-[#b8581a] mb-2">
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              Perfil Cliente
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#2b1a0f]">
+            <h1 className="text-2xl sm:text-3xl font-semibold text-[#2b1a0f]">
               Crea tu cuenta de cliente
             </h1>
             <p className="text-sm text-[#6b5443] mt-1.5">
@@ -163,7 +143,7 @@ export default function RegistroCliente() {
             <form onSubmit={handleSubmit} noValidate className="space-y-4">
               {/* Nombre Completo */}
               <div>
-                <label htmlFor="nombre" className="block text-xs font-bold text-[#6b5443] uppercase tracking-wider mb-1.5">
+                <label htmlFor="nombre" className="block text-xs font-bold text-[#6b5443] mb-1.5">
                   Nombre completo <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -191,7 +171,7 @@ export default function RegistroCliente() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Teléfono / Celular */}
                 <div>
-                  <label htmlFor="telefono" className="block text-xs font-bold text-[#6b5443] uppercase tracking-wider mb-1.5">
+                  <label htmlFor="telefono" className="block text-xs font-bold text-[#6b5443] mb-1.5">
                     Celular (9 dígitos) <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -218,7 +198,7 @@ export default function RegistroCliente() {
 
                 {/* Correo Electrónico */}
                 <div>
-                  <label htmlFor="correo" className="block text-xs font-bold text-[#6b5443] uppercase tracking-wider mb-1.5">
+                  <label htmlFor="correo" className="block text-xs font-bold text-[#6b5443] mb-1.5">
                     Correo electrónico <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -245,7 +225,7 @@ export default function RegistroCliente() {
 
               {/* Contraseña */}
               <div>
-                <label htmlFor="password" className="block text-xs font-bold text-[#6b5443] uppercase tracking-wider mb-1.5">
+                <label htmlFor="password" className="block text-xs font-bold text-[#6b5443] mb-1.5">
                   Contraseña (mínimo 8 caracteres) <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -271,7 +251,7 @@ export default function RegistroCliente() {
 
               {/* Confirmar Contraseña */}
               <div>
-                <label htmlFor="confirmarPassword" className="block text-xs font-bold text-[#6b5443] uppercase tracking-wider mb-1.5">
+                <label htmlFor="confirmarPassword" className="block text-xs font-bold text-[#6b5443] mb-1.5">
                   Confirmar contraseña <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -305,7 +285,7 @@ export default function RegistroCliente() {
               <button
                 type="submit"
                 disabled={cargando}
-                className="w-full mt-2 py-3 px-4 rounded-xl bg-gradient-to-r from-[#b8581a] to-[#9e4a14] hover:from-[#a04b14] hover:to-[#873e0e] text-white font-bold text-sm shadow-md hover:shadow-lg transition-all transform active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full mt-2 py-3 px-4 rounded-xl bg-[#b4531a] hover:bg-[#96430f] text-white font-bold text-sm shadow-md hover:shadow-lg transition-all transform active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {cargando ? (
                   <>
@@ -341,10 +321,6 @@ export default function RegistroCliente() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="py-4 text-center text-xs text-[#9a8676]">
-        EMOLIVERY &copy; {new Date().getFullYear()} - Plataforma de Emolientes Tradicionales de Lima
-      </footer>
     </div>
   )
 }
