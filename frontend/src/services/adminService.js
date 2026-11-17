@@ -9,3 +9,13 @@ export const listarHistorial = () => pedirConSesion('/admin/emolienteros/histori
 export const aprobarEmolientero = (id) => pedirConSesion(`/admin/emolienteros/${id}/aprobar`, { method: 'POST' })
 export const rechazarEmolientero = (id, motivo) =>
   pedirConSesion(`/admin/emolienteros/${id}/rechazar`, { method: 'POST', body: { motivo } })
+
+// US24: gestión de usuarios registrados.
+export const ROLES = { cliente: 'Clientes', emolientero: 'Emolienteros', admin: 'Administradores' }
+export const ESTADOS = { activo: 'Activo', pendiente_verificacion: 'Pendiente', rechazado: 'Rechazado', suspendido: 'Suspendido' }
+export const listarUsuarios = (filtros) => {
+  const consulta = new URLSearchParams(Object.entries(filtros).filter(([, v]) => v))
+  return pedirConSesion(`/admin/usuarios?${consulta}`)
+}
+export const suspenderUsuario = (id, motivo) => pedirConSesion(`/admin/usuarios/${id}/suspender`, { method: 'POST', body: { motivo } })
+export const reactivarUsuario = (id, motivo) => pedirConSesion(`/admin/usuarios/${id}/reactivar`, { method: 'POST', body: { motivo } })

@@ -21,6 +21,9 @@ import comprasRouter from './routes/compras.js'
 import consultaResenasRouter from './routes/consultaResenas.js'
 import moderacionRouter from './routes/moderacion.js'
 import favoritosRouter from './routes/favoritos.js'
+import { cancelacionRouter, devolucionesRouter } from './routes/cancelacion.js'
+import respuestasResenasRouter from './routes/respuestasResenas.js'
+import adminUsuariosRouter from './routes/adminUsuarios.js'
 import { pool } from './db.js'
 
 // La app se crea aquí y se arranca en server.js, para que las pruebas puedan levantarla en otro puerto.
@@ -41,6 +44,8 @@ app.use('/api/puntos', puntosRouter)
 app.use('/api/productos', productosRouter)
 app.use('/api/ventas', ventasRouter)
 app.use('/api/auth', authRouter)
+// US24 va antes que US23: si no, toda petición a /api/admin/usuarios pasaría primero por adminRouter.
+app.use('/api/admin/usuarios', adminUsuariosRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/notificaciones', notificacionesRouter)
 app.use('/api/ubicaciones', ubicacionesRouter)
@@ -49,13 +54,18 @@ app.use('/api/clientes', clientesRouter)
 app.use('/api/jornadas', jornadasRouter)
 app.use('/api/puntos-habituales', puntosHabitualesRouter)
 app.use('/api/catalogo', catalogoRouter)
-app.use('/api/ordenes', ordenesRouter)
 app.use('/api/avistamientos', avistamientosRouter)
 app.use('/api/noticias', noticiasRouter)
 app.use('/api/mapa', mapaRouter)
 app.use('/api/pagos', pagosRouter)
+// US13 (compras.js), US15 (ordenes.js) y US16 (cancelacion.js) comparten /api/ordenes: cada ruta exige su propio rol.
 app.use('/api/ordenes', comprasRouter)
+app.use('/api/ordenes', cancelacionRouter)
+app.use('/api/ordenes', ordenesRouter)
+app.use('/api/devoluciones', devolucionesRouter)
+// US18 (consulta pública) y US19 (respuesta del emolientero) comparten /api/resenas.
 app.use('/api/resenas', consultaResenasRouter)
+app.use('/api/resenas', respuestasResenasRouter)
 app.use('/api/moderacion', moderacionRouter)
 app.use('/api/favoritos', favoritosRouter)
 

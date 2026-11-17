@@ -18,6 +18,7 @@ router.get('/mias', requiereRol('cliente'), async (req, res) => {
   const { rows } = await query(
     `SELECT o.id, e.nombre AS emolientero, o.estado, o.codigo_recojo AS "codigoRecojo",
             o.creada_en AS "creadaEn", o.entregada_en AS "entregadaEn",
+            o.total, o.pagada_en AS "pagadaEn", o.cancelada_en AS "canceladaEn",
             (r.id IS NOT NULL) AS "resenaHabilitada"
      FROM ordenes o
      JOIN usuarios e ON e.id = o.emolientero_id

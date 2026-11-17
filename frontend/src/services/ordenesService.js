@@ -23,3 +23,15 @@ export function formatearMientrasEscribe(texto) {
 }
 
 export const codigoCompleto = (texto) => texto.replace('-', '').length === 6
+
+// US16: cancelación de compra anticipada (cliente) y devoluciones (emolientero).
+export const PLAZO_CANCELACION_MIN = 30 // debe coincidir con backend/src/cancelacion.js
+export const cancelarOrden = (id) => pedirConSesion(`/ordenes/${id}/cancelar`, { method: 'POST' })
+export const misDevoluciones = () => pedirConSesion('/devoluciones')
+export const marcarDevolucionRealizada = (id) => pedirConSesion(`/devoluciones/${id}/realizada`, { method: 'POST' })
+
+// Una orden pagada y no entregada se puede cancelar hasta 30 minutos después del pago.
+export function cancelableHasta(pedido) {
+  if (!pedido.pagadaEn || !['pendiente', 'en_camino'].includes(pedido.estado)) return null
+  return new Date(new Date(pedido.pagadaEn).getTime() + PLAZO_CANCELACION_MIN * 60_000)
+}

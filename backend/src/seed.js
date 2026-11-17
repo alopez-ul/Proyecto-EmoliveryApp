@@ -63,6 +63,23 @@ try {
   )
   const codigo = pendiente?.codigo ?? (await crearOrden(pool, { clienteId: carla.id, emolienteroId: elmer.id })).codigoRecojo
   console.log(`Pedido de prueba por entregar: código de recojo ${formatearCodigo(codigo)} (cliente@ → emolientero@)`)
+
+  // US16: un pedido pagado ahora mismo, cancelable durante 30 minutos. Como el pago con QR (US14) aún no
+  // existe, se marca pagado directo. Cada vez que se corre el seed se crea uno nuevo.
+  const pagado = await crearOrden(pool, { clienteId: carla.id, emolienteroId: elmer.id })
+  await pool.query("UPDATE ordenes SET estado = 'pendiente', total = 4.5, pagada_en = now() WHERE id = $1", [pagado.id])
+  console.log(`Pedido pagado para probar la cancelación (US16): #${pagado.id}, cancelable hasta 30 min desde ahora`)
+
+  // US19: una reseña publicada sobre Elmer, sin responder. Como publicar reseñas (US17) aún no existe,
+  // se publica directo sobre un pedido entregado.
+  const entregado = await crearOrden(pool, { clienteId: carla.id, emolienteroId: elmer.id })
+  await pool.query("UPDATE ordenes SET estado = 'entregada', entregada_en = now() WHERE id = $1", [entregado.id])
+  await pool.query(
+    `INSERT INTO resenas (orden_id, cliente_id, emolientero_id, calificacion, comentario, publicada_en)
+     VALUES ($1, $2, $3, 5, 'El emoliente estaba bien caliente y me atendió rápido.', now())`,
+    [entregado.id, carla.id, elmer.id],
+  )
+  console.log('Reseña de prueba sin responder para emolientero@ (US19)')
 } finally {
   await pool.end()
 }

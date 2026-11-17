@@ -94,6 +94,13 @@ export default function ResenasEmolientero() {
                   </time>
                 </div>
                 {r.comentario && <p className="text-sm mt-1.5">{r.comentario}</p>}
+                {/* US19: respuesta del emolientero, vinculada bajo la reseña */}
+                {r.respuesta && (
+                  <div className="mt-2 ml-4 pl-3 border-l-2 border-[#b8581a]">
+                    <p className="text-xs font-bold text-[#b8581a]">Respuesta de {datos.emolientero.nombre}</p>
+                    <p className="text-sm mt-0.5">{r.respuesta}</p>
+                  </div>
+                )}
                 <div className="flex items-center justify-between mt-1">
                   <p className="text-xs font-semibold text-[#6b5443]">{r.autor}</p>
                   <button type="button" onClick={() => reportar(r)} className="text-xs font-semibold text-[#9a8676] hover:text-red-600 hover:underline">

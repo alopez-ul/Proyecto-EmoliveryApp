@@ -9,6 +9,7 @@ import {
   listarPendientes,
   rechazarEmolientero,
 } from '../../services/adminService.js'
+import GestionUsuarios from './GestionUsuarios.jsx'
 import NoticiasAdmin from './NoticiasAdmin.jsx'
 import './PanelAdmin.css'
 
@@ -133,6 +134,16 @@ export default function PanelAdmin({ usuario, onCerrarSesion }) {
             >
               Noticias
             </button>
+            {/* US24: gestión de usuarios registrados */}
+            <button
+              type="button"
+              role="tab"
+              aria-selected={pestana === 'usuarios'}
+              className={pestana === 'usuarios' ? 'is-activa' : ''}
+              onClick={() => setPestana('usuarios')}
+            >
+              Usuarios
+            </button>
           </div>
 
           {pestana === 'pendientes' && (
@@ -146,6 +157,7 @@ export default function PanelAdmin({ usuario, onCerrarSesion }) {
           )}
           {pestana === 'historial' && <Historial historial={historial} />}
           {pestana === 'noticias' && <NoticiasAdmin onAviso={setAviso} onError={setError} />}
+          {pestana === 'usuarios' && <GestionUsuarios usuarioActual={usuario} />}
         </section>
       </main>
 

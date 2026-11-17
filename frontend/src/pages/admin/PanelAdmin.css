@@ -112,6 +112,20 @@
   .pa-acciones { text-align: left; }
 }
 
+/* ---------- US24: gestión de usuarios ---------- */
+.pa-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.pa-filtros { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin: 0 0 16px; padding: 0; border: 0; }
+.pa-filtros label { display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; font-weight: 600; color: var(--cafe-medio); }
+.pa-filtros select, .pa-filtros input { font: inherit; padding: 8px 10px; border: 1px solid var(--borde-fuerte); border-radius: 8px; background: var(--superficie); color: var(--cafe); }
+.pa-totales { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin: 0 0 16px; }
+.pa-totales div { padding: 8px 10px; border: 1px solid var(--borde); border-radius: 10px; background: var(--crema); }
+.pa-totales dt { font-size: 0.72rem; font-weight: 600; color: var(--cafe-suave); }
+.pa-totales dd { margin: 2px 0 0; font-size: 1.15rem; font-weight: 800; }
+.pa-estado-activo { background: #e8f3e9; color: var(--hierba); }
+.pa-estado-suspendido { background: #fdecea; color: #b42318; }
+.pa-estado-pendiente_verificacion { background: var(--ambar-suave); color: var(--caramelo); }
+.pa-estado-rechazado { background: #f1ede8; color: var(--cafe-medio); }
+.pa-lista-ordenes { margin: 0 0 12px; padding-left: 18px; font-size: 0.86rem; color: var(--cafe); }
 /* US22: noticias (formulario y listado del administrador) */
 .pa-noticias { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; padding: 20px 18px; }
 .pa-noticias h3 { margin: 0 0 14px; font-size: 1.05rem; }
