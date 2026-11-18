@@ -184,7 +184,7 @@ export default function EmolienterosFavoritosDemo() {
   }, [directorio, filtroVista, zonaFiltroDirectorio])
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col">
       {/* Header Principal */}
       <Encabezado />
 
@@ -192,11 +192,11 @@ export default function EmolienterosFavoritosDemo() {
       {modoDemo() && (
       <section
         aria-label="Simulador de apertura de jornada y casos de prueba"
-        className="bg-gradient-to-r from-[#2b1a0f] via-[#432818] to-[#b8581a] text-white px-4 py-3.5 sm:px-6 border-b border-amber-900 shadow-sm"
+        className="bg-gradient-to-r from-[#2b2118] via-[#432818] to-[#2f4a2e] text-white px-4 py-3.5 sm:px-6 border-b border-amber-900 shadow-sm"
       >
         <div className="max-w-7xl mx-auto flex flex-col xl:flex-row xl:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-1 rounded-lg bg-amber-400 text-[#2b1a0f] text-xs font-extrabold">
+            <span className="px-2.5 py-1 rounded-lg bg-amber-400 text-[#2b2118] text-xs font-extrabold">
               Simulador de avisos
             </span>
             <span className="text-xs text-amber-100">
@@ -306,14 +306,14 @@ export default function EmolienterosFavoritosDemo() {
           {/* Panel de Configuración del Cliente (T95 / T96) */}
           <section
             aria-labelledby="titulo-config-favoritos"
-            className={`${modoDemo() ? 'lg:col-span-7' : 'lg:col-span-12'} bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6 space-y-4`}
+            className={`${modoDemo() ? 'lg:col-span-7' : 'lg:col-span-12'} bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-5 sm:p-6 space-y-4`}
           >
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#ebe3d9]">
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#e6dcc8]">
               <div>
-                <span className="text-[11px] font-bold text-[#b8581a] block">
+                <span className="text-[11px] font-bold text-[#2f4a2e] block">
                   Preferencias del Cliente
                 </span>
-                <h1 id="titulo-config-favoritos" className="text-xl font-extrabold text-[#2b1a0f]">
+                <h1 id="titulo-config-favoritos" className="text-xl font-extrabold text-[#2b2118]">
                   Configuración de Avisos de Apertura de Jornada
                 </h1>
               </div>
@@ -345,7 +345,7 @@ export default function EmolienterosFavoritosDemo() {
               <div>
                 <label
                   htmlFor="select-zona-interes-principal"
-                  className="block text-xs font-bold text-[#6b5443] mb-1.5"
+                  className="block text-xs font-bold text-[#6b4a2f] mb-1.5"
                 >
                   Mi Zona de Interés Principal en La Molina:
                 </label>
@@ -353,7 +353,7 @@ export default function EmolienterosFavoritosDemo() {
                   id="select-zona-interes-principal"
                   value={preferencias.zonasInteres[0] ?? 'La Fontana'}
                   onChange={handleSeleccionarZonaUnica}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#ddd2c4] bg-[#fbf6ef] text-xs sm:text-sm font-bold text-[#2b1a0f]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#d6c8ad] bg-[#fbf7ee] text-xs sm:text-sm font-bold text-[#2b2118]"
                 >
                   {ZONAS_FAVORITOS_LA_MOLINA.map((z) => (
                     <option key={z} value={z}>
@@ -366,7 +366,7 @@ export default function EmolienterosFavoritosDemo() {
               <div>
                 <label
                   htmlFor="select-subclase-notificacion"
-                  className="block text-xs font-bold text-[#6b5443] mb-1.5"
+                  className="block text-xs font-bold text-[#6b4a2f] mb-1.5"
                 >
                   Tipo de aviso:
                 </label>
@@ -374,7 +374,7 @@ export default function EmolienterosFavoritosDemo() {
                   id="select-subclase-notificacion"
                   value={preferencias.canalPreferido ?? 'IN_APP'}
                   onChange={handleCambiarCanal}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#ddd2c4] bg-[#fbf6ef] text-xs sm:text-sm font-bold text-[#2b1a0f]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#d6c8ad] bg-[#fbf7ee] text-xs sm:text-sm font-bold text-[#2b2118]"
                 >
                   <option value="IN_APP">NotificacionEnApp (Banner + Acciones)</option>
                   <option value="APERTURA_JORNADA">NotificacionAperturaJornada (Estándar)</option>
@@ -385,7 +385,7 @@ export default function EmolienterosFavoritosDemo() {
 
             {/* Chips multi-zona de interés en La Molina */}
             <div>
-              <span className="block text-xs font-bold text-[#6b5443] mb-1.5">
+              <span className="block text-xs font-bold text-[#6b4a2f] mb-1.5">
                 Zonas de interés activas para recibir avisos ({preferencias.zonasInteres.join(', ')}):
               </span>
               <div className="flex flex-wrap gap-1.5">
@@ -398,8 +398,8 @@ export default function EmolienterosFavoritosDemo() {
                       onClick={() => handleToggleZonaInteres(zona)}
                       className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                         activa
-                          ? 'bg-[#b8581a] text-white border-[#b8581a] shadow-xs'
-                          : 'bg-[#fbf6ef] text-[#6b5443] border-[#ddd2c4] hover:border-[#b8581a]'
+                          ? 'bg-[#2f4a2e] text-white border-[#2f4a2e] shadow-xs'
+                          : 'bg-[#fbf7ee] text-[#6b4a2f] border-[#d6c8ad] hover:border-[#2f4a2e]'
                       }`}
                     >
                       {activa ? '✓ ' : '+ '}
@@ -413,15 +413,15 @@ export default function EmolienterosFavoritosDemo() {
 
           {/* Tarjeta Derecha: Métricas de Favoritos y Diseño Polimórfico (T93 / T94) */}
           {modoDemo() && (
-          <section className="lg:col-span-5 bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6 flex flex-col justify-between space-y-4">
+          <section className="lg:col-span-5 bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-5 sm:p-6 flex flex-col justify-between space-y-4">
             <div>
-              <span className="text-[11px] font-bold text-[#b8581a] block">
+              <span className="text-[11px] font-bold text-[#2f4a2e] block">
                 Arquitectura
               </span>
-              <h2 className="text-lg font-extrabold text-[#2b1a0f]">
+              <h2 className="text-lg font-extrabold text-[#2b2118]">
                 Estado de Favoritos y Notificaciones
               </h2>
-              <p className="text-xs text-[#6b5443] mt-1">
+              <p className="text-xs text-[#6b4a2f] mt-1">
                 `FavoritoService` desacopla la lógica de negocio mediante la jerarquía polimórfica `Notificacion`,
                 cumpliendo el Principio Abierto/Cerrado (`RNF18`).
               </p>
@@ -429,8 +429,8 @@ export default function EmolienterosFavoritosDemo() {
 
             <div className="grid grid-cols-3 gap-3 text-center">
               <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200">
-                <span className="text-2xl font-extrabold text-[#b8581a] block">{totalFavoritos}</span>
-                <span className="text-[11px] font-bold text-[#6b5443]">Mis Favoritos</span>
+                <span className="text-2xl font-extrabold text-[#2f4a2e] block">{totalFavoritos}</span>
+                <span className="text-[11px] font-bold text-[#6b4a2f]">Mis Favoritos</span>
               </div>
               <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200">
                 <span className="text-2xl font-extrabold text-emerald-700 block">
@@ -446,7 +446,7 @@ export default function EmolienterosFavoritosDemo() {
               </div>
             </div>
 
-            <div className="p-3 rounded-2xl bg-[#fbf6ef] border border-[#ebe3d9] text-xs text-[#6b5443]">
+            <div className="p-3 rounded-2xl bg-[#fbf7ee] border border-[#e6dcc8] text-xs text-[#6b4a2f]">
               💡 <strong>Regla de negocio:</strong> Solo se emite notificación cuando el emolientero es{' '}
               <strong>favorito</strong>, las notificaciones están <strong>activas</strong> y abre jornada{' '}
               <strong>dentro de tu zona de interés</strong>. En caso contrario, solo se registra la actividad.
@@ -458,14 +458,14 @@ export default function EmolienterosFavoritosDemo() {
         {/* Directorio de Emolienteros de La Molina y Lista de Favoritos (T93) */}
         <section
           aria-labelledby="titulo-directorio-favoritos"
-          className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6 space-y-4"
+          className="bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-5 sm:p-6 space-y-4"
         >
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#ebe3d9]">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#e6dcc8]">
             <div>
-              <h2 id="titulo-directorio-favoritos" className="text-lg font-extrabold text-[#2b1a0f]">
+              <h2 id="titulo-directorio-favoritos" className="text-lg font-extrabold text-[#2b2118]">
                 Directorio de Emolienteros Verificados en La Molina
               </h2>
-              <p className="text-xs text-[#6b5443]">
+              <p className="text-xs text-[#6b4a2f]">
                 Marca o desmarca tus emolienteros favoritos y simula la apertura de su jornada con un clic.
               </p>
             </div>
@@ -476,8 +476,8 @@ export default function EmolienterosFavoritosDemo() {
                 onClick={() => setFiltroVista('todos')}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer transition-all ${
                   filtroVista === 'todos'
-                    ? 'bg-[#2b1a0f] text-white'
-                    : 'bg-[#fbf6ef] text-[#6b5443] border border-[#ddd2c4]'
+                    ? 'bg-[#2b2118] text-white'
+                    : 'bg-[#fbf7ee] text-[#6b4a2f] border border-[#d6c8ad]'
                 }`}
               >
                 Todos ({directorio.length})
@@ -487,8 +487,8 @@ export default function EmolienterosFavoritosDemo() {
                 onClick={() => setFiltroVista('favoritos')}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer transition-all ${
                   filtroVista === 'favoritos'
-                    ? 'bg-[#b8581a] text-white'
-                    : 'bg-[#fbf6ef] text-[#b8581a] border border-amber-300'
+                    ? 'bg-[#2f4a2e] text-white'
+                    : 'bg-[#fbf7ee] text-[#2f4a2e] border border-amber-300'
                 }`}
               >
                 ♥ Solo Mis Favoritos ({totalFavoritos})
@@ -498,7 +498,7 @@ export default function EmolienterosFavoritosDemo() {
                 value={zonaFiltroDirectorio}
                 onChange={(e) => setZonaFiltroDirectorio(e.target.value)}
                 aria-label="Filtrar directorio por zona de La Molina"
-                className="px-3 py-1.5 rounded-xl border border-[#ddd2c4] bg-[#fbf6ef] text-xs font-bold text-[#2b1a0f]"
+                className="px-3 py-1.5 rounded-xl border border-[#d6c8ad] bg-[#fbf7ee] text-xs font-bold text-[#2b2118]"
               >
                 <option value="Todas">Todas las zonas</option>
                 {ZONAS_FAVORITOS_LA_MOLINA.map((z) => (
@@ -518,8 +518,8 @@ export default function EmolienterosFavoritosDemo() {
                   key={emo.id}
                   className={`rounded-2xl border p-4 flex flex-col justify-between transition-all ${
                     emo.esFavorito
-                      ? 'bg-amber-50/40 border-2 border-[#b8581a] shadow-xs'
-                      : 'bg-white border-[#ebe3d9]'
+                      ? 'bg-amber-50/40 border-2 border-[#2f4a2e] shadow-xs'
+                      : 'bg-white border-[#e6dcc8]'
                   }`}
                 >
                   <div>
@@ -550,8 +550,8 @@ export default function EmolienterosFavoritosDemo() {
                         }
                         className={`px-2.5 py-1 rounded-xl text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1 border ${
                           emo.esFavorito
-                            ? 'bg-[#b8581a] text-white border-[#b8581a] shadow-xs'
-                            : 'bg-[#fbf6ef] text-[#6b5443] border-[#ddd2c4] hover:border-[#b8581a]'
+                            ? 'bg-[#2f4a2e] text-white border-[#2f4a2e] shadow-xs'
+                            : 'bg-[#fbf7ee] text-[#6b4a2f] border-[#d6c8ad] hover:border-[#2f4a2e]'
                         }`}
                       >
                         <span aria-hidden="true">{emo.esFavorito ? '♥' : '♡'}</span>
@@ -559,14 +559,14 @@ export default function EmolienterosFavoritosDemo() {
                       </button>
                     </div>
 
-                    <h3 className="font-extrabold text-base text-[#2b1a0f]">{emo.nombre}</h3>
-                    <p className="text-xs text-[#6b5443] mt-0.5">📍 {emo.direccionReferencia}</p>
+                    <h3 className="font-extrabold text-base text-[#2b2118]">{emo.nombre}</h3>
+                    <p className="text-xs text-[#6b4a2f] mt-0.5">📍 {emo.direccionReferencia}</p>
                     <p className="text-xs text-amber-800 font-bold mt-1">
                       ★ {emo.calificacionPromedio.toFixed(1)} ({emo.totalResenas} reseñas) · {emo.especialidad}
                     </p>
                   </div>
 
-                  <div className="mt-3 pt-2.5 border-t border-[#ebe3d9] flex flex-wrap items-center justify-between gap-2">
+                  <div className="mt-3 pt-2.5 border-t border-[#e6dcc8] flex flex-wrap items-center justify-between gap-2">
                     <button
                       type="button"
                       onClick={() => simularAperturaDesdeTarjeta(emo)}
@@ -576,7 +576,7 @@ export default function EmolienterosFavoritosDemo() {
                     </button>
                     <a
                       href={`#pago-yape?emolientero=${emo.id}`}
-                      className="px-2.5 py-1.5 rounded-xl bg-[#fbf6ef] hover:bg-amber-100 border border-[#ddd2c4] text-xs font-bold text-[#2b1a0f]"
+                      className="px-2.5 py-1.5 rounded-xl bg-[#fbf7ee] hover:bg-amber-100 border border-[#d6c8ad] text-xs font-bold text-[#2b2118]"
                     >
                       Pedir con Yape →
                     </a>
@@ -592,14 +592,14 @@ export default function EmolienterosFavoritosDemo() {
           {/* Columna 1: Bandeja de Avisos Efectivamente Enviados al Cliente (T95) */}
           <section
             aria-labelledby="titulo-avisos-enviados"
-            className="lg:col-span-5 bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6 space-y-4"
+            className="lg:col-span-5 bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-5 sm:p-6 space-y-4"
           >
-            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#ebe3d9]">
+            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#e6dcc8]">
               <div>
                 <span className="text-[11px] font-bold text-emerald-700 block">
                   Notificaciones Emitidas
                 </span>
-                <h2 id="titulo-avisos-enviados" className="text-base sm:text-lg font-extrabold text-[#2b1a0f]">
+                <h2 id="titulo-avisos-enviados" className="text-base sm:text-lg font-extrabold text-[#2b2118]">
                   Bandeja de Avisos Recibidos ({avisosEnviados.length})
                 </h2>
               </div>
@@ -609,7 +609,7 @@ export default function EmolienterosFavoritosDemo() {
             </div>
 
             {avisosEnviados.length === 0 ? (
-              <div className="p-6 rounded-2xl bg-[#fbf6ef] border border-dashed border-[#ddd2c4] text-center text-xs text-[#6b5443]">
+              <div className="p-6 rounded-2xl bg-[#fbf7ee] border border-dashed border-[#d6c8ad] text-center text-xs text-[#6b4a2f]">
                 No hay avisos emitidos aún. Pulsa el{' '}
                 <strong>Botón 1 (Escenario Exitoso)</strong> en la barra superior para recibir un aviso de apertura con ubicación.
               </div>
@@ -628,8 +628,8 @@ export default function EmolienterosFavoritosDemo() {
                         {new Date(notif.fechaHora).toLocaleTimeString('es-PE')}
                       </span>
                     </div>
-                    <h3 className="font-extrabold text-sm text-[#2b1a0f]">{notif.titulo}</h3>
-                    <p className="text-xs text-[#6b5443]">{notif.mensaje}</p>
+                    <h3 className="font-extrabold text-sm text-[#2b2118]">{notif.titulo}</h3>
+                    <p className="text-xs text-[#6b4a2f]">{notif.mensaje}</p>
                     <p className="text-xs font-bold text-emerald-900 pt-1">
                       📍 {notif.ubicacion} ({notif.zona})
                     </p>
@@ -642,14 +642,14 @@ export default function EmolienterosFavoritosDemo() {
           {/* Columna 2: Registro Interno de Actividad (Incluye Avisos Suprimidos por T96) */}
           <section
             aria-labelledby="titulo-registro-actividad"
-            className="lg:col-span-7 bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6 space-y-4"
+            className="lg:col-span-7 bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-5 sm:p-6 space-y-4"
           >
-            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#ebe3d9]">
+            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#e6dcc8]">
               <div>
-                <span className="text-[11px] font-bold text-[#b8581a] block">
+                <span className="text-[11px] font-bold text-[#2f4a2e] block">
                   Trazabilidad de Aperturas y Supresión de Avisos
                 </span>
-                <h2 id="titulo-registro-actividad" className="text-base sm:text-lg font-extrabold text-[#2b1a0f]">
+                <h2 id="titulo-registro-actividad" className="text-base sm:text-lg font-extrabold text-[#2b2118]">
                   Registro Interno de Actividad ({historialActividad.length})
                 </h2>
               </div>
@@ -659,14 +659,14 @@ export default function EmolienterosFavoritosDemo() {
             </div>
 
             {historialActividad.length === 0 ? (
-              <div className="p-6 rounded-2xl bg-[#fbf6ef] border border-dashed border-[#ddd2c4] text-center text-xs text-[#6b5443]">
+              <div className="p-6 rounded-2xl bg-[#fbf7ee] border border-dashed border-[#d6c8ad] text-center text-xs text-[#6b4a2f]">
                 Usa los 3 botones del <strong>Simulador de avisos</strong> para comprobar cómo se registra cada inicio de jornada cuando se envía o se suprime el aviso.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-[#ebe3d9] text-[#6b5443] text-[11px]">
+                    <tr className="border-b border-[#e6dcc8] text-[#6b4a2f] text-[11px]">
                       <th className="py-2 px-2.5">Hora</th>
                       <th className="py-2 px-2.5">Emolientero</th>
                       <th className="py-2 px-2.5">Zona Apertura</th>
@@ -674,13 +674,13 @@ export default function EmolienterosFavoritosDemo() {
                       <th className="py-2 px-2.5">Motivo / Regla Aplicada</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#ebe3d9]">
+                  <tbody className="divide-y divide-[#e6dcc8]">
                     {historialActividad.map((ev) => (
-                      <tr key={ev.idEvento} className="hover:bg-[#fbf6ef]/60">
+                      <tr key={ev.idEvento} className="hover:bg-[#fbf7ee]/60">
                         <td className="py-2.5 px-2.5 font-mono whitespace-nowrap">
                           {new Date(ev.fechaHora).toLocaleTimeString('es-PE')}
                         </td>
-                        <td className="py-2.5 px-2.5 font-bold text-[#2b1a0f]">
+                        <td className="py-2.5 px-2.5 font-bold text-[#2b2118]">
                           {ev.emolienteroNombre}
                         </td>
                         <td className="py-2.5 px-2.5 whitespace-nowrap">
@@ -699,7 +699,7 @@ export default function EmolienterosFavoritosDemo() {
                             {ev.avisoEnviado ? 'SÍ (ENVIADO)' : 'NO (SOLO BITÁCORA)'}
                           </span>
                         </td>
-                        <td className="py-2.5 px-2.5 text-[#6b5443]">{ev.motivo}</td>
+                        <td className="py-2.5 px-2.5 text-[#6b4a2f]">{ev.motivo}</td>
                       </tr>
                     ))}
                   </tbody>

@@ -16,7 +16,7 @@ const VACIO = { nombre: '', descripcion: '', categoria: '', precio: '', disponib
 
 const claseCampo = (error) =>
   `w-full rounded-xl border px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 ${
-    error ? 'border-red-300 focus:ring-red-200' : 'border-[#ebe3d9] focus:ring-orange-200'
+    error ? 'border-red-300 focus:ring-red-200' : 'border-[#e6dcc8] focus:ring-[#d6dcb0]'
   }`
 
 function ErrorCampo({ mensaje }) {
@@ -95,20 +95,20 @@ export default function GestionCatalogo() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col">
       <Encabezado volver={{ href: '#emolientero', texto: 'Mi puesto' }} />
 
       <main className="flex-1 w-full max-w-5xl mx-auto p-4 sm:p-6 lg:p-8">
         <div className="text-center mb-6">
           <h1 className="text-2xl sm:text-3xl font-semibold">Mi catálogo</h1>
-          <p className="text-sm text-[#6b5443] mt-1.5 max-w-xl mx-auto">
+          <p className="text-sm text-[#6b4a2f] mt-1.5 max-w-xl mx-auto">
             Registra los productos que vendes, con su categoría y precio. Marca como no disponibles los que se te acabaron.
           </p>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr]">
           {/* Formulario de alta y edición (T50) */}
-          <form onSubmit={guardar} noValidate className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6 space-y-4 self-start">
+          <form onSubmit={guardar} noValidate className="bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-5 sm:p-6 space-y-4 self-start">
             <h2 className="text-lg font-bold">{editandoId ? 'Editar producto' : 'Nuevo producto'}</h2>
 
             <div>
@@ -127,7 +127,7 @@ export default function GestionCatalogo() {
 
             <div>
               <label htmlFor="descripcion" className="block text-sm font-semibold mb-1.5">
-                Descripción <span className="font-normal text-[#9a8676]">(opcional)</span>
+                Descripción <span className="font-normal text-[#9a8670]">(opcional)</span>
               </label>
               <textarea
                 id="descripcion"
@@ -169,7 +169,7 @@ export default function GestionCatalogo() {
             </div>
 
             <label className="flex items-center gap-2.5 text-sm font-semibold">
-              <input type="checkbox" checked={form.disponible} onChange={cambiar('disponible')} className="w-4 h-4 accent-[#b8581a]" />
+              <input type="checkbox" checked={form.disponible} onChange={cambiar('disponible')} className="w-4 h-4 accent-[#2f4a2e]" />
               Disponible para la venta
             </label>
 
@@ -187,47 +187,47 @@ export default function GestionCatalogo() {
             <button
               type="submit"
               disabled={guardando || !productos}
-              className="w-full py-3.5 rounded-xl font-bold text-sm text-white shadow-md bg-[#b4531a] hover:bg-[#96430f] disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-3.5 rounded-xl font-bold text-sm text-white shadow-md bg-[#2f4a2e] hover:bg-[#243a23] disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {guardando ? 'Guardando…' : editandoId ? 'Guardar cambios' : 'Agregar producto'}
             </button>
             {editandoId && (
-              <button type="button" onClick={limpiarFormulario} className="w-full py-2.5 rounded-xl font-semibold text-sm text-[#6b5443] hover:bg-[#fbf6ef]">
+              <button type="button" onClick={limpiarFormulario} className="w-full py-2.5 rounded-xl font-semibold text-sm text-[#6b4a2f] hover:bg-[#fbf7ee]">
                 Cancelar edición
               </button>
             )}
           </form>
 
           {/* Catálogo agrupado por categoría */}
-          <section className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6">
+          <section className="bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-5 sm:p-6">
             <h2 className="text-lg font-bold mb-4">Mis productos</h2>
-            {!productos && !error && <p className="text-sm text-[#9a8676]">Cargando…</p>}
-            {productos?.length === 0 && <p className="text-sm text-[#9a8676]">Aún no registras productos.</p>}
+            {!productos && !error && <p className="text-sm text-[#9a8670]">Cargando…</p>}
+            {productos?.length === 0 && <p className="text-sm text-[#9a8670]">Aún no registras productos.</p>}
             <div className="space-y-4">
               {Object.entries(CATEGORIAS).map(([clave, nombreCategoria]) => {
                 const deCategoria = (productos ?? []).filter((p) => p.categoria === clave)
                 if (!deCategoria.length) return null
                 return (
                   <div key={clave}>
-                    <h3 className="text-xs font-bold text-[#9a8676] mb-2">{nombreCategoria}</h3>
+                    <h3 className="text-xs font-bold text-[#9a8670] mb-2">{nombreCategoria}</h3>
                     <ul className="space-y-2">
                       {deCategoria.map((p) => (
                         <li
                           key={p.id}
                           className={`flex items-center justify-between gap-3 p-3 rounded-xl border ${
-                            editandoId === p.id ? 'bg-orange-50 border-orange-200' : 'bg-[#fbf6ef] border-[#ebe3d9]'
+                            editandoId === p.id ? 'bg-[#f3f4e6] border-[#d6dcb0]' : 'bg-[#fbf7ee] border-[#e6dcc8]'
                           }`}
                         >
                           <div className="min-w-0">
                             <p className="text-sm font-semibold truncate">{p.nombre}</p>
                             <p className="text-xs">
-                              <span className="font-mono font-bold text-[#b8581a]">{soles(p.precio)}</span>
-                              <span className={`ml-2 font-semibold ${p.disponible ? 'text-emerald-700' : 'text-[#9a8676]'}`}>
+                              <span className="font-mono font-bold text-[#2f4a2e]">{soles(p.precio)}</span>
+                              <span className={`ml-2 font-semibold ${p.disponible ? 'text-emerald-700' : 'text-[#9a8670]'}`}>
                                 {p.disponible ? 'Disponible' : 'No disponible'}
                               </span>
                             </p>
                           </div>
-                          <button type="button" onClick={() => empezarEdicion(p)} className="shrink-0 text-xs font-bold text-[#b8581a] hover:underline">
+                          <button type="button" onClick={() => empezarEdicion(p)} className="shrink-0 text-xs font-bold text-[#2f4a2e] hover:underline">
                             Editar
                           </button>
                         </li>

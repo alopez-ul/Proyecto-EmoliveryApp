@@ -19,9 +19,9 @@ const COLOR_ESTADO = {
 
 function Resumen({ etiqueta, valor }) {
   return (
-    <div className="flex-1 rounded-2xl bg-[#fbf6ef] border border-[#ebe3d9] p-4 text-center">
-      <p className="text-xs font-bold text-[#9a8676]">{etiqueta}</p>
-      <p className="mt-1 text-2xl font-extrabold text-[#2b1a0f] tabular-nums">{valor}</p>
+    <div className="flex-1 rounded-2xl bg-[#fbf7ee] border border-[#e6dcc8] p-4 text-center">
+      <p className="text-xs font-bold text-[#9a8670]">{etiqueta}</p>
+      <p className="mt-1 text-2xl font-extrabold text-[#2b2118] tabular-nums">{valor}</p>
     </div>
   )
 }
@@ -31,11 +31,11 @@ function Compra({ compra }) {
     <li className="py-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="font-bold text-sm text-[#2b1a0f]">{compra.emolientero.nombre}</p>
-          <p className="text-xs text-[#6b5443] mt-0.5">{formatoFecha.format(new Date(compra.fecha))}</p>
+          <p className="font-bold text-sm text-[#2b2118]">{compra.emolientero.nombre}</p>
+          <p className="text-xs text-[#6b4a2f] mt-0.5">{formatoFecha.format(new Date(compra.fecha))}</p>
         </div>
         <div className="text-right shrink-0">
-          <p className="font-extrabold text-base text-[#2b1a0f] tabular-nums">{soles.format(compra.monto)}</p>
+          <p className="font-extrabold text-base text-[#2b2118] tabular-nums">{soles.format(compra.monto)}</p>
           <span
             className={`inline-block mt-1 px-2 py-0.5 rounded-full text-[11px] font-bold ${
               compra.vencida ? 'bg-stone-100 text-stone-600' : COLOR_ESTADO[compra.estado] ?? 'bg-amber-50 text-amber-800'
@@ -45,8 +45,8 @@ function Compra({ compra }) {
           </span>
         </div>
       </div>
-      {!cuentaComoCompra(compra) && <p className="mt-1 text-[11px] text-[#9a8676]">No suma al total de compras.</p>}
-      <ul className="mt-2 text-xs text-[#6b5443] space-y-0.5">
+      {!cuentaComoCompra(compra) && <p className="mt-1 text-[11px] text-[#9a8670]">No suma al total de compras.</p>}
+      <ul className="mt-2 text-xs text-[#6b4a2f] space-y-0.5">
         {compra.productos.map((p, i) => (
           <li key={i}>
             {p.cantidad} × {p.nombre} <span className="tabular-nums">({soles.format(p.precioUnitario)} c/u)</span>
@@ -105,7 +105,7 @@ export default function MisCompras() {
   }
 
   const campo = (nombre, etiqueta) => (
-    <label className="flex-1 text-xs font-bold text-[#6b5443]">
+    <label className="flex-1 text-xs font-bold text-[#6b4a2f]">
       {etiqueta}
       <input
         type="date"
@@ -113,7 +113,7 @@ export default function MisCompras() {
         onChange={(e) => setFiltro((f) => ({ ...f, [nombre]: e.target.value }))}
         aria-invalid={Boolean(erroresFiltro[nombre])}
         aria-describedby={erroresFiltro[nombre] ? `error-${nombre}` : undefined}
-        className="mt-1 w-full rounded-xl border border-[#ddd2c4] px-3 py-2 text-sm text-[#2b1a0f] font-normal"
+        className="mt-1 w-full rounded-xl border border-[#d6c8ad] px-3 py-2 text-sm text-[#2b2118] font-normal"
       />
       {erroresFiltro[nombre] && (
         <span id={`error-${nombre}`} className="block mt-1 font-normal text-red-700">
@@ -124,20 +124,20 @@ export default function MisCompras() {
   )
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col">
       <Encabezado volver={{ href: '#cliente', texto: 'Volver a mi panel' }} />
 
       <main className="flex-1 flex justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-xl bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-6 sm:p-8 self-start">
+        <div className="w-full max-w-xl bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-6 sm:p-8 self-start">
           {!usuario ? (
-            <p className="text-center text-sm text-[#6b5443] py-10" role="status">
+            <p className="text-center text-sm text-[#6b4a2f] py-10" role="status">
               Verificando tu sesión…
             </p>
           ) : (
             <>
               <div className="text-center mb-6">
                 <h1 className="text-2xl sm:text-3xl font-semibold">Mis compras</h1>
-                <p className="text-sm text-[#6b5443] mt-1">{usuario.nombre}</p>
+                <p className="text-sm text-[#6b4a2f] mt-1">{usuario.nombre}</p>
               </div>
 
               {/* T77: filtro por rango de fechas */}
@@ -150,7 +150,7 @@ export default function MisCompras() {
                   <button
                     type="submit"
                     disabled={cargando}
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-[#b8581a] text-white font-bold text-sm hover:bg-[#9e4a14] transition-all disabled:opacity-60"
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-[#2f4a2e] text-white font-bold text-sm hover:bg-[#243a23] transition-all disabled:opacity-60"
                   >
                     Filtrar
                   </button>
@@ -158,7 +158,7 @@ export default function MisCompras() {
                     type="button"
                     onClick={limpiar}
                     disabled={cargando}
-                    className="px-4 py-2.5 rounded-xl border border-[#ddd2c4] text-[#6b5443] font-bold text-sm hover:bg-[#fbf6ef] transition-all disabled:opacity-60"
+                    className="px-4 py-2.5 rounded-xl border border-[#d6c8ad] text-[#6b4a2f] font-bold text-sm hover:bg-[#fbf7ee] transition-all disabled:opacity-60"
                   >
                     Ver todo
                   </button>
@@ -172,7 +172,7 @@ export default function MisCompras() {
               )}
 
               {cargando && !historial && (
-                <p className="text-center text-sm text-[#6b5443] py-6" role="status">
+                <p className="text-center text-sm text-[#6b4a2f] py-6" role="status">
                   Cargando tus compras…
                 </p>
               )}
@@ -186,11 +186,11 @@ export default function MisCompras() {
                   </div>
 
                   {historial.compras.length === 0 ? (
-                    <div className="text-center py-8 px-4 rounded-2xl bg-[#fbf6ef] border border-dashed border-[#ddd2c4]" role="status">
-                      <p className="font-bold text-[#2b1a0f]">{historial.mensaje ?? SIN_COMPRAS}</p>
+                    <div className="text-center py-8 px-4 rounded-2xl bg-[#fbf7ee] border border-dashed border-[#d6c8ad]" role="status">
+                      <p className="font-bold text-[#2b2118]">{historial.mensaje ?? SIN_COMPRAS}</p>
                     </div>
                   ) : (
-                    <ul className="divide-y divide-[#ebe3d9]">
+                    <ul className="divide-y divide-[#e6dcc8]">
                       {historial.compras.map((c) => (
                         <Compra key={c.id} compra={c} />
                       ))}

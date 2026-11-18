@@ -42,7 +42,12 @@ export default function LoginPage() {
       subtitulo="Ingresa para pedir tu emoliente o atender tu puesto."
       pie={
         <>
-          ¿Aún no tienes cuenta? <a href="#registro-cliente" style={estilos.enlace}>Créala aquí</a>
+          <p style={{ margin: 0 }}>
+            ¿Aún no tienes cuenta? <a href="#registro-cliente" style={estilos.enlace}>Créala aquí</a>
+          </p>
+          <p style={{ margin: '8px 0 0' }}>
+            ¿Tienes un puesto de emoliente? <a href="#registro-emolientero" style={estilos.enlace}>Regístralo aquí</a>
+          </p>
         </>
       }
     >

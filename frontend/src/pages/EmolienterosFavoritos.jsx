@@ -25,16 +25,16 @@ function Corazon({ lleno }) {
 
 function Puesto({ e, ocupado, onAlternar }) {
   return (
-    <li className="flex items-center gap-3 p-3 rounded-2xl border border-[#ece2d5] bg-white">
-      <span className="grid place-items-center w-11 h-11 rounded-xl bg-[#f5ede2] shrink-0" aria-hidden="true">
+    <li className="flex items-center gap-3 p-3 rounded-2xl border border-[#e6dcc8] bg-white">
+      <span className="grid place-items-center w-11 h-11 rounded-xl bg-[#efe6d3] shrink-0" aria-hidden="true">
         <EmolienteIcon size={30} />
       </span>
       <div className="flex-1 min-w-0">
         <p className="font-bold truncate">{e.nombre}</p>
-        <p className="text-sm text-[#6b5443] flex items-center gap-1.5">
+        <p className="text-sm text-[#6b4a2f] flex items-center gap-1.5">
           <span className={`w-2 h-2 rounded-full ${e.atendiendo ? 'bg-[#2f6b3a]' : 'bg-[#c9b8a3]'}`} aria-hidden="true" />
           {e.atendiendo ? 'Atendiendo ahora' : 'Cerrado por ahora'}
-          {e.zona && <span className="text-[#9a8676]">· {e.zona}</span>}
+          {e.zona && <span className="text-[#9a8670]">· {e.zona}</span>}
         </p>
       </div>
       <a href={`#catalogo?id=${e.id}`} className="ui-boton ui-boton-suave" style={{ padding: '7px 12px', fontSize: '0.85rem' }}>
@@ -47,7 +47,7 @@ function Puesto({ e, ocupado, onAlternar }) {
         aria-pressed={e.favorito}
         aria-label={e.favorito ? `Quitar a ${e.nombre} de favoritos` : `Agregar a ${e.nombre} a favoritos`}
         className={`grid place-items-center w-10 h-10 rounded-full border transition-colors disabled:opacity-50 ${
-          e.favorito ? 'bg-[#fbe8d3] border-[#fbe8d3] text-[#b4531a]' : 'border-[#ddcfbe] text-[#9a8676] hover:text-[#b4531a]'
+          e.favorito ? 'bg-[#e8ead5] border-[#e8ead5] text-[#2f4a2e]' : 'border-[#d6c8ad] text-[#9a8670] hover:text-[#2f4a2e]'
         }`}
       >
         <Corazon lleno={e.favorito} />
@@ -142,7 +142,7 @@ export default function EmolienterosFavoritos() {
               <section className="panel-tarjeta">
                 <h2 className="text-xl mb-3">Mis favoritos</h2>
                 {datos.favoritos.length === 0 ? (
-                  <p className="text-[#6b5443]">Aún no tienes favoritos. Toca el corazón de un puesto para guardarlo.</p>
+                  <p className="text-[#6b4a2f]">Aún no tienes favoritos. Toca el corazón de un puesto para guardarlo.</p>
                 ) : (
                   <ul className="flex flex-col gap-2">
                     {datos.favoritos.map((e) => (
@@ -155,7 +155,7 @@ export default function EmolienterosFavoritos() {
               {otros.length > 0 && (
                 <section className="panel-tarjeta">
                   <h2 className="text-xl mb-1">Descubre más puestos</h2>
-                  <p className="text-sm text-[#6b5443] mb-3">Emolienteros verificados de La Molina.</p>
+                  <p className="text-sm text-[#6b4a2f] mb-3">Emolienteros verificados de La Molina.</p>
                   <ul className="flex flex-col gap-2">
                     {otros.map((e) => (
                       <Puesto key={e.id} e={e} ocupado={ocupado === e.id} onAlternar={alternar} />
@@ -170,7 +170,7 @@ export default function EmolienterosFavoritos() {
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <h2 className="text-xl">Avisos de apertura</h2>
-                    <p className="text-sm text-[#6b5443] mt-1">Te avisamos cuando uno de tus favoritos abre su jornada.</p>
+                    <p className="text-sm text-[#6b4a2f] mt-1">Te avisamos cuando uno de tus favoritos abre su jornada.</p>
                   </div>
                   <button
                     type="button"
@@ -178,7 +178,7 @@ export default function EmolienterosFavoritos() {
                     aria-checked={prefs.avisosActivos}
                     aria-label="Recibir avisos de apertura"
                     onClick={() => cambiarPreferencias({ avisosActivos: !prefs.avisosActivos })}
-                    className={`relative shrink-0 w-12 h-7 rounded-full transition-colors ${prefs.avisosActivos ? 'bg-[#2f6b3a]' : 'bg-[#ddcfbe]'}`}
+                    className={`relative shrink-0 w-12 h-7 rounded-full transition-colors ${prefs.avisosActivos ? 'bg-[#2f6b3a]' : 'bg-[#d6c8ad]'}`}
                   >
                     <span
                       className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow transition-all ${prefs.avisosActivos ? 'left-6' : 'left-1'}`}
@@ -199,7 +199,7 @@ export default function EmolienterosFavoritos() {
                         disabled={!prefs.avisosActivos}
                         onClick={() => alternarZona(z)}
                         className={`px-3 py-1.5 rounded-full text-sm border transition-colors disabled:opacity-50 ${
-                          activa ? 'bg-[#b4531a] border-[#b4531a] text-white' : 'border-[#ddcfbe] text-[#6b5443] hover:bg-[#f5ede2]'
+                          activa ? 'bg-[#2f4a2e] border-[#2f4a2e] text-white' : 'border-[#d6c8ad] text-[#6b4a2f] hover:bg-[#efe6d3]'
                         }`}
                       >
                         {z}
@@ -207,7 +207,7 @@ export default function EmolienterosFavoritos() {
                     )
                   })}
                 </div>
-                <p className="text-xs text-[#9a8676] mt-2" role="status">
+                <p className="text-xs text-[#9a8670] mt-2" role="status">
                   {estadoGuardado === 'guardando'
                     ? 'Guardando…'
                     : estadoGuardado === 'guardado'
@@ -219,7 +219,7 @@ export default function EmolienterosFavoritos() {
               <section className="panel-tarjeta">
                 <h2 className="text-xl mb-3">Últimos avisos</h2>
                 {datos.avisos.length === 0 ? (
-                  <p className="text-sm text-[#6b5443]">Cuando un favorito abra su jornada, lo verás aquí.</p>
+                  <p className="text-sm text-[#6b4a2f]">Cuando un favorito abra su jornada, lo verás aquí.</p>
                 ) : (
                   <ul className="flex flex-col gap-3">
                     {datos.avisos.map((a) => (
@@ -228,8 +228,8 @@ export default function EmolienterosFavoritos() {
                           {a.enviado ? '🔔 ' : ''}
                           {a.emolientero} abrió en {a.zona}
                         </p>
-                        <p className="text-[#6b5443]">{a.enviado ? "Te avisamos." : `No te avisamos: ${a.motivo}.`}</p>
-                        <p className="text-xs text-[#9a8676]">{fecha.format(new Date(a.creadoEn))}</p>
+                        <p className="text-[#6b4a2f]">{a.enviado ? "Te avisamos." : `No te avisamos: ${a.motivo}.`}</p>
+                        <p className="text-xs text-[#9a8670]">{fecha.format(new Date(a.creadoEn))}</p>
                       </li>
                     ))}
                   </ul>

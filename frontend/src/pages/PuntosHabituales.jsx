@@ -18,7 +18,7 @@ const VACIO = { referencia: '', diaSemana: '', horaInicio: '', horaFin: '' }
 
 const claseCampo = (error) =>
   `w-full rounded-xl border px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 ${
-    error ? 'border-red-300 focus:ring-red-200' : 'border-[#ebe3d9] focus:ring-orange-200'
+    error ? 'border-red-300 focus:ring-red-200' : 'border-[#e6dcc8] focus:ring-[#d6dcb0]'
   }`
 
 function ErrorCampo({ mensaje }) {
@@ -112,13 +112,13 @@ export default function PuntosHabituales() {
   }))
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col">
       <Encabezado volver={{ href: '#emolientero', texto: 'Mi puesto' }} />
 
       <main className="flex-1 w-full max-w-5xl mx-auto p-4 sm:p-6 lg:p-8">
         <div className="text-center mb-6">
           <h1 className="text-2xl sm:text-3xl font-semibold">Mis puntos habituales</h1>
-          <p className="text-sm text-[#6b5443] mt-1.5 max-w-xl mx-auto">
+          <p className="text-sm text-[#6b4a2f] mt-1.5 max-w-xl mx-auto">
             Indica dónde sueles vender cada día. Cuando no tengas la jornada abierta, los clientes te verán en el mapa
             como <strong>ubicación aproximada</strong> según este horario.
           </p>
@@ -126,12 +126,12 @@ export default function PuntosHabituales() {
 
         <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
           {/* Formulario (T46) */}
-          <form onSubmit={guardar} noValidate className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6 space-y-4">
+          <form onSubmit={guardar} noValidate className="bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-5 sm:p-6 space-y-4">
             <h2 className="text-lg font-bold">Nuevo punto habitual</h2>
 
             <div>
               <p className="block text-sm font-semibold mb-1.5">Zona</p>
-              <div className={`relative h-72 rounded-2xl overflow-hidden border ${errores.ubicacion ? 'border-red-300' : 'border-[#ebe3d9]'}`}>
+              <div className={`relative h-72 rounded-2xl overflow-hidden border ${errores.ubicacion ? 'border-red-300' : 'border-[#e6dcc8]'}`}>
                 <MapaLima
                   puntos={marcadores}
                   seleccionado={null}
@@ -146,7 +146,7 @@ export default function PuntosHabituales() {
                   zoom={14}
                 />
               </div>
-              <p className="mt-1 text-xs text-[#9a8676]">
+              <p className="mt-1 text-xs text-[#9a8670]">
                 {zona
                   ? `Zona marcada (${zona.lat.toFixed(5)}, ${zona.lng.toFixed(5)}). Haz clic en otro lugar para cambiarla.`
                   : 'Haz clic en el mapa para marcar la zona (dentro de La Molina), o toca uno de tus puntos para reutilizarlo.'}
@@ -206,29 +206,29 @@ export default function PuntosHabituales() {
             <button
               type="submit"
               disabled={guardando || !puntos}
-              className="w-full py-3.5 rounded-xl font-bold text-sm text-white shadow-md bg-[#b4531a] hover:bg-[#96430f] disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-3.5 rounded-xl font-bold text-sm text-white shadow-md bg-[#2f4a2e] hover:bg-[#243a23] disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {guardando ? 'Guardando…' : 'Guardar punto habitual'}
             </button>
           </form>
 
           {/* Horario semanal */}
-          <section className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6">
+          <section className="bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-5 sm:p-6">
             <h2 className="text-lg font-bold mb-4">Mi horario semanal</h2>
-            {!puntos && !error && <p className="text-sm text-[#9a8676]">Cargando…</p>}
-            {puntos?.length === 0 && <p className="text-sm text-[#9a8676]">Aún no registras puntos habituales.</p>}
+            {!puntos && !error && <p className="text-sm text-[#9a8670]">Cargando…</p>}
+            {puntos?.length === 0 && <p className="text-sm text-[#9a8670]">Aún no registras puntos habituales.</p>}
             <div className="space-y-4">
               {DIAS_SEMANA.map((dia, i) => {
                 const delDia = (puntos ?? []).filter((p) => p.diaSemana === i + 1)
                 if (!delDia.length) return null
                 return (
                   <div key={dia}>
-                    <h3 className="text-xs font-bold text-[#9a8676] mb-2">{dia}</h3>
+                    <h3 className="text-xs font-bold text-[#9a8670] mb-2">{dia}</h3>
                     <ul className="space-y-2">
                       {delDia.map((p) => (
-                        <li key={p.id} className="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9]">
+                        <li key={p.id} className="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#fbf7ee] border border-[#e6dcc8]">
                           <div className="min-w-0">
-                            <p className="font-mono text-sm font-bold text-[#b8581a]">{p.horaInicio} – {p.horaFin}</p>
+                            <p className="font-mono text-sm font-bold text-[#2f4a2e]">{p.horaInicio} – {p.horaFin}</p>
                             <p className="text-sm truncate">{p.referencia}</p>
                           </div>
                           <button

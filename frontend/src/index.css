@@ -1,27 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  /* Paleta del emoliente: caramelo tostado, café, hierbas frescas y papel crema */
-  --fondo: #faf6f0;
-  --superficie: #ffffff;
-  --crema: #f5ede2;
-  --caramelo: #b4531a;
-  --caramelo-hover: #96430f;
-  --ambar-suave: #fbe8d3;
-  --hierba: #2f6b3a;
-  --hierba-suave: #e4efe3;
-  --cafe: #2b1a0f;
-  --cafe-medio: #6b5443;
-  --cafe-suave: #9a8676;
-  --borde: #ece2d5;
-  --borde-fuerte: #ddcfbe;
-  --sombra-xs: 0 1px 2px rgba(43, 26, 15, 0.05);
-  --sombra-md: 0 2px 8px -2px rgba(43, 26, 15, 0.1);
-  --sombra-lg: 0 12px 28px -14px rgba(43, 26, 15, 0.22);
-  --offline: #b9aa98;
-  --radio: 14px;
-  --font: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-titulo: 'Fraunces', Georgia, 'Times New Roman', serif;
+  /* Paleta natural: verde oscuro (hierbas del emoliente), verde oliva, crema y marrón (la linaza tostada) */
+  --fondo: #f8f3e8;
+  --superficie: #fffdf8;
+  --crema: #efe6d3;
+  --caramelo: #2f4a2e; /* verde oscuro: color principal (botones, títulos, enlaces) */
+  --caramelo-hover: #243a23;
+  --oliva: #6b7a3a; /* verde oliva: acento */
+  --oliva-claro: #a3ad6a;
+  --ambar-suave: #e8ead5; /* fondo oliva muy suave */
+  --marron: #7a5236;
+  --hierba: #4f6f2c;
+  --hierba-suave: #e8ead5;
+  --cafe: #2b2118;
+  --cafe-medio: #6b4a2f;
+  --cafe-suave: #9a8670;
+  --borde: #e6dcc8;
+  --borde-fuerte: #d6c8ad;
+  --sombra-xs: 0 1px 2px rgba(43, 33, 24, 0.05);
+  --sombra-md: 0 4px 14px -6px rgba(43, 33, 24, 0.14);
+  --sombra-lg: 0 14px 30px -14px rgba(43, 33, 24, 0.22);
+  --offline: #b3a892;
+  --radio: 12px;
+  /* Una sola familia sans serif, limpia y minimalista, para títulos y texto */
+  --font: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-titulo: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 /* Estilos globales en la capa "base" de Tailwind: las clases de Tailwind de cada pantalla los pueden sobrescribir. */
@@ -35,63 +39,67 @@
     color: var(--cafe);
     font-family: var(--font);
     font-size: 16px;
-    line-height: 1.5;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Títulos con una serif cálida: le da a la app un tono de puesto artesanal, no de plantilla. */
-  h1, h2, h3 {
+  h1, h2 {
     font-family: var(--font-titulo);
     font-weight: 600;
-    letter-spacing: -0.01em;
-    font-optical-sizing: auto;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    color: var(--caramelo);
   }
+  /* Los subtítulos de las tarjetas van con la letra del texto, para no recargar. */
+  h3 { font-family: var(--font); font-weight: 700; letter-spacing: 0; }
   h4 { font-weight: 700; }
 
   button { font: inherit; color: inherit; }
 
-  :focus-visible { outline: 2px solid var(--caramelo); outline-offset: 2px; border-radius: 4px; }
+  :focus-visible { outline: 2px solid var(--oliva); outline-offset: 2px; border-radius: 4px; }
 }
 
 /* ---------- Encabezado común (components/Encabezado.jsx) ---------- */
+/* Claro y sereno, con una línea oliva: deja que el contenido sea el protagonista. */
 .ui-encabezado {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(250, 246, 240, 0.92);
-  backdrop-filter: saturate(140%) blur(8px);
+  background: rgba(255, 253, 248, 0.94);
+  backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--borde);
+  box-shadow: inset 0 -3px 0 var(--oliva-claro);
 }
 .ui-encabezado-interior {
   display: flex;
   align-items: center;
   gap: 20px;
-  height: 64px;
+  height: 66px;
   padding: 0 24px;
 }
-.ui-logo { display: flex; align-items: center; gap: 8px; color: var(--cafe); text-decoration: none; flex-shrink: 0; }
-.ui-logo span { font-family: var(--font-titulo); font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; }
+.ui-logo { display: flex; align-items: center; gap: 8px; color: var(--caramelo); text-decoration: none; flex-shrink: 0; }
+.ui-logo span { font-family: var(--font-titulo); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.03em; }
 .ui-nav { display: flex; align-items: center; gap: 4px; flex: 1; }
 .ui-nav a {
-  padding: 8px 12px;
-  border-radius: 999px;
+  padding: 8px 13px;
+  border-radius: 10px;
   color: var(--cafe-medio);
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.95rem;
   text-decoration: none;
   transition: background 0.15s, color 0.15s;
 }
 .ui-nav a:hover { background: var(--crema); color: var(--cafe); }
-.ui-nav a[aria-current='page'] { color: var(--cafe); background: var(--crema); }
+.ui-nav a[aria-current='page'] { color: var(--caramelo); background: var(--ambar-suave); }
 .ui-acciones { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-.ui-usuario { display: flex; align-items: center; gap: 8px; color: var(--cafe); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+.ui-usuario { display: flex; align-items: center; gap: 8px; color: var(--cafe); text-decoration: none; font-weight: 700; font-size: 0.95rem; }
 .ui-avatar {
   display: grid;
   place-items: center;
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: var(--hierba);
+  background: var(--oliva);
   color: #fff;
   font-weight: 700;
   font-size: 0.9rem;
@@ -101,10 +109,10 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 9px 16px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 10px;
+  border: 1.5px solid transparent;
+  font-weight: 700;
   font-size: 0.95rem;
   text-decoration: none;
   cursor: pointer;
@@ -113,8 +121,8 @@
 }
 .ui-boton-primario { background: var(--caramelo); color: #fff; }
 .ui-boton-primario:hover { background: var(--caramelo-hover); }
-.ui-boton-suave { background: transparent; color: var(--cafe); border-color: var(--borde-fuerte); }
-.ui-boton-suave:hover { background: var(--crema); }
+.ui-boton-suave { background: transparent; color: var(--caramelo); border-color: var(--borde-fuerte); }
+.ui-boton-suave:hover { background: var(--ambar-suave); border-color: var(--oliva-claro); }
 .ui-boton-texto { background: transparent; color: var(--cafe-medio); padding-inline: 10px; }
 .ui-boton-texto:hover { color: var(--cafe); background: var(--crema); }
 .ui-menu-movil { display: none; }
@@ -122,8 +130,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--cafe-medio);
-  font-weight: 600;
+  color: var(--marron);
+  font-weight: 700;
   font-size: 0.9rem;
   text-decoration: none;
 }
@@ -132,11 +140,11 @@
 /* Menú desplegable en celulares */
 .ui-desplegable {
   position: absolute;
-  top: 64px;
+  top: 66px;
   left: 0;
   right: 0;
   padding: 10px 16px 16px;
-  background: var(--fondo);
+  background: var(--superficie);
   border-bottom: 1px solid var(--borde);
   box-shadow: var(--sombra-lg);
 }
@@ -149,7 +157,7 @@
   background: none;
   text-align: left;
   color: var(--cafe);
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
   cursor: pointer;
 }
@@ -162,8 +170,9 @@
     width: 40px;
     height: 40px;
     border: 1px solid var(--borde-fuerte);
-    border-radius: 12px;
+    border-radius: 10px;
     background: var(--superficie);
+    color: var(--caramelo);
     cursor: pointer;
   }
   .ui-encabezado-interior { padding: 0 16px; gap: 12px; }
@@ -173,7 +182,7 @@
 .inicio {
   display: grid;
   grid-template-columns: minmax(320px, 400px) 1fr;
-  height: calc(100vh - 65px);
+  height: calc(100vh - 67px);
 }
 .inicio-panel {
   display: flex;
@@ -303,7 +312,7 @@
 }
 .marcador svg, .marcador img { transform: rotate(45deg); }
 .marcador:hover { transform: rotate(-45deg) scale(1.1); }
-.marcador.is-selected { border-color: var(--hierba); background: var(--hierba-suave); transform: rotate(-45deg) scale(1.15); }
+.marcador.is-selected { border-color: var(--marron); background: var(--crema); transform: rotate(-45deg) scale(1.15); }
 .marcador.is-offline { border-color: var(--offline); filter: grayscale(1); opacity: 0.75; }
 .marcador.is-draft { border-style: dashed; border-color: var(--hierba); }
 /* US10: ubicación aproximada por horario habitual (baja precisión): borde punteado y más tenue. */
@@ -321,11 +330,11 @@
 
 /* ---------- Panel del cliente y del emolientero (pages/PanelRolPage.jsx) ---------- */
 .panel { max-width: 1080px; margin: 0 auto; padding: 36px 20px 64px; }
-.panel-saludo h1 { margin: 0; font-size: 2.1rem; line-height: 1.15; }
+.panel-saludo h1 { margin: 0; font-size: 2.2rem; line-height: 1.15; }
 .panel-saludo p { margin: 6px 0 0; color: var(--cafe-medio); font-size: 1.05rem; }
 .panel-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 24px; margin-top: 28px; align-items: start; }
 .panel-columna { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
-.panel-tarjeta { padding: 20px; border: 1px solid var(--borde); border-radius: 18px; background: var(--superficie); }
+.panel-tarjeta { padding: 20px; border: 1px solid var(--borde); border-radius: 12px; background: var(--superficie); }
 .panel-tarjeta > div:last-child { margin-bottom: 0 !important; }
 .panel-tarjeta h3 { font-size: 1.1rem !important; }
 .accesos { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
@@ -335,7 +344,7 @@
   align-items: flex-start;
   padding: 16px;
   border: 1px solid var(--borde);
-  border-radius: 16px;
+  border-radius: 12px;
   background: var(--superficie);
   color: var(--cafe);
   text-decoration: none;
@@ -344,7 +353,7 @@
 .acceso:hover { border-color: var(--borde-fuerte); box-shadow: var(--sombra-md); transform: translateY(-1px); }
 .acceso strong { display: block; font-size: 1rem; }
 .acceso span span { display: block; margin-top: 2px; font-size: 0.88rem; color: var(--cafe-medio); }
-.acceso-icono { display: grid; place-items: center; flex-shrink: 0; width: 42px; height: 42px; border-radius: 12px; background: var(--crema); color: var(--caramelo); }
+.acceso-icono { display: grid; place-items: center; flex-shrink: 0; width: 42px; height: 42px; border-radius: 8px; background: var(--ambar-suave); color: var(--caramelo); }
 .acceso.is-destacado { grid-column: 1 / -1; background: var(--caramelo); border-color: var(--caramelo); color: #fff; }
 .acceso.is-destacado span span { color: rgba(255, 255, 255, 0.85); }
 .acceso.is-destacado .acceso-icono { background: rgba(255, 255, 255, 0.16); color: #fff; }
@@ -353,5 +362,5 @@
 .panel-cuenta button { border: 0; background: none; padding: 0; color: var(--caramelo); font-weight: 600; cursor: pointer; }
 @media (max-width: 860px) {
   .panel-grid { grid-template-columns: 1fr; }
-  .panel-saludo h1 { font-size: 1.7rem; }
+  .panel-saludo h1 { font-size: 1.75rem; }
 }

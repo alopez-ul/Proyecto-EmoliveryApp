@@ -79,11 +79,11 @@ export default function PagoOrden() {
   const operacionValida = /^\d{6,10}$/.test(numeroOperacion.trim())
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col">
       <Encabezado volver={{ href: '#cliente', texto: 'Mi panel' }} />
 
       <main className="flex-1 w-full max-w-lg mx-auto p-4 sm:p-6">
-        <div className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-6">
+        <div className="bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-6">
           <p className="text-center text-xs font-bold text-[#742384]">Pago con Yape</p>
 
           {error && (
@@ -91,18 +91,18 @@ export default function PagoOrden() {
               {error}
             </div>
           )}
-          {!orden && !error && <p className="mt-4 text-center text-sm text-[#9a8676]">Cargando la orden…</p>}
+          {!orden && !error && <p className="mt-4 text-center text-sm text-[#9a8670]">Cargando la orden…</p>}
 
           {orden && resultado?.valido && (
             <div role="status" className="mt-4 text-center">
               <h1 className="text-2xl font-extrabold">¡Pago confirmado!</h1>
-              <p className="text-sm text-[#6b5443] mt-1">
+              <p className="text-sm text-[#6b4a2f] mt-1">
                 Orden #{orden.id} · {soles.format(orden.total)} · {orden.emolientero.nombre}
               </p>
-              <p className="mt-5 text-xs font-bold text-[#9a8676]">Tu código de recojo</p>
+              <p className="mt-5 text-xs font-bold text-[#9a8670]">Tu código de recojo</p>
               <p className="mt-1 font-mono text-4xl font-extrabold tracking-[0.2em] text-emerald-700">{resultado.codigoRecojo}</p>
-              <p className="mt-2 text-sm text-[#6b5443]">Muéstralo al emolientero al recoger tu pedido. Sirve una sola vez.</p>
-              <a href="#cliente" className="inline-block mt-5 px-5 py-2.5 rounded-xl bg-[#b8581a] text-white font-bold text-sm">
+              <p className="mt-2 text-sm text-[#6b4a2f]">Muéstralo al emolientero al recoger tu pedido. Sirve una sola vez.</p>
+              <a href="#cliente" className="inline-block mt-5 px-5 py-2.5 rounded-xl bg-[#2f4a2e] text-white font-bold text-sm">
                 Ver mis pedidos
               </a>
             </div>
@@ -121,7 +121,7 @@ export default function PagoOrden() {
           {orden && !resultado && (
             <>
               <h1 className="text-center text-2xl font-extrabold mt-1">Orden #{orden.id}</h1>
-              <p className="text-center text-sm text-[#6b5443]">Para {orden.emolientero.nombre}</p>
+              <p className="text-center text-sm text-[#6b4a2f]">Para {orden.emolientero.nombre}</p>
 
               {vencida ? (
                 <div className="mt-5 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-sm text-center">
@@ -132,10 +132,10 @@ export default function PagoOrden() {
                 </div>
               ) : (
                 <>
-                  <p className="mt-4 text-center text-3xl font-extrabold tabular-nums text-[#b8581a]" role="timer">
+                  <p className="mt-4 text-center text-3xl font-extrabold tabular-nums text-[#2f4a2e]" role="timer">
                     {tiempoRestante(orden.expiraEn, ahora)}
                   </p>
-                  <p className="text-center text-xs text-[#9a8676]">para pagar esta orden</p>
+                  <p className="text-center text-xs text-[#9a8670]">para pagar esta orden</p>
 
                   <div className="mt-5">
                     <CodigoQRYapeSVG payload={datosQR.payloadQR} size={190} />
@@ -155,9 +155,9 @@ export default function PagoOrden() {
                         placeholder="Ej. 48291035"
                         value={numeroOperacion}
                         onChange={(e) => setNumeroOperacion(e.target.value.replace(/\D/g, ''))}
-                        className="w-full rounded-xl border border-[#ebe3d9] px-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-200"
+                        className="w-full rounded-xl border border-[#e6dcc8] px-3.5 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-200"
                       />
-                      <p className="mt-1 text-xs text-[#9a8676]">Entre 6 y 10 dígitos, como aparece en tu constancia.</p>
+                      <p className="mt-1 text-xs text-[#9a8670]">Entre 6 y 10 dígitos, como aparece en tu constancia.</p>
                     </div>
                     <div>
                       <label htmlFor="monto" className="block text-sm font-semibold mb-1.5">Monto que yapeaste (S/)</label>
@@ -166,10 +166,10 @@ export default function PagoOrden() {
                         inputMode="decimal"
                         value={monto}
                         onChange={(e) => setMonto(e.target.value)}
-                        className="w-full rounded-xl border border-[#ebe3d9] px-3.5 py-2.5 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-purple-200"
+                        className="w-full rounded-xl border border-[#e6dcc8] px-3.5 py-2.5 text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-purple-200"
                       />
                     </div>
-                    <p className="text-xs text-[#6b5443]">
+                    <p className="text-xs text-[#6b4a2f]">
                       Revisa bien los datos: si la constancia no es válida, la reserva se libera y tendrás que comprar de nuevo.
                     </p>
                     <button

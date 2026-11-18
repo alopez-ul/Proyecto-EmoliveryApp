@@ -39,7 +39,7 @@ export default function BotonFavorito({ emolienteroId }) {
       disabled={ocupado}
       aria-pressed={favorito}
       className={`inline-flex items-center gap-1.5 mt-3 ml-2 px-3 py-1 rounded-full text-xs font-bold border transition-colors disabled:opacity-60 ${
-        favorito ? 'bg-[#fbe8d3] border-[#fbe8d3] text-[#b4531a]' : 'border-[#ddcfbe] text-[#6b5443] hover:text-[#b4531a]'
+        favorito ? 'bg-[#e8ead5] border-[#e8ead5] text-[#2f4a2e]' : 'border-[#d6c8ad] text-[#6b4a2f] hover:text-[#2f4a2e]'
       }`}
     >
       <svg width="14" height="14" viewBox="0 0 24 24" fill={favorito ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" aria-hidden="true">

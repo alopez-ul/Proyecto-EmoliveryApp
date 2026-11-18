@@ -18,7 +18,7 @@ export default function EmolienteIcon({ size = 48, className = '' }) {
       {/* vaso */}
       <path d="M14 20h36l-4 36a4 4 0 0 1-4 3.6H22a4 4 0 0 1-4-3.6z" fill="#fff8ec" stroke="#5a3a22" strokeWidth="2.5" strokeLinejoin="round" />
       {/* emoliente */}
-      <path d="M16.3 30h31.4l-3 26.2a2 2 0 0 1-2 1.8H21.3a2 2 0 0 1-2-1.8z" fill="#c8641e" />
+      <path d="M16.3 30h31.4l-3 26.2a2 2 0 0 1-2 1.8H21.3a2 2 0 0 1-2-1.8z" fill="#8b5a2b" />
       <path d="M16.3 30h31.4l-.5 4.5H16.8z" fill="#e89a3c" />
       {/* linaza / burbujas */}
       <g fill="#f3c27a">

@@ -18,9 +18,9 @@ const idDeLaRuta = () => new URLSearchParams(window.location.hash.split('?')[1] 
 function Estado({ titulo, children }) {
   return (
     <div className="text-center py-10">
-      <h2 className="font-bold text-lg text-[#2b1a0f] mb-1">{titulo}</h2>
-      <p className="text-sm text-[#6b5443] mb-5">{children}</p>
-      <a href="#inicio" className="px-5 py-2.5 rounded-xl bg-[#b8581a] text-white font-bold text-sm hover:bg-[#9e4a14] transition-all">
+      <h2 className="font-bold text-lg text-[#2b2118] mb-1">{titulo}</h2>
+      <p className="text-sm text-[#6b4a2f] mb-5">{children}</p>
+      <a href="#inicio" className="px-5 py-2.5 rounded-xl bg-[#2f4a2e] text-white font-bold text-sm hover:bg-[#243a23] transition-all">
         Volver al mapa
       </a>
     </div>
@@ -33,8 +33,8 @@ function Producto({ producto, motivoNoCompra, onComprar }) {
   return (
     <li className="flex items-center gap-4 py-3.5">
       <div className="flex-1 min-w-0">
-        <p className={`font-bold text-sm ${producto.disponible ? 'text-[#2b1a0f]' : 'text-[#9a8676] line-through'}`}>{producto.nombre}</p>
-        {producto.descripcion && <p className="text-xs text-[#6b5443] mt-0.5">{producto.descripcion}</p>}
+        <p className={`font-bold text-sm ${producto.disponible ? 'text-[#2b2118]' : 'text-[#9a8670] line-through'}`}>{producto.nombre}</p>
+        {producto.descripcion && <p className="text-xs text-[#6b4a2f] mt-0.5">{producto.descripcion}</p>}
         <span
           className={`inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-[11px] font-bold ${
             producto.disponible ? 'bg-emerald-50 text-emerald-800' : 'bg-stone-100 text-stone-600'
@@ -45,13 +45,13 @@ function Producto({ producto, motivoNoCompra, onComprar }) {
         </span>
       </div>
       <div className="text-right shrink-0">
-        <p className="font-extrabold text-base text-[#2b1a0f] tabular-nums">{soles.format(producto.precio)}</p>
+        <p className="font-extrabold text-base text-[#2b2118] tabular-nums">{soles.format(producto.precio)}</p>
         <button
           type="button"
           onClick={() => onComprar(producto)}
           disabled={!producto.comprable}
           aria-describedby={producto.comprable ? undefined : motivoId}
-          className="mt-1.5 px-3.5 py-1.5 rounded-lg bg-[#b8581a] text-white font-bold text-xs hover:bg-[#9e4a14] transition-all disabled:bg-stone-200 disabled:text-stone-500 disabled:cursor-not-allowed"
+          className="mt-1.5 px-3.5 py-1.5 rounded-lg bg-[#2f4a2e] text-white font-bold text-xs hover:bg-[#243a23] transition-all disabled:bg-stone-200 disabled:text-stone-500 disabled:cursor-not-allowed"
         >
           Comprar
         </button>
@@ -93,11 +93,11 @@ export default function CatalogoEmolientero() {
   const cantidad = catalogo?.categorias.reduce((n, c) => n + c.productos.length, 0) ?? 0
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col">
       <Encabezado volver={{ href: '#inicio', texto: 'Volver al mapa' }} />
 
       <main className="flex-1 flex justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-xl bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-6 sm:p-8 self-start">
+        <div className="w-full max-w-xl bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-6 sm:p-8 self-start">
           {error ? (
             error.status === 404 ? (
               <Estado titulo="Emolientero no disponible">Este emolientero no existe o su cuenta no está activa.</Estado>
@@ -105,13 +105,13 @@ export default function CatalogoEmolientero() {
               <Estado titulo="No se pudo cargar el catálogo">{error.mensaje}</Estado>
             )
           ) : !catalogo ? (
-            <p className="text-center text-sm text-[#6b5443] py-10" role="status">
+            <p className="text-center text-sm text-[#6b4a2f] py-10" role="status">
               Cargando catálogo…
             </p>
           ) : (
             <>
               <div className="text-center mb-6">
-                <h1 className="text-2xl sm:text-3xl font-semibold text-[#2b1a0f]">{catalogo.emolientero.nombre}</h1>
+                <h1 className="text-2xl sm:text-3xl font-semibold text-[#2b2118]">{catalogo.emolientero.nombre}</h1>
                 <span
                   className={`inline-flex items-center gap-2 mt-3 px-3 py-1 rounded-full text-xs font-bold ${
                     enJornada ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-200 text-stone-700'
@@ -135,26 +135,26 @@ export default function CatalogoEmolientero() {
               )}
 
               {aviso && (
-                <div role="status" className="mb-5 p-3 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9] text-sm text-[#6b5443]">
+                <div role="status" className="mb-5 p-3 rounded-xl bg-[#fbf7ee] border border-[#e6dcc8] text-sm text-[#6b4a2f]">
                   {aviso}
                 </div>
               )}
 
               {cantidad === 0 ? (
-                <div className="text-center py-8 px-4 rounded-2xl bg-[#fbf6ef] border border-dashed border-[#ddd2c4]">
-                  <p className="font-bold text-[#2b1a0f] mb-1">Catálogo vacío</p>
-                  <p className="text-sm text-[#6b5443]">Este emolientero todavía no ha publicado sus productos.</p>
+                <div className="text-center py-8 px-4 rounded-2xl bg-[#fbf7ee] border border-dashed border-[#d6c8ad]">
+                  <p className="font-bold text-[#2b2118] mb-1">Catálogo vacío</p>
+                  <p className="text-sm text-[#6b4a2f]">Este emolientero todavía no ha publicado sus productos.</p>
                 </div>
               ) : (
                 catalogo.categorias.map((categoria) => (
                   <section key={categoria.id} aria-labelledby={`cat-${categoria.id}`} className="mb-5 last:mb-0">
                     <h2
                       id={`cat-${categoria.id}`}
-                      className="text-xs font-bold text-[#9a8676] pb-2 border-b border-[#ebe3d9]"
+                      className="text-xs font-bold text-[#9a8670] pb-2 border-b border-[#e6dcc8]"
                     >
                       {categoria.nombre}
                     </h2>
-                    <ul className="divide-y divide-[#ebe3d9]">
+                    <ul className="divide-y divide-[#e6dcc8]">
                       {categoria.productos.map((p) => (
                         <Producto key={p.id} producto={p} motivoNoCompra={catalogo.motivoNoCompra} onComprar={comprar} />
                       ))}

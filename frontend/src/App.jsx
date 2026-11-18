@@ -22,6 +22,9 @@ import RecuperarPage from './pages/RecuperarPage.jsx'
 import NuevaPasswordPage from './pages/NuevaPasswordPage.jsx'
 import PanelRolPage from './pages/PanelRolPage.jsx'
 
+// Las demostraciones con datos de ejemplo (US07, US14, US21) solo se abren con ?demo en la ruta.
+const modoDemo = () => /[?&]demo\b/.test(window.location.hash)
+
 // Soporta enrutamiento por hash (#/registro-cliente o #registro-cliente) y por pathname (/registro-cliente)
 const obtenerRutaActual = () => {
   const hash = window.location.hash.replace(/^#\/?/, '').split('?')[0]
@@ -80,23 +83,26 @@ export default function App() {
     return <ValidarRecojo key={window.location.hash || window.location.pathname} />
   }
 
-  // US07: Mapa de emolienteros cercanos (Jorge Rodrigo Burga)
+  // US07: Mapa de emolienteros cercanos (Jorge Rodrigo Burga). Usa emolienteros de ejemplo, así que solo se
+  // muestra en modo demostración (#mapa-cercanos?demo); si no, va a la portada, que muestra los reales.
   if (ruta === 'mapa-cercanos') {
-    return <MapaCercanos key={window.location.hash || window.location.pathname} />
+    if (modoDemo()) return <MapaCercanos key={window.location.hash || window.location.pathname} />
+    return <MainPage />
   }
 
   // US14: Pago con QR de Yape (Jorge Rodrigo Burga). Con ?orden=<id> paga una orden real de US13;
-  // sin ella, muestra la demostración.
+  // con ?demo muestra la demostración con una orden de ejemplo; si no, va a la portada.
   if (ruta === 'pago-yape') {
     const ordenId = new URLSearchParams(window.location.hash.split('?')[1] ?? '').get('orden')
     if (ordenId) return <PagoOrden key={window.location.hash} />
-    return <PagoYape key={window.location.hash || window.location.pathname} />
+    if (modoDemo()) return <PagoYape key={window.location.hash || window.location.pathname} />
+    return <MainPage />
   }
 
   // US21: Emolienteros favoritos y avisos de apertura de jornada (Jorge Rodrigo Burga)
   // Con ?demo se abre la demostración en memoria (simulador de aperturas); sin él, los favoritos reales.
   if (ruta === 'favoritos' || ruta === 'emolienteros-favoritos') {
-    if (/[?&]demo\b/.test(window.location.hash)) return <EmolienterosFavoritosDemo key={window.location.hash} />
+    if (modoDemo()) return <EmolienterosFavoritosDemo key={window.location.hash} />
     return <EmolienterosFavoritos key={window.location.hash || window.location.pathname} />
   }
 

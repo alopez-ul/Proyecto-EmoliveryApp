@@ -280,7 +280,7 @@ export default function PagoYape() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col">
       {/* Header Principal */}
       <Encabezado volver={{ href: '#inicio', texto: 'Volver al mapa' }} />
 
@@ -288,11 +288,11 @@ export default function PagoYape() {
       {modoDemo() && (
       <section
         aria-label="Simulador de casos de prueba de caja negra"
-        className="bg-gradient-to-r from-[#3b0747] via-[#4c105c] to-[#2b1a0f] text-white px-4 py-3.5 sm:px-6 border-b border-purple-900"
+        className="bg-gradient-to-r from-[#3b0747] via-[#4c105c] to-[#2b2118] text-white px-4 py-3.5 sm:px-6 border-b border-purple-900"
       >
         <div className="max-w-7xl mx-auto flex flex-col xl:flex-row xl:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-1 rounded-lg bg-[#00cba9] text-[#2b1a0f] text-xs font-extrabold">
+            <span className="px-2.5 py-1 rounded-lg bg-[#00cba9] text-[#2b2118] text-xs font-extrabold">
               Simulador de Casos de Prueba
             </span>
             <span className="text-xs text-purple-100 hidden sm:inline">
@@ -346,14 +346,14 @@ export default function PagoYape() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Columna Izquierda (T64): Resumen de la Orden Anticipada, Temporizador 15:00 y QR de Yape */}
           <div className="lg:col-span-6 space-y-5">
-            <div className="bg-white rounded-2xl border border-[#ebe3d9] shadow-md p-5 sm:p-6 space-y-4">
+            <div className="bg-white rounded-2xl border border-[#e6dcc8] shadow-md p-5 sm:p-6 space-y-4">
               {/* Cabecera de la Orden y Estado */}
-              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#ebe3d9]">
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#e6dcc8]">
                 <div>
-                  <span className="text-[11px] font-bold text-[#9a8676] block">
+                  <span className="text-[11px] font-bold text-[#9a8670] block">
                     Orden de Compra Anticipada
                   </span>
-                  <h1 className="text-xl font-extrabold text-[#2b1a0f] font-mono">{orden.id}</h1>
+                  <h1 className="text-xl font-extrabold text-[#2b2118] font-mono">{orden.id}</h1>
                 </div>
 
                 {/* Badge dinámico del estado de la orden */}
@@ -383,7 +383,7 @@ export default function PagoYape() {
               <div>
                 <label
                   htmlFor="select-puesto-yape"
-                  className="block text-xs font-bold text-[#6b5443] mb-1"
+                  className="block text-xs font-bold text-[#6b4a2f] mb-1"
                 >
                   Puesto de Emoliente en La Molina:
                 </label>
@@ -391,7 +391,7 @@ export default function PagoYape() {
                   id="select-puesto-yape"
                   value={emolienteroId}
                   onChange={handleCambiarEmolientero}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#ddd2c4] bg-[#fbf6ef] text-xs sm:text-sm font-bold text-[#2b1a0f]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#d6c8ad] bg-[#fbf7ee] text-xs sm:text-sm font-bold text-[#2b2118]"
                 >
                   {emolienterosActivos.map((e) => (
                     <option key={e.id} value={e.id}>
@@ -399,7 +399,7 @@ export default function PagoYape() {
                     </option>
                   ))}
                 </select>
-                <p className="text-xs text-[#6b5443] mt-1">
+                <p className="text-xs text-[#6b4a2f] mt-1">
                   📍 {orden.emolientero.direccionReferencia} · Titular Yape:{' '}
                   <strong>{orden.emolientero.encargado}</strong>
                 </p>
@@ -410,7 +410,7 @@ export default function PagoYape() {
                 className={`p-3.5 rounded-2xl border flex items-center justify-between ${
                   segundosRestantes === 0
                     ? 'bg-red-50 border-red-300 text-red-900'
-                    : 'bg-[#fbf6ef] border-[#ebe3d9] text-[#2b1a0f]'
+                    : 'bg-[#fbf7ee] border-[#e6dcc8] text-[#2b2118]'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
@@ -430,7 +430,7 @@ export default function PagoYape() {
                   className={`font-mono text-xl font-extrabold px-3 py-1 rounded-xl ${
                     segundosRestantes === 0
                       ? 'bg-red-600 text-white'
-                      : 'bg-[#2b1a0f] text-amber-300'
+                      : 'bg-[#2b2118] text-amber-300'
                   }`}
                 >
                   {formatearReloj(segundosRestantes)}
@@ -439,15 +439,15 @@ export default function PagoYape() {
 
               {/* Detalle de Productos Reservados y Total Calculado */}
               <div className="space-y-2">
-                <h2 className="text-xs font-bold text-[#6b5443]">
+                <h2 className="text-xs font-bold text-[#6b4a2f]">
                   Productos Reservados:
                 </h2>
-                <ul className="divide-y divide-[#ebe3d9] border border-[#ebe3d9] rounded-2xl px-4 bg-[#fbf6ef]/60">
+                <ul className="divide-y divide-[#e6dcc8] border border-[#e6dcc8] rounded-2xl px-4 bg-[#fbf7ee]/60">
                   {orden.items.map((item) => (
                     <li key={item.id} className="py-2.5 flex items-center justify-between text-xs sm:text-sm">
                       <div>
-                        <span className="font-extrabold text-[#b8581a] mr-1.5">{item.cantidad}x</span>
-                        <span className="font-semibold text-[#2b1a0f]">{item.nombre}</span>
+                        <span className="font-extrabold text-[#2f4a2e] mr-1.5">{item.cantidad}x</span>
+                        <span className="font-semibold text-[#2b2118]">{item.nombre}</span>
                       </div>
                       <span className="font-bold tabular-nums">S/ {item.subtotal.toFixed(2)}</span>
                     </li>
@@ -455,7 +455,7 @@ export default function PagoYape() {
                 </ul>
 
                 <div className="flex items-center justify-between pt-2 px-1">
-                  <span className="text-sm font-extrabold text-[#2b1a0f]">
+                  <span className="text-sm font-extrabold text-[#2b2118]">
                     Monto Total Calculado de la Orden:
                   </span>
                   <span className="text-2xl font-extrabold text-[#742384] tabular-nums">
@@ -466,7 +466,7 @@ export default function PagoYape() {
 
               {/* Tarjeta QR de Yape (T64) */}
               <div className="rounded-2xl bg-[#742384] text-white p-5 text-center space-y-3 shadow-md">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00cba9] text-[#2b1a0f] text-xs font-extrabold">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00cba9] text-[#2b2118] text-xs font-extrabold">
                   <span>📱</span> Escanea con tu app Yape
                 </div>
                 <CodigoQRYapeSVG payload={datosQR.payloadQR} size={185} />
@@ -485,12 +485,12 @@ export default function PagoYape() {
 
           {/* Columna Derecha (T65, T66): Formulario de Constancia y Resolución Exitoso / Inválido */}
           <div className="lg:col-span-6 space-y-5">
-            <div className="bg-white rounded-2xl border border-[#ebe3d9] shadow-md p-5 sm:p-6 space-y-5">
+            <div className="bg-white rounded-2xl border border-[#e6dcc8] shadow-md p-5 sm:p-6 space-y-5">
               <div>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-[#2b1a0f]">
+                <h2 className="text-xl sm:text-2xl font-extrabold text-[#2b2118]">
                   Registrar Constancia de Operación
                 </h2>
-                <p className="text-xs sm:text-sm text-[#6b5443] mt-1">
+                <p className="text-xs sm:text-sm text-[#6b4a2f] mt-1">
                   El sistema verifica la unicidad del número de operación, la coincidencia exacta del monto (
                   <strong>S/ {orden.totalCalculado.toFixed(2)}</strong>) y la vigencia de 15 minutos.
                 </p>
@@ -501,7 +501,7 @@ export default function PagoYape() {
                 <div>
                   <label
                     htmlFor="input-numero-operacion"
-                    className="block text-xs font-bold text-[#6b5443] mb-1.5"
+                    className="block text-xs font-bold text-[#6b4a2f] mb-1.5"
                   >
                     Número de operación de Yape (6 a 10 dígitos) <span className="text-red-600">*</span>
                   </label>
@@ -513,9 +513,9 @@ export default function PagoYape() {
                     value={numeroOperacion}
                     onChange={(e) => setNumeroOperacion(e.target.value)}
                     placeholder="Ej. 48291035"
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#ddd2c4] bg-[#fbf6ef] font-mono text-base font-bold text-[#2b1a0f] focus:outline-none focus:ring-2 focus:ring-[#742384]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#d6c8ad] bg-[#fbf7ee] font-mono text-base font-bold text-[#2b2118] focus:outline-none focus:ring-2 focus:ring-[#742384]"
                   />
-                  <p className="text-[11px] text-[#9a8676] mt-1">
+                  <p className="text-[11px] text-[#9a8670] mt-1">
                     Números ya usados en memoria para probar duplicidad:{' '}
                     <code className="font-mono font-bold text-[#742384]">
                       {operacionesUsadas.slice(0, 6).join(', ')}
@@ -528,7 +528,7 @@ export default function PagoYape() {
                   <div className="flex items-center justify-between mb-1.5">
                     <label
                       htmlFor="input-monto-yape"
-                      className="block text-xs font-bold text-[#6b5443]"
+                      className="block text-xs font-bold text-[#6b4a2f]"
                     >
                       Monto transferido (S/) <span className="text-red-600">*</span>
                     </label>
@@ -548,7 +548,7 @@ export default function PagoYape() {
                     value={montoIngresado}
                     onChange={(e) => setMontoIngresado(e.target.value)}
                     placeholder="11.50"
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#ddd2c4] bg-[#fbf6ef] font-mono text-base font-bold text-[#2b1a0f] focus:outline-none focus:ring-2 focus:ring-[#742384]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#d6c8ad] bg-[#fbf7ee] font-mono text-base font-bold text-[#2b2118] focus:outline-none focus:ring-2 focus:ring-[#742384]"
                   />
                 </div>
 
@@ -588,10 +588,10 @@ export default function PagoYape() {
                     <span className="text-[11px] font-extrabold uppercase tracking-widest text-emerald-800 block">
                       Código de Recojo de un solo uso
                     </span>
-                    <div className="text-3xl sm:text-4xl font-mono font-extrabold tracking-wider text-[#2b1a0f]">
+                    <div className="text-3xl sm:text-4xl font-mono font-extrabold tracking-wider text-[#2b2118]">
                       {resultadoValidacion.codigoRecojo}
                     </div>
-                    <p className="text-[11px] text-[#6b5443]">
+                    <p className="text-[11px] text-[#6b4a2f]">
                       Código alfanumérico equivalente en mostrador:{' '}
                       <strong className="font-mono">{resultadoValidacion.codigoUS15}</strong>
                     </p>
@@ -650,24 +650,24 @@ export default function PagoYape() {
         {modoDemo() && (
         <section
           aria-labelledby="titulo-bitacora-rnf06"
-          className="bg-white rounded-2xl border border-[#ebe3d9] shadow-md p-5 sm:p-6 space-y-4"
+          className="bg-white rounded-2xl border border-[#e6dcc8] shadow-md p-5 sm:p-6 space-y-4"
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <span className="text-[11px] font-bold text-[#b8581a] block">
+              <span className="text-[11px] font-bold text-[#2f4a2e] block">
                 RNF06 · Trazabilidad y Auditoría de Operaciones
               </span>
-              <h2 id="titulo-bitacora-rnf06" className="text-lg font-extrabold text-[#2b1a0f]">
+              <h2 id="titulo-bitacora-rnf06" className="text-lg font-extrabold text-[#2b2118]">
                 Bitácora de Transacciones de Pago con Yape ({bitacora.length})
               </h2>
             </div>
-            <span className="text-xs text-[#6b5443]">
+            <span className="text-xs text-[#6b4a2f]">
               Registra cada intento exitoso o fallido con fecha/hora, orden, operación y causa.
             </span>
           </div>
 
           {bitacora.length === 0 ? (
-            <div className="p-6 rounded-2xl bg-[#fbf6ef] border border-dashed border-[#ddd2c4] text-center text-xs text-[#6b5443]">
+            <div className="p-6 rounded-2xl bg-[#fbf7ee] border border-dashed border-[#d6c8ad] text-center text-xs text-[#6b4a2f]">
               Aún no se han registrado intentos en esta sesión. Usa el formulario o los botones del{' '}
               <strong>Simulador de Casos de Prueba</strong> para registrar transacciones en la bitácora.
             </div>
@@ -675,7 +675,7 @@ export default function PagoYape() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="border-b border-[#ebe3d9] text-[#6b5443] text-[11px]">
+                  <tr className="border-b border-[#e6dcc8] text-[#6b4a2f] text-[11px]">
                     <th className="py-2.5 px-3">Fecha / Hora</th>
                     <th className="py-2.5 px-3">ID Orden</th>
                     <th className="py-2.5 px-3">N.° Operación</th>
@@ -685,9 +685,9 @@ export default function PagoYape() {
                     <th className="py-2.5 px-3">Código Recojo</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#ebe3d9]">
+                <tbody className="divide-y divide-[#e6dcc8]">
                   {bitacora.map((item) => (
-                    <tr key={item.idTransaccion} className="hover:bg-[#fbf6ef]/60">
+                    <tr key={item.idTransaccion} className="hover:bg-[#fbf7ee]/60">
                       <td className="py-2.5 px-3 font-mono whitespace-nowrap">
                         {new Date(item.fechaHora).toLocaleTimeString('es-PE')}
                       </td>
@@ -709,7 +709,7 @@ export default function PagoYape() {
                           {item.resultado}
                         </span>
                       </td>
-                      <td className="py-2.5 px-3 text-[#6b5443] max-w-xs">{item.detalle}</td>
+                      <td className="py-2.5 px-3 text-[#6b4a2f] max-w-xs">{item.detalle}</td>
                       <td className="py-2.5 px-3 font-mono font-extrabold text-emerald-800">
                         {item.codigoRecojo ?? '—'}
                       </td>

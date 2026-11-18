@@ -41,7 +41,7 @@ function crearIconoEmolientero(emo, seleccionado) {
     seleccionado
       ? '#15803d'
       : nivel === 'alto'
-        ? '#b8581a'
+        ? '#2f4a2e'
         : nivel === 'medio'
           ? '#d97706'
           : '#78716c'
@@ -55,7 +55,7 @@ function crearIconoEmolientero(emo, seleccionado) {
       <div style="display:flex;flex-direction:column;align-items:center;transform:${seleccionado ? 'scale(1.12)' : 'scale(1)'};transition:transform 0.15s;">
         <div style="background:#ffffff;border:3px solid ${bordeColor};border-radius:14px;padding:3px 7px;box-shadow:0 6px 16px rgba(43,26,15,0.22);display:flex;align-items:center;gap:4px;white-space:nowrap;">
           <span style="font-size:13px;">🍵</span>
-          <span style="font-size:11px;font-weight:800;color:#2b1a0f;">${distanciaEtiqueta}</span>
+          <span style="font-size:11px;font-weight:800;color:#2b2118;">${distanciaEtiqueta}</span>
         </div>
         <div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:7px solid ${bordeColor};margin-top:-1px;"></div>
       </div>
@@ -283,7 +283,7 @@ export default function MapaCercanos() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col">
       {/* Header Principal */}
       <Encabezado />
 
@@ -319,7 +319,7 @@ export default function MapaCercanos() {
               <button
                 type="button"
                 onClick={simularPermisoOtorgado}
-                className="px-4 py-2.5 rounded-xl bg-[#e67e22] hover:bg-[#d35400] text-white font-bold text-xs sm:text-sm shadow-sm transition-all cursor-pointer"
+                className="px-4 py-2.5 rounded-xl bg-[#6b7a3a] hover:bg-[#6b7a3a] text-white font-bold text-xs sm:text-sm shadow-sm transition-all cursor-pointer"
               >
                 📍 Usar ubicación La Fontana (USIL / U. de Lima)
               </button>
@@ -339,11 +339,11 @@ export default function MapaCercanos() {
       {modoDemo() && (
       <section
         aria-label="Barra de simulación para evaluación de criterios de aceptación"
-        className="bg-[#fbf6ef] border-b border-[#ebe3d9] px-4 py-3 sm:px-6"
+        className="bg-[#fbf7ee] border-b border-[#e6dcc8] px-4 py-3 sm:px-6"
       >
         <div className="max-w-7xl mx-auto flex flex-col xl:flex-row xl:items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-extrabold text-[#b8581a] bg-amber-100 px-2.5 py-1 rounded-lg">
+            <span className="text-xs font-extrabold text-[#2f4a2e] bg-amber-100 px-2.5 py-1 rounded-lg">
               Simulador Sprint Review:
             </span>
             <button
@@ -351,8 +351,8 @@ export default function MapaCercanos() {
               onClick={simularPermisoOtorgado}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                 modoSimulacion === 'gps_la_fontana'
-                  ? 'bg-[#b8581a] text-white border-[#b8581a] shadow-xs'
-                  : 'bg-white text-[#2b1a0f] border-[#ddd2c4] hover:bg-amber-50'
+                  ? 'bg-[#2f4a2e] text-white border-[#2f4a2e] shadow-xs'
+                  : 'bg-white text-[#2b2118] border-[#d6c8ad] hover:bg-amber-50'
               }`}
             >
               1. Permiso GPS Otorgado (Av. La Fontana)
@@ -363,7 +363,7 @@ export default function MapaCercanos() {
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                 modoSimulacion === 'gps_denegado'
                   ? 'bg-red-700 text-white border-red-700 shadow-xs'
-                  : 'bg-white text-[#2b1a0f] border-[#ddd2c4] hover:bg-red-50'
+                  : 'bg-white text-[#2b2118] border-[#d6c8ad] hover:bg-red-50'
               }`}
             >
               2. Permiso GPS Denegado por el cliente
@@ -374,7 +374,7 @@ export default function MapaCercanos() {
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                 modoSimulacion === 'radio_vacio'
                   ? 'bg-amber-700 text-white border-amber-700 shadow-xs'
-                  : 'bg-white text-[#2b1a0f] border-[#ddd2c4] hover:bg-amber-50'
+                  : 'bg-white text-[#2b2118] border-[#d6c8ad] hover:bg-amber-50'
               }`}
             >
               3. Radio sin emolienteros cercanos
@@ -431,24 +431,24 @@ export default function MapaCercanos() {
         {/* Columna Izquierda: Filtros, Caso sin resultados (T39) y Lista ordenada (T38) */}
         <div className="lg:col-span-5 flex flex-col gap-4">
           {/* Tarjeta de Controles de Radio y Ordenamiento (T36, T37) */}
-          <div className="bg-white rounded-2xl border border-[#ebe3d9] p-4 sm:p-5 shadow-sm space-y-4">
+          <div className="bg-white rounded-2xl border border-[#e6dcc8] p-4 sm:p-5 shadow-sm space-y-4">
             <div className="flex items-center justify-between gap-2">
               <div>
-                <h1 className="text-lg font-extrabold text-[#2b1a0f]">Emolienteros en La Molina</h1>
-                <p className="text-xs text-[#6b5443]">
+                <h1 className="text-lg font-extrabold text-[#2b2118]">Emolienteros en La Molina</h1>
+                <p className="text-xs text-[#6b4a2f]">
                   {estadoPermiso === 'otorgado' && coordenadasCliente
                     ? `📍 Ubicación cliente: ${coordenadasCliente.referencia}`
                     : '🚫 Permiso GPS denegado · Modo consulta manual por zona'}
                 </p>
               </div>
-              <span className="px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-[#b8581a]">
+              <span className="px-2.5 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-[#2f4a2e]">
                 {listaActiva.length} {listaActiva.length === 1 ? 'puesto activo' : 'puestos activos'}
               </span>
             </div>
 
             {/* Selector de Radio de Búsqueda (T36) */}
             <div>
-              <label className="block text-xs font-bold text-[#6b5443] mb-1.5">
+              <label className="block text-xs font-bold text-[#6b4a2f] mb-1.5">
                 Radio de búsqueda geodésica:
               </label>
               <div className="grid grid-cols-4 gap-2">
@@ -463,8 +463,8 @@ export default function MapaCercanos() {
                     }}
                     className={`py-2 px-2 rounded-xl text-xs font-bold border transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
                       !usarBusquedaManual && radioMetros === r.valor
-                        ? 'bg-[#b8581a] text-white border-[#b8581a] shadow-xs'
-                        : 'bg-[#fbf6ef] text-[#2b1a0f] border-[#ddd2c4] hover:border-[#b8581a]'
+                        ? 'bg-[#2f4a2e] text-white border-[#2f4a2e] shadow-xs'
+                        : 'bg-[#fbf7ee] text-[#2b2118] border-[#d6c8ad] hover:border-[#2f4a2e]'
                     }`}
                   >
                     {r.etiqueta}
@@ -478,7 +478,7 @@ export default function MapaCercanos() {
               <div>
                 <label
                   htmlFor="select-criterio-orden"
-                  className="block text-xs font-bold text-[#6b5443] mb-1"
+                  className="block text-xs font-bold text-[#6b4a2f] mb-1"
                 >
                   Ordenar por:
                 </label>
@@ -486,7 +486,7 @@ export default function MapaCercanos() {
                   id="select-criterio-orden"
                   value={criterioSeleccionado}
                   onChange={(e) => setCriterioSeleccionado(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-[#ddd2c4] bg-[#fbf6ef] text-xs font-bold text-[#2b1a0f]"
+                  className="w-full px-3 py-2 rounded-xl border border-[#d6c8ad] bg-[#fbf7ee] text-xs font-bold text-[#2b2118]"
                 >
                   <option value="distancia">Menor a mayor distancia (m)</option>
                   <option value="calificacion">Mayor calificación promedio (★)</option>
@@ -496,7 +496,7 @@ export default function MapaCercanos() {
               <div>
                 <label
                   htmlFor="select-zona-rapida"
-                  className="block text-xs font-bold text-[#6b5443] mb-1"
+                  className="block text-xs font-bold text-[#6b4a2f] mb-1"
                 >
                   Filtrar por zona de La Molina:
                 </label>
@@ -507,7 +507,7 @@ export default function MapaCercanos() {
                     setZonaManual(e.target.value)
                     setUsarBusquedaManual(true)
                   }}
-                  className="w-full px-3 py-2 rounded-xl border border-[#ddd2c4] bg-[#fbf6ef] text-xs font-bold text-[#2b1a0f]"
+                  className="w-full px-3 py-2 rounded-xl border border-[#d6c8ad] bg-[#fbf7ee] text-xs font-bold text-[#2b2118]"
                 >
                   {ZONAS_LA_MOLINA.map((z) => (
                     <option key={z} value={z}>
@@ -557,8 +557,8 @@ export default function MapaCercanos() {
                       }}
                       className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                         zonaManual === zona
-                          ? 'bg-[#b8581a] text-white shadow-xs'
-                          : 'bg-white text-[#2b1a0f] border border-amber-300 hover:bg-amber-100'
+                          ? 'bg-[#2f4a2e] text-white shadow-xs'
+                          : 'bg-white text-[#2b2118] border border-amber-300 hover:bg-amber-100'
                       }`}
                     >
                       {zona}
@@ -573,7 +573,7 @@ export default function MapaCercanos() {
                     setUsarBusquedaManual(true)
                   }}
                   placeholder="Buscar por avenida, referencia, puesto o código MLM..."
-                  className="w-full px-3.5 py-2 rounded-xl border border-amber-300 bg-white text-xs text-[#2b1a0f] placeholder:text-[#9a8676]"
+                  className="w-full px-3.5 py-2 rounded-xl border border-amber-300 bg-white text-xs text-[#2b2118] placeholder:text-[#9a8670]"
                 />
               </div>
             </div>
@@ -589,14 +589,14 @@ export default function MapaCercanos() {
                   onClick={() => seleccionarPuesto(emo)}
                   className={`bg-white rounded-2xl border p-4 transition-all cursor-pointer shadow-xs hover:shadow-md ${
                     esSeleccionado
-                      ? 'border-2 border-[#b8581a] ring-2 ring-amber-200/70'
-                      : 'border-[#ebe3d9] hover:border-[#ddd2c4]'
+                      ? 'border-2 border-[#2f4a2e] ring-2 ring-amber-200/70'
+                      : 'border-[#e6dcc8] hover:border-[#d6c8ad]'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                        <span className="px-2 py-0.5 rounded-md bg-[#fbf6ef] border border-[#ebe3d9] text-[11px] font-extrabold text-[#b8581a]">
+                        <span className="px-2 py-0.5 rounded-md bg-[#fbf7ee] border border-[#e6dcc8] text-[11px] font-extrabold text-[#2f4a2e]">
                           #{idx + 1}
                         </span>
                         <span className="px-2 py-0.5 rounded-md bg-stone-100 text-[11px] font-mono font-bold text-stone-700">
@@ -606,14 +606,14 @@ export default function MapaCercanos() {
                           {emo.zona}
                         </span>
                       </div>
-                      <h3 className="font-extrabold text-base text-[#2b1a0f] leading-snug">{emo.nombre}</h3>
-                      <p className="text-xs text-[#6b5443] mt-0.5">{emo.direccionReferencia}</p>
+                      <h3 className="font-extrabold text-base text-[#2b2118] leading-snug">{emo.nombre}</h3>
+                      <p className="text-xs text-[#6b4a2f] mt-0.5">{emo.direccionReferencia}</p>
                     </div>
 
                     {/* Distancia en metros y Calificación promedio (T38) */}
                     <div className="text-right shrink-0">
                       {typeof emo.distanciaMetros === 'number' ? (
-                        <span className="inline-block px-2.5 py-1 rounded-xl bg-[#b8581a] text-white font-extrabold text-xs tabular-nums">
+                        <span className="inline-block px-2.5 py-1 rounded-xl bg-[#2f4a2e] text-white font-extrabold text-xs tabular-nums">
                           {emo.distanciaMetros} m
                         </span>
                       ) : (
@@ -627,13 +627,13 @@ export default function MapaCercanos() {
                       >
                         <span aria-hidden="true">★</span>
                         <span>{emo.calificacionPromedio.toFixed(1)}</span>
-                        <span className="text-[11px] font-normal text-[#9a8676]">({emo.totalResenas})</span>
+                        <span className="text-[11px] font-normal text-[#9a8670]">({emo.totalResenas})</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Especialidad */}
-                  <p className="text-xs text-[#6b5443] mt-2 bg-[#fbf6ef] px-3 py-1.5 rounded-lg border border-[#ebe3d9]">
+                  <p className="text-xs text-[#6b4a2f] mt-2 bg-[#fbf7ee] px-3 py-1.5 rounded-lg border border-[#e6dcc8]">
                     🍵 <strong>Especialidad:</strong> {emo.especialidad} · Desde{' '}
                     <strong>S/ {Number(emo.precioDesde ?? 3.5).toFixed(2)}</strong>
                   </p>
@@ -649,12 +649,12 @@ export default function MapaCercanos() {
 
                   {/* Acciones hacia US12 (Catálogo) y US14 (Pago con QR de Yape) */}
                   <div
-                    className="mt-3 pt-2.5 border-t border-[#ebe3d9] flex flex-wrap items-center justify-end gap-2"
+                    className="mt-3 pt-2.5 border-t border-[#e6dcc8] flex flex-wrap items-center justify-end gap-2"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <a
                       href={`#catalogo?id=${emo.id}`}
-                      className="px-3 py-1.5 rounded-xl border border-[#ddd2c4] bg-[#fbf6ef] hover:bg-amber-50 text-xs font-bold text-[#2b1a0f] transition-colors"
+                      className="px-3 py-1.5 rounded-xl border border-[#d6c8ad] bg-[#fbf7ee] hover:bg-amber-50 text-xs font-bold text-[#2b2118] transition-colors"
                     >
                       Ver Catálogo
                     </a>
@@ -673,27 +673,27 @@ export default function MapaCercanos() {
 
         {/* Columna Derecha: Mapa Interactivo de La Molina (T33, T38) */}
         <div className="lg:col-span-7 flex flex-col gap-3">
-          <div className="bg-white rounded-2xl border border-[#ebe3d9] p-3 shadow-lg flex-1 min-h-[520px] flex flex-col">
-            <div className="flex flex-wrap items-center justify-between gap-2 px-2 pb-2.5 text-xs text-[#6b5443]">
+          <div className="bg-white rounded-2xl border border-[#e6dcc8] p-3 shadow-lg flex-1 min-h-[520px] flex flex-col">
+            <div className="flex flex-wrap items-center justify-between gap-2 px-2 pb-2.5 text-xs text-[#6b4a2f]">
               <div className="flex items-center gap-2">
                 <span className="inline-block w-3 h-3 rounded-full bg-blue-600 border-2 border-white shadow-xs" />
-                <span className="font-bold text-[#2b1a0f]">Tu ubicación</span>
+                <span className="font-bold text-[#2b2118]">Tu ubicación</span>
                 <span className="mx-1">·</span>
-                <span className="inline-block w-3 h-3 rounded-full bg-[#b8581a]" />
-                <span className="font-bold text-[#2b1a0f]">Confiabilidad Alta (&lt;15m)</span>
+                <span className="inline-block w-3 h-3 rounded-full bg-[#2f4a2e]" />
+                <span className="font-bold text-[#2b2118]">Confiabilidad Alta (&lt;15m)</span>
                 <span className="mx-1">·</span>
                 <span className="inline-block w-3 h-3 rounded-full bg-amber-600" />
-                <span className="font-bold text-[#2b1a0f]">Media (15-60m)</span>
+                <span className="font-bold text-[#2b2118]">Media (15-60m)</span>
                 <span className="mx-1">·</span>
                 <span className="inline-block w-3 h-3 rounded-full bg-stone-500" />
-                <span className="font-bold text-[#2b1a0f]">Baja (Horario habitual)</span>
+                <span className="font-bold text-[#2b2118]">Baja (Horario habitual)</span>
               </div>
-              <span className="font-mono text-[11px] text-[#9a8676]">
+              <span className="font-mono text-[11px] text-[#9a8670]">
                 Distrito: La Molina · Radio activo: {estadoPermiso === 'otorgado' ? `${radioMetros} m` : 'Manual'}
               </span>
             </div>
 
-            <div className="relative flex-1 rounded-2xl overflow-hidden border border-[#ebe3d9] min-h-[470px]">
+            <div className="relative flex-1 rounded-2xl overflow-hidden border border-[#e6dcc8] min-h-[470px]">
               <MapContainer
                 center={centroMapa}
                 zoom={zoomMapa}
@@ -715,8 +715,8 @@ export default function MapaCercanos() {
                       center={[coordenadasCliente.latitud, coordenadasCliente.longitud]}
                       radius={radioMetros}
                       pathOptions={{
-                        color: '#b8581a',
-                        fillColor: '#e67e22',
+                        color: '#2f4a2e',
+                        fillColor: '#6b7a3a',
                         fillOpacity: 0.1,
                         weight: 2,
                         dashArray: '6 4',
@@ -752,14 +752,14 @@ export default function MapaCercanos() {
                     <Popup>
                       <div className="text-xs space-y-1.5 min-w-[230px]">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="px-2 py-0.5 rounded bg-amber-100 text-[#b8581a] font-mono font-bold text-[10px]">
+                          <span className="px-2 py-0.5 rounded bg-amber-100 text-[#2f4a2e] font-mono font-bold text-[10px]">
                             {emo.codigoMunicipal}
                           </span>
                           {typeof emo.distanciaMetros === 'number' && (
-                            <span className="font-extrabold text-[#b8581a]">{emo.distanciaMetros} m</span>
+                            <span className="font-extrabold text-[#2f4a2e]">{emo.distanciaMetros} m</span>
                           )}
                         </div>
-                        <p className="font-extrabold text-sm text-[#2b1a0f] m-0">{emo.nombre}</p>
+                        <p className="font-extrabold text-sm text-[#2b2118] m-0">{emo.nombre}</p>
                         <p className="text-stone-600 m-0">{emo.direccionReferencia}</p>
                         <p className="font-bold text-amber-700 m-0">
                           ★ {emo.calificacionPromedio.toFixed(1)} ({emo.totalResenas} reseñas)
@@ -776,7 +776,7 @@ export default function MapaCercanos() {
                           </a>
                           <a
                             href={`#catalogo?id=${emo.id}`}
-                            className="px-2.5 py-1 rounded-lg bg-amber-100 text-[#2b1a0f] font-bold text-[11px] no-underline"
+                            className="px-2.5 py-1 rounded-lg bg-amber-100 text-[#2b2118] font-bold text-[11px] no-underline"
                           >
                             Catálogo
                           </a>

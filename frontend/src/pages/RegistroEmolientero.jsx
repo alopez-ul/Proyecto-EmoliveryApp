@@ -136,68 +136,51 @@ export default function RegistroEmolientero() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col justify-between">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col justify-between">
       {/* Header */}
       <Encabezado />
 
       {/* Main Container */}
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-xl bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-6 sm:p-8">
+        <div className="w-full max-w-xl bg-white rounded-2xl border border-[#ece4d4] p-7 sm:p-10">
           {/* Badge & Title */}
           <div className="text-center mb-6">
-            <h1 className="text-2xl sm:text-3xl font-semibold text-[#2b1a0f]">
-              Únete a la Red de Emolienteros
+            <h1 className="text-2xl sm:text-3xl font-semibold text-[#2b2118]">
+              Registra tu puesto
             </h1>
-            <p className="text-sm text-[#6b5443] mt-1.5">
-              Publica tu punto de venta en tiempo real y recibe pedidos de clientes en tu zona.
+            <p className="text-sm text-[#6b4a2f] mt-1.5">
+              Recibe pedidos de clientes cerca de ti. Antes de aparecer en el mapa, verificamos tu autorización municipal.
             </p>
-          </div>
-
-          {/* Banner Informativo de Verificación Municipal */}
-          <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200/80 flex items-start gap-3 text-amber-900">
-            <div className="mt-0.5 w-6 h-6 rounded-full bg-amber-200 text-amber-800 flex items-center justify-center shrink-0">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="text-xs sm:text-sm leading-relaxed">
-              <p className="font-bold text-amber-950 mb-0.5">Aviso importante de verificación municipal</p>
-              <p className="text-amber-800">
-                Al enviar este formulario, tu cuenta será registrada en estado{' '}
-                <span className="font-semibold underline decoration-amber-400">"Pendiente de verificación municipal"</span>.
-                Un administrador revisará tu autorización antes de que puedas publicar puntos en el mapa.
-              </p>
-            </div>
           </div>
 
           {/* Success Screen */}
           {enviado ? (
-            <div className="bg-amber-50 border border-amber-300 text-[#2b1a0f] rounded-2xl p-6 text-center animate-in fade-in duration-300">
-              <div className="w-14 h-14 bg-amber-200 text-[#b8581a] rounded-full flex items-center justify-center mx-auto mb-3">
+            <div className="bg-amber-50 border border-amber-300 text-[#2b2118] rounded-2xl p-6 text-center animate-in fade-in duration-300">
+              <div className="w-14 h-14 bg-amber-200 text-[#2f4a2e] rounded-full flex items-center justify-center mx-auto mb-3">
                 <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="font-bold text-xl text-[#2b1a0f] mb-2">¡Solicitud recibida satisfactoriamente!</h3>
-              <p className="text-sm text-[#6b5443] mb-4">
+              <h3 className="font-bold text-xl text-[#2b2118] mb-2">¡Solicitud recibida satisfactoriamente!</h3>
+              <p className="text-sm text-[#6b4a2f] mb-4">
                 El puesto <strong>{enviado.nombre}</strong> (DNI: {formData.dni}) ha sido registrado con estado{' '}
                 <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-900 border border-amber-300">
                   Pendiente de verificación municipal
                 </span>.
               </p>
-              <p className="text-xs text-[#9a8676] mb-6">
+              <p className="text-xs text-[#9a8670] mb-6">
                 El administrador ya fue notificado. Te avisaremos a <strong>{enviado.correo}</strong> en cuanto apruebe tu autorización <strong>{enviado.codigoMunicipal}</strong>.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <a
                   href="#login"
-                  className="px-5 py-2.5 rounded-xl bg-[#b8581a] text-white font-bold text-sm hover:bg-[#9e4a14] transition-all shadow-sm"
+                  className="px-5 py-2.5 rounded-xl bg-[#2f4a2e] text-white font-bold text-sm hover:bg-[#243a23] transition-all shadow-sm"
                 >
                   Ir al inicio de sesión
                 </a>
                 <a
                   href="#inicio"
-                  className="px-5 py-2.5 rounded-xl bg-white border border-[#ddd2c4] text-[#6b5443] font-semibold text-sm hover:bg-[#fbf6ef] transition-all"
+                  className="px-5 py-2.5 rounded-xl bg-white border border-[#d6c8ad] text-[#6b4a2f] font-semibold text-sm hover:bg-[#fbf7ee] transition-all"
                 >
                   Volver al mapa
                 </a>
@@ -212,8 +195,8 @@ export default function RegistroEmolientero() {
               )}
               {/* Nombre del Titular / Negocio */}
               <div>
-                <label htmlFor="nombreNegocio" className="block text-xs font-bold text-[#6b5443] mb-1.5">
-                  Nombre del Titular o Puesto Tradicional <span className="text-red-500">*</span>
+                <label htmlFor="nombreNegocio" className="block text-sm font-semibold text-[#2b2118] mb-1.5">
+                  Nombre del titular o del puesto
                 </label>
                 <input
                   id="nombreNegocio"
@@ -223,10 +206,10 @@ export default function RegistroEmolientero() {
                   value={formData.nombreNegocio}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full px-4 py-2.5 rounded-xl border bg-[#fbf6ef] text-[#2b1a0f] placeholder:text-[#9a8676] text-sm focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full px-4 py-3 rounded-lg border bg-white text-[#2b2118] placeholder:text-[#b3a892] text-sm focus:outline-none focus:ring-2 transition-all ${
                     touched.nombreNegocio && errores.nombreNegocio
                       ? 'border-red-400 focus:ring-red-200 bg-red-50/30'
-                      : 'border-[#ddd2c4] focus:ring-amber-200 focus:border-[#b8581a]'
+                      : 'border-[#e6dcc8] focus:ring-[#e8ead5] focus:border-[#6b7a3a]'
                   }`}
                 />
                 {touched.nombreNegocio && errores.nombreNegocio && (
@@ -239,8 +222,8 @@ export default function RegistroEmolientero() {
               {/* Grid: DNI & Código Municipal */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="dni" className="block text-xs font-bold text-[#6b5443] mb-1.5">
-                    DNI (8 dígitos) <span className="text-red-500">*</span>
+                  <label htmlFor="dni" className="block text-sm font-semibold text-[#2b2118] mb-1.5">
+                    DNI (8 dígitos)
                   </label>
                   <input
                     id="dni"
@@ -251,10 +234,10 @@ export default function RegistroEmolientero() {
                     value={formData.dni}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-2.5 rounded-xl border bg-[#fbf6ef] text-[#2b1a0f] placeholder:text-[#9a8676] text-sm focus:outline-none focus:ring-2 transition-all ${
+                    className={`w-full px-4 py-3 rounded-lg border bg-white text-[#2b2118] placeholder:text-[#b3a892] text-sm focus:outline-none focus:ring-2 transition-all ${
                       touched.dni && errores.dni
                         ? 'border-red-400 focus:ring-red-200 bg-red-50/30'
-                        : 'border-[#ddd2c4] focus:ring-amber-200 focus:border-[#b8581a]'
+                        : 'border-[#e6dcc8] focus:ring-[#e8ead5] focus:border-[#6b7a3a]'
                     }`}
                   />
                   {touched.dni && errores.dni && (
@@ -265,8 +248,8 @@ export default function RegistroEmolientero() {
                 </div>
 
                 <div>
-                  <label htmlFor="codigoMunicipal" className="block text-xs font-bold text-[#6b5443] mb-1.5">
-                    Cód. Autorización Municipal <span className="text-red-500">*</span>
+                  <label htmlFor="codigoMunicipal" className="block text-sm font-semibold text-[#2b2118] mb-1.5">
+                    Código de autorización municipal
                   </label>
                   <input
                     id="codigoMunicipal"
@@ -279,10 +262,10 @@ export default function RegistroEmolientero() {
                     value={formData.codigoMunicipal}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-2.5 rounded-xl border bg-[#fbf6ef] text-[#2b1a0f] placeholder:text-[#9a8676] text-sm focus:outline-none focus:ring-2 transition-all ${
+                    className={`w-full px-4 py-3 rounded-lg border bg-white text-[#2b2118] placeholder:text-[#b3a892] text-sm focus:outline-none focus:ring-2 transition-all ${
                       touched.codigoMunicipal && errores.codigoMunicipal
                         ? 'border-red-400 focus:ring-red-200 bg-red-50/30'
-                        : 'border-[#ddd2c4] focus:ring-amber-200 focus:border-[#b8581a]'
+                        : 'border-[#e6dcc8] focus:ring-[#e8ead5] focus:border-[#6b7a3a]'
                     }`}
                   />
                   {touched.codigoMunicipal && errores.codigoMunicipal && (
@@ -296,8 +279,8 @@ export default function RegistroEmolientero() {
               {/* Grid: Teléfono & Correo */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="telefono" className="block text-xs font-bold text-[#6b5443] mb-1.5">
-                    Celular de contacto <span className="text-red-500">*</span>
+                  <label htmlFor="telefono" className="block text-sm font-semibold text-[#2b2118] mb-1.5">
+                    Celular de contacto
                   </label>
                   <input
                     id="telefono"
@@ -308,10 +291,10 @@ export default function RegistroEmolientero() {
                     value={formData.telefono}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-2.5 rounded-xl border bg-[#fbf6ef] text-[#2b1a0f] placeholder:text-[#9a8676] text-sm focus:outline-none focus:ring-2 transition-all ${
+                    className={`w-full px-4 py-3 rounded-lg border bg-white text-[#2b2118] placeholder:text-[#b3a892] text-sm focus:outline-none focus:ring-2 transition-all ${
                       touched.telefono && errores.telefono
                         ? 'border-red-400 focus:ring-red-200 bg-red-50/30'
-                        : 'border-[#ddd2c4] focus:ring-amber-200 focus:border-[#b8581a]'
+                        : 'border-[#e6dcc8] focus:ring-[#e8ead5] focus:border-[#6b7a3a]'
                     }`}
                   />
                   {touched.telefono && errores.telefono && (
@@ -322,8 +305,8 @@ export default function RegistroEmolientero() {
                 </div>
 
                 <div>
-                  <label htmlFor="correo" className="block text-xs font-bold text-[#6b5443] mb-1.5">
-                    Correo para notificaciones <span className="text-red-500">*</span>
+                  <label htmlFor="correo" className="block text-sm font-semibold text-[#2b2118] mb-1.5">
+                    Correo para notificaciones
                   </label>
                   <input
                     id="correo"
@@ -333,10 +316,10 @@ export default function RegistroEmolientero() {
                     value={formData.correo}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-2.5 rounded-xl border bg-[#fbf6ef] text-[#2b1a0f] placeholder:text-[#9a8676] text-sm focus:outline-none focus:ring-2 transition-all ${
+                    className={`w-full px-4 py-3 rounded-lg border bg-white text-[#2b2118] placeholder:text-[#b3a892] text-sm focus:outline-none focus:ring-2 transition-all ${
                       touched.correo && errores.correo
                         ? 'border-red-400 focus:ring-red-200 bg-red-50/30'
-                        : 'border-[#ddd2c4] focus:ring-amber-200 focus:border-[#b8581a]'
+                        : 'border-[#e6dcc8] focus:ring-[#e8ead5] focus:border-[#6b7a3a]'
                     }`}
                   />
                   {touched.correo && errores.correo && (
@@ -350,8 +333,8 @@ export default function RegistroEmolientero() {
               {/* Grid: Contraseña & Confirmación */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="password" className="block text-xs font-bold text-[#6b5443] mb-1.5">
-                    Contraseña <span className="text-red-500">*</span>
+                  <label htmlFor="password" className="block text-sm font-semibold text-[#2b2118] mb-1.5">
+                    Contraseña
                   </label>
                   <input
                     id="password"
@@ -361,10 +344,10 @@ export default function RegistroEmolientero() {
                     value={formData.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-2.5 rounded-xl border bg-[#fbf6ef] text-[#2b1a0f] placeholder:text-[#9a8676] text-sm focus:outline-none focus:ring-2 transition-all ${
+                    className={`w-full px-4 py-3 rounded-lg border bg-white text-[#2b2118] placeholder:text-[#b3a892] text-sm focus:outline-none focus:ring-2 transition-all ${
                       touched.password && errores.password
                         ? 'border-red-400 focus:ring-red-200 bg-red-50/30'
-                        : 'border-[#ddd2c4] focus:ring-amber-200 focus:border-[#b8581a]'
+                        : 'border-[#e6dcc8] focus:ring-[#e8ead5] focus:border-[#6b7a3a]'
                     }`}
                   />
                   {touched.password && errores.password && (
@@ -375,8 +358,8 @@ export default function RegistroEmolientero() {
                 </div>
 
                 <div>
-                  <label htmlFor="confirmarPassword" className="block text-xs font-bold text-[#6b5443] mb-1.5">
-                    Confirmar Contraseña <span className="text-red-500">*</span>
+                  <label htmlFor="confirmarPassword" className="block text-sm font-semibold text-[#2b2118] mb-1.5">
+                    Confirmar contraseña
                   </label>
                   <input
                     id="confirmarPassword"
@@ -386,10 +369,10 @@ export default function RegistroEmolientero() {
                     value={formData.confirmarPassword}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-2.5 rounded-xl border bg-[#fbf6ef] text-[#2b1a0f] placeholder:text-[#9a8676] text-sm focus:outline-none focus:ring-2 transition-all ${
+                    className={`w-full px-4 py-3 rounded-lg border bg-white text-[#2b2118] placeholder:text-[#b3a892] text-sm focus:outline-none focus:ring-2 transition-all ${
                       touched.confirmarPassword && errores.confirmarPassword
                         ? 'border-red-400 focus:ring-red-200 bg-red-50/30'
-                        : 'border-[#ddd2c4] focus:ring-amber-200 focus:border-[#b8581a]'
+                        : 'border-[#e6dcc8] focus:ring-[#e8ead5] focus:border-[#6b7a3a]'
                     }`}
                   />
                   {touched.confirmarPassword && errores.confirmarPassword && (
@@ -404,7 +387,7 @@ export default function RegistroEmolientero() {
               <button
                 type="submit"
                 disabled={cargando}
-                className="w-full mt-3 py-3.5 px-4 rounded-xl bg-[#b4531a] hover:bg-[#96430f] text-white font-bold text-sm shadow-md hover:shadow-lg transition-all transform active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full mt-3 py-3.5 px-4 rounded-xl bg-[#2f4a2e] hover:bg-[#243a23] text-white font-bold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {cargando ? (
                   <>
@@ -422,20 +405,19 @@ export default function RegistroEmolientero() {
           )}
 
           {/* Enlaces de pie */}
-          <div className="mt-8 pt-6 border-t border-[#ebe3d9] text-center space-y-3">
-            <p className="text-sm text-[#6b5443]">
-              ¿Ya tienes cuenta verificada?{' '}
-              <a href="#login" className="font-bold text-[#b8581a] hover:underline">
-                Inicia sesión aquí
+          <div className="mt-6 text-center text-sm text-[#6b4a2f] space-y-2">
+            <p>
+              ¿Ya tienes cuenta?{' '}
+              <a href="#login" className="font-semibold text-[#2f4a2e] hover:underline">
+                Inicia sesión
               </a>
             </p>
-
-            <div className="text-xs text-[#6b5443]">
-              ¿Buscas registrarte como cliente para comprar?{' '}
-              <a href="#registro-cliente" className="font-bold text-[#b8581a] hover:underline">
-                Crear cuenta de cliente →
+            <p>
+              ¿Quieres comprar?{' '}
+              <a href="#registro-cliente" className="font-semibold text-[#2f4a2e] hover:underline">
+                Crea una cuenta de cliente
               </a>
-            </div>
+            </p>
           </div>
         </div>
       </main>

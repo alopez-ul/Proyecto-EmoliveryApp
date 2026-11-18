@@ -36,7 +36,7 @@ function BotonCantidad({ etiqueta, onClick, disabled, children }) {
       aria-label={etiqueta}
       onClick={onClick}
       disabled={disabled}
-      className="w-7 h-7 rounded-lg border border-[#ddd2c4] bg-white font-bold text-[#2b1a0f] hover:bg-[#fbf6ef] disabled:opacity-40 disabled:cursor-not-allowed"
+      className="w-7 h-7 rounded-lg border border-[#d6c8ad] bg-white font-bold text-[#2b2118] hover:bg-[#fbf7ee] disabled:opacity-40 disabled:cursor-not-allowed"
     >
       {children}
     </button>
@@ -58,20 +58,20 @@ function OrdenCreada({ orden, onSeguir }) {
         {vencida ? 'Orden vencida' : 'Pendiente de pago'}
       </span>
       <h2 className="text-2xl font-semibold">Orden #{orden.id}</h2>
-      <p className="text-sm text-[#6b5443] mt-1">Para {orden.emolientero.nombre}</p>
+      <p className="text-sm text-[#6b4a2f] mt-1">Para {orden.emolientero.nombre}</p>
 
-      <p className={`mt-5 text-4xl font-extrabold tabular-nums ${vencida ? 'text-stone-400' : 'text-[#b8581a]'}`} role="timer">
+      <p className={`mt-5 text-4xl font-extrabold tabular-nums ${vencida ? 'text-stone-400' : 'text-[#2f4a2e]'}`} role="timer">
         {tiempoRestante(orden.expiraEn, ahora)}
       </p>
-      <p className="text-sm text-[#6b5443] mt-1">
+      <p className="text-sm text-[#6b4a2f] mt-1">
         {vencida ? 'Se acabó el tiempo para pagar esta orden. Puedes hacer una nueva.' : 'Tienes este tiempo para pagarla con Yape.'}
       </p>
 
-      <ul className="mt-6 text-left divide-y divide-[#ebe3d9] border-y border-[#ebe3d9]">
+      <ul className="mt-6 text-left divide-y divide-[#e6dcc8] border-y border-[#e6dcc8]">
         {orden.lineas.map((l) => (
           <li key={l.productoId ?? l.nombre} className="flex justify-between gap-3 py-2.5 text-sm">
             <span>
-              {l.cantidad} × {l.nombre} <span className="text-[#9a8676]">({soles.format(l.precioUnitario)})</span>
+              {l.cantidad} × {l.nombre} <span className="text-[#9a8670]">({soles.format(l.precioUnitario)})</span>
             </span>
             <span className="font-semibold tabular-nums">{soles.format(l.subtotal)}</span>
           </li>
@@ -91,10 +91,10 @@ function OrdenCreada({ orden, onSeguir }) {
           Pagar {soles.format(orden.total)} con Yape
         </a>
       )}
-      <p className="mt-4 p-3 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9] text-xs text-[#6b5443]">
+      <p className="mt-4 p-3 rounded-xl bg-[#fbf7ee] border border-[#e6dcc8] text-xs text-[#6b4a2f]">
         El precio quedó fijado al confirmar: aunque el emolientero lo cambie, pagarás {soles.format(orden.total)}.
       </p>
-      <button type="button" onClick={onSeguir} className="mt-4 text-sm font-bold text-[#b8581a] hover:underline">
+      <button type="button" onClick={onSeguir} className="mt-4 text-sm font-bold text-[#2f4a2e] hover:underline">
         Hacer otra compra
       </button>
     </div>
@@ -167,12 +167,12 @@ export default function CompraAnticipada() {
   const contenido = () => {
     if (errorCarga) {
       return (
-        <p className="text-center py-10 text-sm text-[#6b5443]">
+        <p className="text-center py-10 text-sm text-[#6b4a2f]">
           {errorCarga.status === 404 ? 'Este emolientero no existe o su cuenta no está activa.' : errorCarga.mensaje}
         </p>
       )
     }
-    if (!catalogo) return <p className="text-center py-10 text-sm text-[#6b5443]" role="status">Cargando catálogo…</p>
+    if (!catalogo) return <p className="text-center py-10 text-sm text-[#6b4a2f]" role="status">Cargando catálogo…</p>
     if (orden) return <OrdenCreada orden={orden} onSeguir={() => setOrden(null)} />
 
     return (
@@ -185,24 +185,24 @@ export default function CompraAnticipada() {
               {catalogo.motivoNoCompra}
             </div>
           )}
-          {catalogo.categorias.length === 0 && <p className="text-sm text-[#9a8676]">Este emolientero todavía no ha publicado sus productos.</p>}
+          {catalogo.categorias.length === 0 && <p className="text-sm text-[#9a8670]">Este emolientero todavía no ha publicado sus productos.</p>}
           {catalogo.categorias.map((categoria) => (
             <div key={categoria.id} className="mb-4">
-              <h3 className="text-xs font-bold text-[#9a8676] pb-1.5 border-b border-[#ebe3d9]">{categoria.nombre}</h3>
-              <ul className="divide-y divide-[#ebe3d9]">
+              <h3 className="text-xs font-bold text-[#9a8670] pb-1.5 border-b border-[#e6dcc8]">{categoria.nombre}</h3>
+              <ul className="divide-y divide-[#e6dcc8]">
                 {categoria.productos.map((p) => {
                   const enCarrito = cantidadEnCarrito(lineas, p.id)
                   return (
                     <li key={p.id} className="flex items-center justify-between gap-3 py-3">
                       <div className="min-w-0">
-                        <p className={`text-sm font-semibold ${p.disponible ? '' : 'text-[#9a8676] line-through'}`}>{p.nombre}</p>
-                        <p className="text-xs font-mono font-bold text-[#b8581a]">{soles.format(p.precio)}</p>
+                        <p className={`text-sm font-semibold ${p.disponible ? '' : 'text-[#9a8670] line-through'}`}>{p.nombre}</p>
+                        <p className="text-xs font-mono font-bold text-[#2f4a2e]">{soles.format(p.precio)}</p>
                       </div>
                       <button
                         type="button"
                         onClick={() => cambiar(p.id, enCarrito + 1)}
                         disabled={!p.comprable || enCarrito >= CANTIDAD_MAXIMA}
-                        className="shrink-0 px-3 py-1.5 rounded-lg bg-[#b8581a] text-white font-bold text-xs hover:bg-[#9e4a14] disabled:bg-stone-200 disabled:text-stone-500 disabled:cursor-not-allowed"
+                        className="shrink-0 px-3 py-1.5 rounded-lg bg-[#2f4a2e] text-white font-bold text-xs hover:bg-[#243a23] disabled:bg-stone-200 disabled:text-stone-500 disabled:cursor-not-allowed"
                       >
                         {p.disponible ? (enCarrito ? `Agregar otro (${enCarrito})` : 'Agregar') : 'Agotado'}
                       </button>
@@ -215,14 +215,14 @@ export default function CompraAnticipada() {
         </section>
 
         {/* Carrito (T59) */}
-        <section className="lg:border-l lg:border-[#ebe3d9] lg:pl-6">
+        <section className="lg:border-l lg:border-[#e6dcc8] lg:pl-6">
           <h2 className="text-lg font-bold mb-3">Tu carrito</h2>
           {lineas.length === 0 ? (
-            <p className="text-sm text-[#9a8676] py-6 text-center rounded-2xl bg-[#fbf6ef] border border-dashed border-[#ddd2c4]">
+            <p className="text-sm text-[#9a8670] py-6 text-center rounded-2xl bg-[#fbf7ee] border border-dashed border-[#d6c8ad]">
               Tu carrito está vacío. Agrega productos para comprar.
             </p>
           ) : (
-            <ul className="divide-y divide-[#ebe3d9]">
+            <ul className="divide-y divide-[#e6dcc8]">
               {lineas.map((l) => {
                 const p = productosPorId.get(l.productoId)
                 return (
@@ -252,7 +252,7 @@ export default function CompraAnticipada() {
             </ul>
           )}
 
-          <p className="flex justify-between mt-4 pt-3 border-t border-[#ebe3d9] text-base font-extrabold">
+          <p className="flex justify-between mt-4 pt-3 border-t border-[#e6dcc8] text-base font-extrabold">
             <span>Total</span>
             <span className="tabular-nums">{soles.format(total)}</span>
           </p>
@@ -263,35 +263,35 @@ export default function CompraAnticipada() {
             </div>
           )}
           {usuario === null && (
-            <p className="mt-4 text-sm text-[#6b5443]">
-              Para confirmar, <a href="#login" className="font-bold text-[#b8581a] hover:underline">inicia sesión como cliente</a>. Tu carrito se guarda.
+            <p className="mt-4 text-sm text-[#6b4a2f]">
+              Para confirmar, <a href="#login" className="font-bold text-[#2f4a2e] hover:underline">inicia sesión como cliente</a>. Tu carrito se guarda.
             </p>
           )}
-          {usuario && !esCliente && <p className="mt-4 text-sm text-[#6b5443]">Solo una cuenta de cliente puede comprar.</p>}
+          {usuario && !esCliente && <p className="mt-4 text-sm text-[#6b4a2f]">Solo una cuenta de cliente puede comprar.</p>}
 
           <button
             type="button"
             onClick={confirmar}
             disabled={!puedeConfirmar}
-            className="w-full mt-4 py-3.5 rounded-xl font-bold text-sm text-white shadow-md bg-[#b4531a] hover:bg-[#96430f] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-4 py-3.5 rounded-xl font-bold text-sm text-white shadow-md bg-[#2f4a2e] hover:bg-[#243a23] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {enviando ? 'Confirmando…' : 'Confirmar compra'}
           </button>
-          <p className="mt-2 text-xs text-center text-[#9a8676]">Tendrás 15 minutos para pagar con Yape después de confirmar.</p>
+          <p className="mt-2 text-xs text-center text-[#9a8670]">Tendrás 15 minutos para pagar con Yape después de confirmar.</p>
         </section>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col">
       <Encabezado volver={{ href: `#catalogo?id=${encodeURIComponent(id)}`, texto: 'Volver a la carta' }} />
 
       <main className="flex-1 w-full max-w-5xl mx-auto p-4 sm:p-6 lg:p-8">
         <div className="text-center mb-6">
           <h1 className="text-2xl sm:text-3xl font-semibold">{catalogo ? `Comprar a ${catalogo.emolientero.nombre}` : 'Compra anticipada'}</h1>
         </div>
-        <div className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6">{contenido()}</div>
+        <div className="bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-5 sm:p-6">{contenido()}</div>
       </main>
 
     </div>

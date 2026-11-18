@@ -56,18 +56,18 @@ export default function ValidarRecojo() {
         : aviso?.titulo
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col">
       <Encabezado volver={{ href: '#emolientero', texto: 'Mi puesto' }} />
 
       <main className="flex-1 w-full max-w-lg mx-auto p-4 sm:p-6 lg:p-8">
         <div className="text-center mb-6">
           <h1 className="text-2xl sm:text-3xl font-semibold">Entregar un pedido</h1>
-          <p className="text-sm text-[#6b5443] mt-1.5">
+          <p className="text-sm text-[#6b4a2f] mt-1.5">
             Pide al cliente su código de recojo y escríbelo aquí. Cada código sirve una sola vez.
           </p>
         </div>
 
-        <form onSubmit={validar} noValidate className="bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6">
+        <form onSubmit={validar} noValidate className="bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-5 sm:p-6">
           <label htmlFor="codigo" className="block text-sm font-semibold mb-2">Código de recojo</label>
           <input
             id="codigo"
@@ -81,10 +81,10 @@ export default function ValidarRecojo() {
               setCodigo(formatearMientrasEscribe(e.target.value))
               setRechazo(null)
             }}
-            className="w-full rounded-2xl border border-[#ebe3d9] px-4 py-4 text-center font-mono text-3xl font-bold tracking-[0.3em] uppercase focus:outline-none focus:ring-2 focus:ring-orange-200"
+            className="w-full rounded-2xl border border-[#e6dcc8] px-4 py-4 text-center font-mono text-3xl font-bold tracking-[0.3em] uppercase focus:outline-none focus:ring-2 focus:ring-[#d6dcb0]"
             aria-describedby="ayuda-codigo"
           />
-          <p id="ayuda-codigo" className="mt-2 text-xs text-[#9a8676] text-center">
+          <p id="ayuda-codigo" className="mt-2 text-xs text-[#9a8670] text-center">
             6 letras y números. No usa 0, O, 1 ni I.
           </p>
 
@@ -114,18 +114,18 @@ export default function ValidarRecojo() {
           </button>
         </form>
 
-        <section className="mt-6 bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-5 sm:p-6">
+        <section className="mt-6 bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-5 sm:p-6">
           <h2 className="text-lg font-bold mb-3">Pedidos por entregar</h2>
           {errorCarga && <p className="text-sm text-red-700">{errorCarga}</p>}
-          {!pendientes && !errorCarga && <p className="text-sm text-[#9a8676]">Cargando…</p>}
-          {pendientes?.length === 0 && <p className="text-sm text-[#9a8676]">No tienes pedidos pendientes.</p>}
+          {!pendientes && !errorCarga && <p className="text-sm text-[#9a8670]">Cargando…</p>}
+          {pendientes?.length === 0 && <p className="text-sm text-[#9a8670]">No tienes pedidos pendientes.</p>}
           <ul className="space-y-2">
             {pendientes?.map((o) => (
-              <li key={o.id} className="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9] text-sm">
+              <li key={o.id} className="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#fbf7ee] border border-[#e6dcc8] text-sm">
                 <span>
                   <strong>#{o.id}</strong> · {o.cliente}
                 </span>
-                <span className="text-xs text-[#9a8676]">{formatoHora.format(new Date(o.creadaEn))}</span>
+                <span className="text-xs text-[#9a8670]">{formatoHora.format(new Date(o.creadaEn))}</span>
               </li>
             ))}
           </ul>

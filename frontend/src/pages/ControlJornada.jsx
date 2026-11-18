@@ -54,19 +54,19 @@ export default function ControlJornada() {
   const cerrarJornadaActual = () => ejecutar(cerrarJornada, setAvisoOrdenes)
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col">
       {/* Header */}
       <Encabezado volver={{ href: '#emolientero', texto: 'Mi puesto' }} />
 
       {/* Main */}
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-lg bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-6 sm:p-8">
+        <div className="w-full max-w-lg bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-6 sm:p-8">
           {/* Title */}
           <div className="text-center mb-6">
-            <h1 className="text-2xl sm:text-3xl font-semibold text-[#2b1a0f]">
+            <h1 className="text-2xl sm:text-3xl font-semibold text-[#2b2118]">
               Apertura y Cierre de Jornada
             </h1>
-            <p className="text-sm text-[#6b5443] mt-1.5">
+            <p className="text-sm text-[#6b4a2f] mt-1.5">
               Gestiona tu disponibilidad diaria como emolientero autorizado.
             </p>
           </div>
@@ -88,15 +88,15 @@ export default function ControlJornada() {
               {jornadaAbierta ? 'Jornada Abierta' : 'Jornada Cerrada'}
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-3 text-xs text-[#6b5443]">
+            <div className="grid grid-cols-2 gap-4 mt-3 text-xs text-[#6b4a2f]">
               <div>
-                <span className="block font-bold text-[10px] text-[#9a8676] mb-0.5">Hora de Apertura</span>
+                <span className="block font-bold text-[10px] text-[#9a8670] mb-0.5">Hora de Apertura</span>
                 <span className={`text-base font-mono font-bold ${jornadaAbierta ? 'text-emerald-700' : 'text-stone-400'}`}>
                   {formatearHora(horaInicio)}
                 </span>
               </div>
               <div>
-                <span className="block font-bold text-[10px] text-[#9a8676] mb-0.5">Hora de Cierre</span>
+                <span className="block font-bold text-[10px] text-[#9a8670] mb-0.5">Hora de Cierre</span>
                 <span className={`text-base font-mono font-bold ${horaCierre ? 'text-red-600' : 'text-stone-400'}`}>
                   {formatearHora(horaCierre)}
                 </span>
@@ -107,7 +107,7 @@ export default function ControlJornada() {
           {/* Toggles de Simulación */}
           <div className="space-y-4 mb-6">
             {/* Toggle GPS */}
-            <div className="flex items-center justify-between p-4 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9]">
+            <div className="flex items-center justify-between p-4 rounded-xl bg-[#fbf7ee] border border-[#e6dcc8]">
               <div className="flex items-center gap-3">
                 <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
                   ubicacionGPS ? 'bg-emerald-100 text-emerald-600' : 'bg-stone-100 text-stone-400'
@@ -118,8 +118,8 @@ export default function ControlJornada() {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#2b1a0f]">Ubicación GPS registrada</p>
-                  <p className="text-xs text-[#9a8676]">
+                  <p className="text-sm font-bold text-[#2b2118]">Ubicación GPS registrada</p>
+                  <p className="text-xs text-[#9a8670]">
                     {ubicacionGPS
                       ? `Hoy a las ${formatearHora(new Date(estado.ubicacionHoy.registradaEn))} · La Molina`
                       : 'Aún no registras tu ubicación hoy'}
@@ -129,12 +129,12 @@ export default function ControlJornada() {
               {ubicacionGPS ? (
                 <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">Registrada</span>
               ) : (
-                <a href="#emolientero" className="text-xs font-bold text-[#b8581a] hover:underline">Registrar ubicación</a>
+                <a href="#emolientero" className="text-xs font-bold text-[#2f4a2e] hover:underline">Registrar ubicación</a>
               )}
             </div>
 
             {/* Toggle Órdenes Pendientes */}
-            <div className="flex items-center justify-between p-4 rounded-xl bg-[#fbf6ef] border border-[#ebe3d9]">
+            <div className="flex items-center justify-between p-4 rounded-xl bg-[#fbf7ee] border border-[#e6dcc8]">
               <div className="flex items-center gap-3">
                 <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
                   ordenesPendientes ? 'bg-amber-100 text-amber-600' : 'bg-stone-100 text-stone-400'
@@ -144,8 +144,8 @@ export default function ControlJornada() {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#2b1a0f]">Órdenes pendientes de entrega</p>
-                  <p className="text-xs text-[#9a8676]">
+                  <p className="text-sm font-bold text-[#2b2118]">Órdenes pendientes de entrega</p>
+                  <p className="text-xs text-[#9a8670]">
                     {ordenesPendientes === 0
                       ? 'Sin órdenes pendientes'
                       : `${ordenesPendientes} ${ordenesPendientes === 1 ? 'orden' : 'órdenes'} sin entregar`}
@@ -227,19 +227,19 @@ export default function ControlJornada() {
 
           {/* Registro de actividad de hoy (desde la base de datos) */}
           {estado?.jornadasHoy.length > 0 && (
-            <div className="mt-6 pt-5 border-t border-[#ebe3d9]">
-              <h3 className="text-xs font-bold text-[#9a8676] mb-3">Registro de actividad de hoy</h3>
+            <div className="mt-6 pt-5 border-t border-[#e6dcc8]">
+              <h3 className="text-xs font-bold text-[#9a8670] mb-3">Registro de actividad de hoy</h3>
               <div className="space-y-2">
                 {estado.jornadasHoy.flatMap((j) => [
                   <div key={`a${j.id}`} className="flex items-center gap-2.5 text-sm">
                     <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                    <span className="text-[#6b5443]">Jornada iniciada a las</span>
+                    <span className="text-[#6b4a2f]">Jornada iniciada a las</span>
                     <span className="font-mono font-bold text-emerald-700">{formatearHora(new Date(j.abiertaEn))}</span>
                   </div>,
                   j.cerradaEn && (
                     <div key={`c${j.id}`} className="flex items-center gap-2.5 text-sm">
                       <span className="w-2 h-2 rounded-full bg-red-500" />
-                      <span className="text-[#6b5443]">Jornada cerrada a las</span>
+                      <span className="text-[#6b4a2f]">Jornada cerrada a las</span>
                       <span className="font-mono font-bold text-red-600">{formatearHora(new Date(j.cerradaEn))}</span>
                     </div>
                   ),

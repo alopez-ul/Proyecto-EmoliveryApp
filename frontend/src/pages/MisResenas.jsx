@@ -10,9 +10,9 @@ const fecha = new Intl.DateTimeFormat('es-PE', { dateStyle: 'medium' })
 
 function Estrellas({ valor }) {
   return (
-    <span className="text-[#b8581a] tracking-wider" aria-label={`${valor} de 5 estrellas`}>
+    <span className="text-[#2f4a2e] tracking-wider" aria-label={`${valor} de 5 estrellas`}>
       {'★'.repeat(valor)}
-      <span className="text-[#ddd2c4]">{'★'.repeat(5 - valor)}</span>
+      <span className="text-[#d6c8ad]">{'★'.repeat(5 - valor)}</span>
     </span>
   )
 }
@@ -41,7 +41,7 @@ function FormularioRespuesta({ resena, onRespondida }) {
 
   return (
     <form onSubmit={enviar} noValidate className="mt-3">
-      <label htmlFor={idCampo} className="block text-xs font-bold text-[#6b5443] mb-1.5">
+      <label htmlFor={idCampo} className="block text-xs font-bold text-[#6b4a2f] mb-1.5">
         Tu respuesta
       </label>
       <textarea
@@ -56,16 +56,16 @@ function FormularioRespuesta({ resena, onRespondida }) {
         placeholder="Ej.: ¡Gracias por tu visita! Te esperamos mañana."
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${idCampo}-error` : undefined}
-        className="w-full px-3 py-2 rounded-xl border border-[#ddd2c4] bg-[#fbf6ef] text-sm focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-[#b8581a]"
+        className="w-full px-3 py-2 rounded-xl border border-[#d6c8ad] bg-[#fbf7ee] text-sm focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-[#2f4a2e]"
       />
       <div className="flex items-center justify-between mt-1.5 gap-3">
-        <span className="text-xs text-[#9a8676]">
+        <span className="text-xs text-[#9a8670]">
           {texto.trim().length}/{RESPUESTA_MAX} · Solo puedes responder una vez.
         </span>
         <button
           type="submit"
           disabled={enviando}
-          className="px-4 py-2 rounded-xl bg-[#b8581a] text-white font-bold text-xs hover:bg-[#9e4a14] disabled:opacity-60"
+          className="px-4 py-2 rounded-xl bg-[#2f4a2e] text-white font-bold text-xs hover:bg-[#243a23] disabled:opacity-60"
         >
           {enviando ? 'Publicando…' : 'Publicar respuesta'}
         </button>
@@ -94,14 +94,14 @@ export default function MisResenas() {
   const sinResponder = resenas?.filter((r) => !r.respuesta && !r.oculta).length ?? 0
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col">
       <Encabezado volver={{ href: '#emolientero', texto: 'Mi puesto' }} />
 
       <main className="flex-1 flex justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-xl bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-6 sm:p-8 self-start">
+        <div className="w-full max-w-xl bg-white rounded-2xl border border-[#e6dcc8] shadow-sm p-6 sm:p-8 self-start">
           <div className="text-center mb-6">
             <h1 className="text-2xl sm:text-3xl font-semibold">Mis reseñas</h1>
-            <p className="text-sm text-[#6b5443] mt-1.5">
+            <p className="text-sm text-[#6b4a2f] mt-1.5">
               {resenas
                 ? sinResponder
                   ? `Tienes ${sinResponder} reseña${sinResponder > 1 ? 's' : ''} sin responder.`
@@ -115,34 +115,34 @@ export default function MisResenas() {
               {error}
             </p>
           ) : !resenas ? (
-            <p role="status" className="text-center text-sm text-[#6b5443] py-6">
+            <p role="status" className="text-center text-sm text-[#6b4a2f] py-6">
               Cargando reseñas…
             </p>
           ) : resenas.length === 0 ? (
-            <div className="text-center py-8 px-4 rounded-2xl bg-[#fbf6ef] border border-dashed border-[#ddd2c4]">
+            <div className="text-center py-8 px-4 rounded-2xl bg-[#fbf7ee] border border-dashed border-[#d6c8ad]">
               <p className="font-bold mb-1">Aún no tienes reseñas</p>
-              <p className="text-sm text-[#6b5443]">Aparecen cuando un cliente recoge su pedido y lo califica.</p>
+              <p className="text-sm text-[#6b4a2f]">Aparecen cuando un cliente recoge su pedido y lo califica.</p>
             </div>
           ) : (
-            <ul className="divide-y divide-[#ebe3d9]">
+            <ul className="divide-y divide-[#e6dcc8]">
               {resenas.map((r) => (
                 <li key={r.id} className="py-4">
                   <div className="flex items-center justify-between gap-3">
                     <Estrellas valor={r.calificacion} />
-                    <time className="text-xs text-[#9a8676]" dateTime={r.publicadaEn}>
+                    <time className="text-xs text-[#9a8670]" dateTime={r.publicadaEn}>
                       {fecha.format(new Date(r.publicadaEn))}
                     </time>
                   </div>
                   {r.comentario && <p className="text-sm mt-1.5">{r.comentario}</p>}
-                  <p className="text-xs font-semibold text-[#6b5443] mt-1">{r.autor}</p>
+                  <p className="text-xs font-semibold text-[#6b4a2f] mt-1">{r.autor}</p>
 
                   {r.oculta ? (
                     <p className="mt-3 p-3 rounded-xl bg-stone-100 text-xs text-stone-700">
                       Esta reseña fue ocultada por moderación: ya no es pública y no admite respuesta.
                     </p>
                   ) : r.respuesta ? (
-                    <div className="mt-3 ml-4 pl-3 border-l-2 border-[#b8581a]">
-                      <p className="text-xs font-bold text-[#b8581a]">Tu respuesta</p>
+                    <div className="mt-3 ml-4 pl-3 border-l-2 border-[#2f4a2e]">
+                      <p className="text-xs font-bold text-[#2f4a2e]">Tu respuesta</p>
                       <p className="text-sm mt-0.5">{r.respuesta}</p>
                     </div>
                   ) : (

@@ -44,13 +44,13 @@ export default function ConfirmarAvistamiento({ emolienteroId, nombre }) {
   }
 
   return (
-    <div className="mb-5 p-4 rounded-2xl bg-[#fbf6ef] border border-[#ebe3d9]">
+    <div className="mb-5 p-4 rounded-2xl bg-[#fbf7ee] border border-[#e6dcc8]">
       <p className="font-bold text-sm">¿Estás viendo a {nombre}?</p>
-      <p className="text-xs text-[#6b5443] mt-0.5 mb-3">
+      <p className="text-xs text-[#6b4a2f] mt-0.5 mb-3">
         Confírmalo para ayudar a otros clientes. Debes estar a {RADIO_CONFIRMACION_M} m o menos; usaremos tu GPS.
       </p>
       {rol === null ? (
-        <a href="#login" className="text-sm font-bold text-[#b8581a] hover:underline">
+        <a href="#login" className="text-sm font-bold text-[#2f4a2e] hover:underline">
           Inicia sesión como cliente para confirmar
         </a>
       ) : (

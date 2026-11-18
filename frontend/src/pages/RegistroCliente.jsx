@@ -109,19 +109,19 @@ export default function RegistroCliente() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf6f0] text-[#2b1a0f] flex flex-col justify-between">
+    <div className="min-h-screen bg-[#f8f3e8] text-[#2b2118] flex flex-col justify-between">
       {/* Header */}
       <Encabezado />
 
       {/* Main Container */}
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-lg bg-white rounded-2xl border border-[#ebe3d9] shadow-sm p-6 sm:p-8">
+        <div className="w-full max-w-md bg-white rounded-2xl border border-[#ece4d4] p-7 sm:p-10">
           {/* Título */}
           <div className="text-center mb-6">
-            <h1 className="text-2xl sm:text-3xl font-semibold text-[#2b1a0f]">
+            <h1 className="text-2xl sm:text-3xl font-semibold text-[#2b2118]">
               Crea tu cuenta de cliente
             </h1>
-            <p className="text-sm text-[#6b5443] mt-1.5">
+            <p className="text-sm text-[#6b4a2f] mt-1.5">
               Encuentra y pide tu emoliente tradicional favorito al instante.
             </p>
           </div>
@@ -143,8 +143,8 @@ export default function RegistroCliente() {
             <form onSubmit={handleSubmit} noValidate className="space-y-4">
               {/* Nombre Completo */}
               <div>
-                <label htmlFor="nombre" className="block text-xs font-bold text-[#6b5443] mb-1.5">
-                  Nombre completo <span className="text-red-500">*</span>
+                <label htmlFor="nombre" className="block text-sm font-semibold text-[#2b2118] mb-1.5">
+                  Nombre completo
                 </label>
                 <input
                   id="nombre"
@@ -154,10 +154,10 @@ export default function RegistroCliente() {
                   value={formData.nombre}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full px-4 py-2.5 rounded-xl border bg-[#fbf6ef] text-[#2b1a0f] placeholder:text-[#9a8676] text-sm focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full px-4 py-3 rounded-lg border bg-white text-[#2b2118] placeholder:text-[#b3a892] text-sm focus:outline-none focus:ring-2 transition-all ${
                     touched.nombre && errores.nombre
                       ? 'border-red-400 focus:ring-red-200 bg-red-50/30'
-                      : 'border-[#ddd2c4] focus:ring-amber-200 focus:border-[#b8581a]'
+                      : 'border-[#e6dcc8] focus:ring-[#e8ead5] focus:border-[#6b7a3a]'
                   }`}
                 />
                 {touched.nombre && errores.nombre && (
@@ -171,8 +171,8 @@ export default function RegistroCliente() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Teléfono / Celular */}
                 <div>
-                  <label htmlFor="telefono" className="block text-xs font-bold text-[#6b5443] mb-1.5">
-                    Celular (9 dígitos) <span className="text-red-500">*</span>
+                  <label htmlFor="telefono" className="block text-sm font-semibold text-[#2b2118] mb-1.5">
+                    Celular (9 dígitos)
                   </label>
                   <input
                     id="telefono"
@@ -183,10 +183,10 @@ export default function RegistroCliente() {
                     value={formData.telefono}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-2.5 rounded-xl border bg-[#fbf6ef] text-[#2b1a0f] placeholder:text-[#9a8676] text-sm focus:outline-none focus:ring-2 transition-all ${
+                    className={`w-full px-4 py-3 rounded-lg border bg-white text-[#2b2118] placeholder:text-[#b3a892] text-sm focus:outline-none focus:ring-2 transition-all ${
                       touched.telefono && errores.telefono
                         ? 'border-red-400 focus:ring-red-200 bg-red-50/30'
-                        : 'border-[#ddd2c4] focus:ring-amber-200 focus:border-[#b8581a]'
+                        : 'border-[#e6dcc8] focus:ring-[#e8ead5] focus:border-[#6b7a3a]'
                     }`}
                   />
                   {touched.telefono && errores.telefono && (
@@ -198,8 +198,8 @@ export default function RegistroCliente() {
 
                 {/* Correo Electrónico */}
                 <div>
-                  <label htmlFor="correo" className="block text-xs font-bold text-[#6b5443] mb-1.5">
-                    Correo electrónico <span className="text-red-500">*</span>
+                  <label htmlFor="correo" className="block text-sm font-semibold text-[#2b2118] mb-1.5">
+                    Correo electrónico
                   </label>
                   <input
                     id="correo"
@@ -209,10 +209,10 @@ export default function RegistroCliente() {
                     value={formData.correo}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full px-4 py-2.5 rounded-xl border bg-[#fbf6ef] text-[#2b1a0f] placeholder:text-[#9a8676] text-sm focus:outline-none focus:ring-2 transition-all ${
+                    className={`w-full px-4 py-3 rounded-lg border bg-white text-[#2b2118] placeholder:text-[#b3a892] text-sm focus:outline-none focus:ring-2 transition-all ${
                       touched.correo && errores.correo
                         ? 'border-red-400 focus:ring-red-200 bg-red-50/30'
-                        : 'border-[#ddd2c4] focus:ring-amber-200 focus:border-[#b8581a]'
+                        : 'border-[#e6dcc8] focus:ring-[#e8ead5] focus:border-[#6b7a3a]'
                     }`}
                   />
                   {touched.correo && errores.correo && (
@@ -225,21 +225,21 @@ export default function RegistroCliente() {
 
               {/* Contraseña */}
               <div>
-                <label htmlFor="password" className="block text-xs font-bold text-[#6b5443] mb-1.5">
-                  Contraseña (mínimo 8 caracteres) <span className="text-red-500">*</span>
+                <label htmlFor="password" className="block text-sm font-semibold text-[#2b2118] mb-1.5">
+                  Contraseña
                 </label>
                 <input
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="Mínimo 8 caracteres"
                   value={formData.password}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full px-4 py-2.5 rounded-xl border bg-[#fbf6ef] text-[#2b1a0f] placeholder:text-[#9a8676] text-sm focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full px-4 py-3 rounded-lg border bg-white text-[#2b2118] placeholder:text-[#b3a892] text-sm focus:outline-none focus:ring-2 transition-all ${
                     touched.password && errores.password
                       ? 'border-red-400 focus:ring-red-200 bg-red-50/30'
-                      : 'border-[#ddd2c4] focus:ring-amber-200 focus:border-[#b8581a]'
+                      : 'border-[#e6dcc8] focus:ring-[#e8ead5] focus:border-[#6b7a3a]'
                   }`}
                 />
                 {touched.password && errores.password && (
@@ -251,21 +251,21 @@ export default function RegistroCliente() {
 
               {/* Confirmar Contraseña */}
               <div>
-                <label htmlFor="confirmarPassword" className="block text-xs font-bold text-[#6b5443] mb-1.5">
-                  Confirmar contraseña <span className="text-red-500">*</span>
+                <label htmlFor="confirmarPassword" className="block text-sm font-semibold text-[#2b2118] mb-1.5">
+                  Confirmar contraseña
                 </label>
                 <input
                   id="confirmarPassword"
                   name="confirmarPassword"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="Repite tu contraseña"
                   value={formData.confirmarPassword}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full px-4 py-2.5 rounded-xl border bg-[#fbf6ef] text-[#2b1a0f] placeholder:text-[#9a8676] text-sm focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full px-4 py-3 rounded-lg border bg-white text-[#2b2118] placeholder:text-[#b3a892] text-sm focus:outline-none focus:ring-2 transition-all ${
                     touched.confirmarPassword && errores.confirmarPassword
                       ? 'border-red-400 focus:ring-red-200 bg-red-50/30'
-                      : 'border-[#ddd2c4] focus:ring-amber-200 focus:border-[#b8581a]'
+                      : 'border-[#e6dcc8] focus:ring-[#e8ead5] focus:border-[#6b7a3a]'
                   }`}
                 />
                 {touched.confirmarPassword && errores.confirmarPassword && (
@@ -285,7 +285,7 @@ export default function RegistroCliente() {
               <button
                 type="submit"
                 disabled={cargando}
-                className="w-full mt-2 py-3 px-4 rounded-xl bg-[#b4531a] hover:bg-[#96430f] text-white font-bold text-sm shadow-md hover:shadow-lg transition-all transform active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full mt-2 py-3 px-4 rounded-xl bg-[#2f4a2e] hover:bg-[#243a23] text-white font-bold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {cargando ? (
                   <>
@@ -303,20 +303,19 @@ export default function RegistroCliente() {
           )}
 
           {/* Enlaces de pie */}
-          <div className="mt-8 pt-6 border-t border-[#ebe3d9] text-center space-y-3">
-            <p className="text-sm text-[#6b5443]">
-              ¿Ya tienes una cuenta registrada?{' '}
-              <a href="#login" className="font-bold text-[#b8581a] hover:underline">
-                Inicia sesión aquí
+          <div className="mt-6 text-center text-sm text-[#6b4a2f] space-y-2">
+            <p>
+              ¿Ya tienes cuenta?{' '}
+              <a href="#login" className="font-semibold text-[#2f4a2e] hover:underline">
+                Inicia sesión
               </a>
             </p>
-
-            <div className="p-3 bg-amber-50/80 rounded-xl border border-amber-200/70 text-xs text-[#6b5443]">
-              ¿Tienes un puesto tradicional de emoliente?{' '}
-              <a href="#registro-emolientero" className="font-bold text-[#b8581a] hover:underline block sm:inline mt-1 sm:mt-0">
-                Regístrate como Emolientero Autorizado →
+            <p>
+              ¿Tienes un puesto de emoliente?{' '}
+              <a href="#registro-emolientero" className="font-semibold text-[#2f4a2e] hover:underline">
+                Regístralo aquí
               </a>
-            </div>
+            </p>
           </div>
         </div>
       </main>
