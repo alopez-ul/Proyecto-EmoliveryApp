@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { obtenerCatalogo } from '../services/catalogoService.js'
+import { cambiarCantidad, cantidadEnCarrito, guardarCarrito, leerCarrito } from '../services/compraService.js'
 import ConfirmarAvistamiento from '../components/ConfirmarAvistamiento.jsx'
 import Encabezado from '../components/Encabezado.jsx'
 import BotonFavorito from '../components/BotonFavorito.jsx'
@@ -69,7 +70,6 @@ export default function CatalogoEmolientero() {
   const [id] = useState(idDeLaRuta)
   const [catalogo, setCatalogo] = useState(null)
   const [error, setError] = useState(null) // { status, mensaje }
-  const [aviso, setAviso] = useState('')
 
   const cargar = useCallback(() => {
     obtenerCatalogo(id)
@@ -86,8 +86,13 @@ export default function CatalogoEmolientero() {
     return () => clearInterval(intervalo)
   }, [cargar])
 
-  // La compra anticipada (orden, pago con QR de Yape) es US13; aquí solo se habilita o no el botón.
-  const comprar = (producto) => setAviso(`Pronto podrás reservar "${producto.nombre}" y pagarlo con Yape desde aquí.`)
+  // El botón solo está activo si el producto es comprable (T56). Al presionarlo, el producto se agrega al carrito
+  // de este emolientero y se abre su compra anticipada (US13), donde se arma la orden y se paga con Yape (US14).
+  const comprar = (producto) => {
+    const lineas = leerCarrito(id)
+    guardarCarrito(id, cambiarCantidad(lineas, producto.id, cantidadEnCarrito(lineas, producto.id) + 1))
+    window.location.hash = `comprar?id=${encodeURIComponent(id)}`
+  }
 
   const enJornada = catalogo?.emolientero.enJornada
   const cantidad = catalogo?.categorias.reduce((n, c) => n + c.productos.length, 0) ?? 0
@@ -134,11 +139,6 @@ export default function CatalogoEmolientero() {
                 </div>
               )}
 
-              {aviso && (
-                <div role="status" className="mb-5 p-3 rounded-xl bg-[#fbf7ee] border border-[#e6dcc8] text-sm text-[#6b4a2f]">
-                  {aviso}
-                </div>
-              )}
 
               {cantidad === 0 ? (
                 <div className="text-center py-8 px-4 rounded-2xl bg-[#fbf7ee] border border-dashed border-[#d6c8ad]">
