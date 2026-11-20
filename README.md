@@ -98,6 +98,7 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 | POST   | /api/ordenes             | US13: el cliente confirma su carrito `{emolienteroId, lineas: [{productoId, cantidad}]}` → orden `pendiente_pago` con vigencia de 15 min y precios congelados. 400 si el carrito está vacío o es inválido; 422 si el emolientero cerró su jornada o un producto ya no está disponible (solo cliente) |
 | GET    | /api/ordenes/:id         | US13: orden propia con sus líneas, `total`, `expiraEn` y `vencida` (solo cliente) |
 | GET    | /api/resenas/emolientero/:id | US18: reseñas publicadas de un emolientero, de la más reciente a la más antigua, con `promedio` (1 decimal) y `total`. Sin reseñas: `total` 0 y `promedio` null (público) |
+| POST   | /api/resenas/orden/:ordenId | US17: el cliente publica la reseña de su pedido entregado `{calificacion (1-5), comentario}`. 201; 400 con `campos` si hay datos inválidos; 404 si el pedido no es suyo; 409 si aún no se entregó o ya la publicó |
 | POST   | /api/moderacion/resenas/:id/reportes | US25: reporta una reseña `{motivo}` (10–300 caracteres; con sesión). 409 si ya la reportaste y sigue pendiente; 422 si es tuya |
 | GET    | /api/moderacion/reportes?estado=pendientes o atendidos | US25: bandeja de reportes pendientes o registro de decisiones (solo admin) |
 | POST   | /api/moderacion/reportes/:id/decision | US25: `{decision: "ocultar" o "mantener", nota}`. Ocultar oculta la reseña y baja 10 puntos la reputación del autor. 409 si ya fue atendido; 410 si el autor eliminó la reseña (solo admin) |
@@ -183,7 +184,8 @@ Abre http://localhost:5173. Vite redirige `/api` al backend.
 - **US16:** el plazo de cancelación (30 min) se cuenta desde `ordenes.pagada_en` (migración `016_cancelacion.sql`), que debe llenar el pago con QR de US14. Cancelar anula la orden y libera lo que ocupaba: sale de los pedidos por entregar, su código de recojo deja de servir y ya no impide cerrar la jornada. Además registra una devolución en `devoluciones` que el emolientero ve en su panel. Cancelación y entrega van en una sola consulta, así que si llegan a la vez solo una se aplica.
 - **US19:** la respuesta se guarda en la misma fila de la reseña (`resenas.respuesta`, migración `017_respuesta_resenas.sql`), así que solo puede haber una. Se ve en la vista pública de reseñas (US18) y se oculta junto con la reseña si la modera US25. El emolientero responde desde `#mis-resenas`.
 - **US24:** pestaña "Usuarios" del panel del administrador. Cada suspensión o reactivación queda en `cambios_estado_cuenta` (migración `018_suspensiones.sql`) con su motivo y el admin que la hizo. Suspender a un emolientero le cierra la jornada abierta.
-- Mientras no existan US14 (pago) y US17 (publicar reseña), `npm run db:seed` crea un pedido pagado cancelable y una reseña publicada para probar estas historias.
+- `npm run db:seed` crea además un pedido pagado cancelable y una reseña publicada, para probar US16 y US19 sin tener que comprar, pagar y entregar antes.
+- **US17 (publicar reseña):** al entregar un pedido (US15) se habilita su reseña. En "Mis pedidos" el cliente pulsa "Dejar reseña", elige de 1 a 5 estrellas y escribe un comentario (obligatorio, hasta 500 caracteres). Solo sobre una compra propia y entregada, y una sola vez por pedido. Al publicarla se avisa al emolientero; la reseña aparece en la vista pública (US18), él puede responderla (US19) y se puede moderar (US25).
 
 ## Favoritos (US21)
 

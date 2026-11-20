@@ -2,6 +2,7 @@
 // US16 - T72: puede cancelar un pedido pagado y no entregado hasta 30 minutos después del pago.
 import { useCallback, useEffect, useState } from 'react'
 import { cancelableHasta, cancelarOrden, misPedidos } from '../services/ordenesService.js'
+import FormularioResena from './FormularioResena.jsx'
 
 const ESTADOS = { pendiente_pago: 'Pendiente de pago', pendiente: 'Pendiente', en_camino: 'En camino', entregada: 'Entregado', cancelada: 'Cancelado' }
 const soles = new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' })
@@ -103,8 +104,18 @@ export default function MisPedidos() {
                   <div style={{ fontSize: '0.78rem', color: 'var(--cafe-medio)' }}>Muéstralo al emolientero al recoger. Sirve una sola vez.</div>
                 </div>
               )}
-              {p.resenaHabilitada && (
-                <div style={{ marginTop: 6, color: 'var(--hierba)', fontWeight: 600 }}>Entregado: ya puedes dejar tu reseña.</div>
+              {/* US17: reseña del pedido entregado (habilitada por US15) */}
+              {p.resenaHabilitada && !p.resenaPublicada && (
+                <FormularioResena ordenId={p.id} emolientero={p.emolientero} onPublicada={cargar} />
+              )}
+              {p.resenaPublicada && (
+                <div style={{ marginTop: 6, fontSize: '0.85rem', color: 'var(--cafe-medio)' }}>
+                  Tu reseña: <span style={{ color: '#c9952b', letterSpacing: 1 }}>{'★'.repeat(p.calificacion)}{'☆'.repeat(5 - p.calificacion)}</span>
+                  {' · '}
+                  <a href={`#resenas?id=${p.emolienteroId}`} style={{ color: 'var(--caramelo)', fontWeight: 600 }}>
+                    Ver reseñas de {p.emolientero}
+                  </a>
+                </div>
               )}
 
               {/* US16: cancelar dentro del plazo, con confirmación */}

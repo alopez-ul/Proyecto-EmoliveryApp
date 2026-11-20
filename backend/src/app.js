@@ -23,6 +23,7 @@ import moderacionRouter from './routes/moderacion.js'
 import favoritosRouter from './routes/favoritos.js'
 import { cancelacionRouter, devolucionesRouter } from './routes/cancelacion.js'
 import respuestasResenasRouter from './routes/respuestasResenas.js'
+import publicarResenasRouter from './routes/publicarResenas.js'
 import adminUsuariosRouter from './routes/adminUsuarios.js'
 import historialComprasRouter from './routes/historialCompras.js'
 import { pool } from './db.js'
@@ -67,6 +68,7 @@ app.use('/api/devoluciones', devolucionesRouter)
 // US18 (consulta pública) y US19 (respuesta del emolientero) comparten /api/resenas.
 app.use('/api/resenas', consultaResenasRouter)
 app.use('/api/resenas', respuestasResenasRouter)
+app.use('/api/resenas', publicarResenasRouter)
 app.use('/api/moderacion', moderacionRouter)
 app.use('/api/favoritos', favoritosRouter)
 app.use('/api/historial-compras', historialComprasRouter)

@@ -16,10 +16,12 @@ const formatoLima = new Intl.DateTimeFormat('es-PE', { dateStyle: 'medium', time
 // T68: pedidos del cliente con su código de recojo (es el único que lo ve).
 router.get('/mias', requiereRol('cliente'), async (req, res) => {
   const { rows } = await query(
-    `SELECT o.id, e.nombre AS emolientero, o.estado, o.codigo_recojo AS "codigoRecojo",
+    `SELECT o.id, e.nombre AS emolientero, o.emolientero_id AS "emolienteroId", o.estado, o.codigo_recojo AS "codigoRecojo",
             o.creada_en AS "creadaEn", o.entregada_en AS "entregadaEn",
             o.total, o.pagada_en AS "pagadaEn", o.cancelada_en AS "canceladaEn",
-            (r.id IS NOT NULL) AS "resenaHabilitada"
+            (r.id IS NOT NULL) AS "resenaHabilitada",
+            -- US17: si ya publicó la reseña de este pedido y con cuántas estrellas.
+            (r.publicada_en IS NOT NULL) AS "resenaPublicada", r.calificacion
      FROM ordenes o
      JOIN usuarios e ON e.id = o.emolientero_id
      LEFT JOIN resenas r ON r.orden_id = o.id
